@@ -1,0 +1,227 @@
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+
+}
+
+
+/* =========================
+   BOX
+========================= */
+
+.sidebar-box {
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border-color);
+
+    border-radius: var(--radius-medium);
+
+    padding: 22px;
+
+    box-shadow: var(--shadow-small);
+
+}
+
+
+/* =========================
+   TITLES
+========================= */
+
+.sidebar-box h3 {
+
+    color: var(--accent);
+
+    margin-bottom: 18px;
+
+    font-size: 1.1rem;
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
+
+    padding-bottom: 10px;
+
+}
+
+
+/* =========================
+   RECENT LIST
+========================= */
+
+#recent-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+#recent-list li {
+
+    padding: 10px;
+
+    border-radius: var(--radius-small);
+
+    transition: var(--transition-fast);
+
+    cursor: pointer;
+
+}
+
+#recent-list li:hover {
+
+    background: rgba(255,255,255,.05);
+
+}
+
+
+/* =========================
+   CHARACTERS
+========================= */
+
+#characters-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+.character-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+.character-avatar {
+
+    width: 55px;
+
+    height: 55px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+
+    border: 2px solid var(--accent);
+
+}
+
+.character-avatar img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+.character-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+.character-name {
+
+    font-weight: bold;
+
+    color: var(--text-main);
+
+}
+
+.character-series {
+
+    color: var(--text-dark);
+
+    font-size: .85rem;
+
+}
+
+
+/* =========================
+   TAG CLOUD
+========================= */
+
+.sidebar-tags {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+}
+
+.sidebar-tag {
+
+    padding: 6px 12px;
+
+    background: rgba(255,255,255,.05);
+
+    border-radius: 20px;
+
+    font-size: .8rem;
+
+    transition: var(--transition-fast);
+
+}
+
+.sidebar-tag:hover {
+
+    background: var(--primary);
+
+    color: white;
+
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.sidebar-stats {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+.stat-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: var(--text-secondary);
+
+}
+
+.stat-item strong {
+
+    color: var(--accent);
+
+}
