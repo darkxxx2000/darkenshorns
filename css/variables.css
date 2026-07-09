@@ -1,0 +1,58 @@
+:root {
+
+    /* COLORS */
+
+    --bg-main: #080808;
+    --bg-secondary: #111111;
+    --bg-card: #171717;
+    --bg-hover: #222222;
+
+    --primary: #8b0000;
+    --primary-light: #b30000;
+
+    --accent: #c89b3c;
+
+    --text-main: #eeeeee;
+    --text-secondary: #aaaaaa;
+    --text-dark: #777777;
+
+
+    /* BORDERS */
+
+    --border-color: rgba(255,255,255,0.08);
+
+    --radius-small: 6px;
+    --radius-medium: 12px;
+    --radius-large: 18px;
+
+
+    /* SHADOWS */
+
+    --shadow-small:
+    0 4px 10px rgba(0,0,0,.3);
+
+
+    --shadow-large:
+    0 10px 30px rgba(0,0,0,.6);
+
+
+
+    /* LAYOUT */
+
+    --container-width: 1400px;
+
+
+    /* TRANSITIONS */
+
+    --transition-fast: .2s ease;
+
+    --transition-normal: .35s ease;
+
+
+    /* FONTS */
+
+    --font-main:
+    Arial, Helvetica, sans-serif;
+
+
+}
