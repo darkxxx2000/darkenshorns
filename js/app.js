@@ -3,58 +3,168 @@
  * APP
  *************************************************/
 
-import { detectCurrentPage, initHomePage } from "./ui.js";
+import {
+    detectCurrentPage,
+    initHomePage
+} from "./ui.js";
+
+import {
+    initNavigation
+} from "./navigation.js";
+
+import {
+    initSidebar
+} from "./sidebar.js";
+
+import {
+    initModal
+} from "./modal.js";
+
+import {
+    initLazyLoad
+} from "./lazyload.js";
+
+import {
+    getCurrentPage
+} from "./router.js";
+
 
 /**
- * Inicializa la aplicación.
+ * Inicialización general.
  */
 async function initializeApp() {
 
+
     try {
 
-        const currentPage = detectCurrentPage();
 
-        switch (currentPage) {
+        /*
+        =========================
+        GLOBAL
+        =========================
+        */
 
-            case "home":
+
+        initNavigation();
+
+        initModal();
+
+        initLazyLoad();
+
+
+        /*
+        =========================
+        PAGE ROUTER
+        =========================
+        */
+
+
+        const page =
+        getCurrentPage();
+
+
+
+        switch(page) {
+
+
+            case "index":
+
+            case "":
+
                 await initHomePage();
+
+                await initSidebar();
+
                 break;
 
-            case "series":
-                // Se implementará más adelante
-                break;
+
 
             case "comic":
-                // Se implementará más adelante
+
+                // Próximamente:
+                // cargar ficha del comic
+
                 break;
+
+
 
             case "chapter":
-                // Se implementará más adelante
+
+                // Próximamente:
+                // lector de capítulos
+
                 break;
 
-            case "gallery":
-                // Se implementará más adelante
+
+
+            case "series":
+
+                // Próximamente:
+                // listado de series
+
                 break;
+
+
 
             case "search":
-                // Se implementará más adelante
+
+                // Próximamente:
+                // buscador avanzado
+
                 break;
 
+
+
             default:
-                console.warn("Unknown page.");
+
+                console.log(
+                    "Page:",
+                    page
+                );
+
                 break;
+
 
         }
 
-    } catch (error) {
 
-        console.error("Application initialization failed:", error);
+
+        /*
+        =========================
+        Lazy load final
+        =========================
+        */
+
+
+        initLazyLoad();
+
+
 
     }
 
+    catch(error) {
+
+
+        console.error(
+            "DarkensHorns initialization error:",
+            error
+        );
+
+
+    }
+
+
 }
 
+
+
 /**
- * Inicio
+ * Arranque
  */
-document.addEventListener("DOMContentLoaded", initializeApp);
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    initializeApp
+
+);
