@@ -3,31 +3,45 @@
  * DATA LOADER
  *************************************************/
 
-const DATA_PATH = "../data";
+/**
+ * Detecta automáticamente la ruta base.
+ * Funciona tanto desde index.html como desde /pages/.
+ */
+const BASE_PATH = window.location.pathname.includes("/pages/")
+    ? "../data/"
+    : "data/";
 
 /**
- * Cargar un archivo JSON
+ * Caché de archivos ya cargados.
  */
+const cache = new Map();
 
-export async function loadJSON(file) {
+/**
+ * Carga cualquier archivo JSON.
+ */
+export async function loadJSON(filename) {
+
+    if (cache.has(filename)) {
+        return cache.get(filename);
+    }
 
     try {
 
-        const response = await fetch(`${DATA_PATH}/${file}`);
+        const response = await fetch(BASE_PATH + filename);
 
         if (!response.ok) {
-
-            throw new Error(`Error loading ${file}`);
-
+            throw new Error(`Unable to load ${filename}`);
         }
 
-        return await response.json();
+        const data = await response.json();
 
-    }
+        cache.set(filename, data);
 
-    catch (error) {
+        return data;
 
-        console.error(error);
+    } catch (error) {
+
+        console.error(`Error loading ${filename}:`, error);
 
         return [];
 
@@ -35,90 +49,22 @@ export async function loadJSON(file) {
 
 }
 
+/* ===========================
+   DATASETS
+=========================== */
 
-/**
- * Comics
- */
+export const loadHome = () => loadJSON("home.json");
 
-export async function loadComics() {
+export const loadComics = () => loadJSON("comics.json");
 
-    return await loadJSON("comics.json");
+export const loadSeries = () => loadJSON("series.json");
 
-}
+export const loadCharacters = () => loadJSON("characters.json");
 
+export const loadGenres = () => loadJSON("genres.json");
 
-/**
- * Series
- */
+export const loadTags = () => loadJSON("tags.json");
 
-export async function loadSeries() {
+export const loadGalleries = () => loadJSON("galleries.json");
 
-    return await loadJSON("series.json");
-
-}
-
-
-/**
- * Characters
- */
-
-export async function loadCharacters() {
-
-    return await loadJSON("characters.json");
-
-}
-
-
-/**
- * Galleries
- */
-
-export async function loadGalleries() {
-
-    return await loadJSON("galleries.json");
-
-}
-
-
-/**
- * Genres
- */
-
-export async function loadGenres() {
-
-    return await loadJSON("genres.json");
-
-}
-
-
-/**
- * Tags
- */
-
-export async function loadTags() {
-
-    return await loadJSON("tags.json");
-
-}
-
-
-/**
- * Short Comics
- */
-
-export async function loadShortComics() {
-
-    return await loadJSON("short-comics.json");
-
-}
-
-
-/**
- * Home
- */
-
-export async function loadHome() {
-
-    return await loadJSON("home.json");
-
-}
+export const loadShortComics = () => loadJSON("short-comics.json");
