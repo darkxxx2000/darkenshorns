@@ -1,1 +1,28 @@
-
+[
+    {
+        "id": "char-001",
+        "name": "Mai Shiranui",
+        "slug": "mai-shiranui",
+        "series": "Fatal Fury",
+        "image": "uploads/characters/mai-shiranui.webp",
+        "description": "A legendary kunoichi from Fatal Fury.",
+        "tags": [
+            "Female",
+            "Ninja",
+            "Fighting"
+        ]
+    },
+    {
+        "id": "char-002",
+        "name": "Deunan Knute",
+        "slug": "deunan-knute",
+        "series": "Appleseed",
+        "image": "uploads/characters/deunan-knute.webp",
+        "description": "Elite ESWAT officer.",
+        "tags": [
+            "Female",
+            "Military",
+            "Sci-Fi"
+        ]
+    }
+]
