@@ -1,0 +1,71 @@
+[
+  {
+    "id": "comic-001",
+    "slug": "dark-hunter",
+    "title": "Dark Hunter",
+    "description": "A dark fantasy story where hunters fight demons in a ruined world.",
+    "author": "DarkensHorns",
+    "status": "Ongoing",
+    "cover": "uploads/covers/dark-hunter.webp",
+    "banner": "assets/backgrounds/dark-hunter.webp",
+    "chapters": 12,
+    "views": 15230,
+    "rating": 4.8,
+    "updated": "2026-07-11",
+    "genres": [
+      "Fantasy",
+      "Action"
+    ],
+    "tags": [
+      "Demons",
+      "Magic",
+      "Dark"
+    ]
+  },
+  {
+    "id": "comic-002",
+    "slug": "crimson-moon",
+    "title": "Crimson Moon",
+    "description": "A cursed kingdom survives beneath a blood-red moon.",
+    "author": "DarkensHorns",
+    "status": "Completed",
+    "cover": "uploads/covers/crimson-moon.webp",
+    "banner": "assets/backgrounds/crimson-moon.webp",
+    "chapters": 24,
+    "views": 8450,
+    "rating": 4.5,
+    "updated": "2026-07-09",
+    "genres": [
+      "Horror",
+      "Fantasy"
+    ],
+    "tags": [
+      "Vampires",
+      "Blood",
+      "Dark"
+    ]
+  },
+  {
+    "id": "comic-003",
+    "slug": "iron-souls",
+    "title": "Iron Souls",
+    "description": "Ancient machines awaken after centuries of silence.",
+    "author": "DarkensHorns",
+    "status": "Ongoing",
+    "cover": "uploads/covers/iron-souls.webp",
+    "banner": "assets/backgrounds/iron-souls.webp",
+    "chapters": 8,
+    "views": 5230,
+    "rating": 4.3,
+    "updated": "2026-07-10",
+    "genres": [
+      "Sci-Fi",
+      "Action"
+    ],
+    "tags": [
+      "Robots",
+      "Future",
+      "War"
+    ]
+  }
+]
