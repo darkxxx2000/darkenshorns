@@ -1,28 +1,23 @@
 [
-    {
-        "id": "char-001",
-        "name": "Mai Shiranui",
-        "slug": "mai-shiranui",
-        "series": "Fatal Fury",
-        "image": "uploads/characters/mai-shiranui.webp",
-        "description": "A legendary kunoichi from Fatal Fury.",
-        "tags": [
-            "Female",
-            "Ninja",
-            "Fighting"
-        ]
-    },
-    {
-        "id": "char-002",
-        "name": "Deunan Knute",
-        "slug": "deunan-knute",
-        "series": "Appleseed",
-        "image": "uploads/characters/deunan-knute.webp",
-        "description": "Elite ESWAT officer.",
-        "tags": [
-            "Female",
-            "Military",
-            "Sci-Fi"
-        ]
-    }
+  {
+    "id":"chapter-001",
+    "seriesId":"series-001",
+    "comicId":"comic-001",
+    "number":1,
+    "title":"The Beginning",
+    "pages":32,
+    "folder":"dark-hunter/chapter-001",
+    "releaseDate":"2026-07-10"
+  },
+
+  {
+    "id":"chapter-002",
+    "seriesId":"series-001",
+    "comicId":"comic-001",
+    "number":2,
+    "title":"Dark Arrival",
+    "pages":29,
+    "folder":"dark-hunter/chapter-002",
+    "releaseDate":"2026-07-12"
+  }
 ]
