@@ -1,0 +1,45 @@
+[
+  {
+    "id": "series-001",
+    "slug": "dark-hunter",
+    "title": "Dark Hunter",
+    "description": "Official Dark Hunter universe.",
+    "cover": "uploads/series/dark-hunter.webp",
+    "banner": "uploads/series/dark-hunter-banner.webp",
+    "type": "comic",
+    "adult": true
+  },
+
+  {
+    "id": "series-002",
+    "slug": "crimson-moon",
+    "title": "Crimson Moon",
+    "description": "Blood fantasy universe.",
+    "cover": "uploads/series/crimson-moon.webp",
+    "banner": "uploads/series/crimson-moon-banner.webp",
+    "type": "comic",
+    "adult": true
+  },
+
+  {
+    "id": "series-003",
+    "slug": "iron-souls",
+    "title": "Iron Souls",
+    "description": "Sci-fi universe.",
+    "cover": "uploads/series/iron-souls.webp",
+    "banner": "uploads/series/iron-souls-banner.webp",
+    "type": "comic",
+    "adult": true
+  },
+
+  {
+    "id": "series-004",
+    "slug": "fallen-empire",
+    "title": "Fallen Empire",
+    "description": "Fantasy world.",
+    "cover": "uploads/series/fallen-empire.webp",
+    "banner": "uploads/series/fallen-empire-banner.webp",
+    "type": "comic",
+    "adult": true
+  }
+]
