@@ -174,3 +174,429 @@ Chapter ${Reader.chapter.number}
 `;
 
 }
+
+/* ==========================================================
+   PAGE LOADER
+========================================================== */
+
+function loadPage(page){
+
+    if(page<1) page=1;
+
+    if(page>Reader.totalPages) page=Reader.totalPages;
+
+    Reader.page=page;
+
+    const image=document.createElement("img");
+
+    image.draggable=false;
+
+    image.loading="eager";
+
+    image.alt=
+        Reader.comic.title+
+        " Chapter "+
+        Reader.chapter.number+
+        " Page "+
+        page;
+
+    image.src=getPageURL(page);
+
+    image.onload=()=>{
+
+        Reader.currentImage=image;
+
+        const container=
+        document.getElementById("imageContainer");
+
+        container.innerHTML="";
+
+        container.appendChild(image);
+
+        updateCounter();
+
+        updateProgress();
+
+        preloadNext();
+
+        saveReading();
+
+    };
+
+    image.onerror=()=>{
+
+        showError(
+            "Image "+
+            page+
+            " not found."
+        );
+
+    };
+
+}
+
+
+
+/* ==========================================================
+   IMAGE URL
+========================================================== */
+
+function getPageURL(page){
+
+    const file=
+        String(page).padStart(3,"0");
+
+    return "../uploads/comics/" +
+
+        Reader.chapter.folder +
+
+        "/" +
+
+        file +
+
+        ".webp";
+
+}
+
+
+
+/* ==========================================================
+   PAGE COUNTER
+========================================================== */
+
+function updateCounter(){
+
+    document.getElementById("pageCounter")
+    .textContent=
+
+    Reader.page+
+
+    " / "+
+
+    Reader.totalPages;
+
+}
+
+
+
+/* ==========================================================
+   NEXT / PREVIOUS
+========================================================== */
+
+function nextPage(){
+
+    if(Reader.page>=Reader.totalPages){
+
+        return;
+
+    }
+
+    loadPage(Reader.page+1);
+
+}
+
+
+
+function previousPage(){
+
+    if(Reader.page<=1){
+
+        return;
+
+    }
+
+    loadPage(Reader.page-1);
+
+}
+
+
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+function configureButtons(){
+
+    document
+    .getElementById("nextPage")
+    .onclick=nextPage;
+
+    document
+    .getElementById("previousPage")
+    .onclick=previousPage;
+
+    document
+    .getElementById("footerNext")
+    .onclick=nextPage;
+
+    document
+    .getElementById("footerPrevious")
+    .onclick=previousPage;
+
+}
+
+
+
+/* ==========================================================
+   PRELOAD
+========================================================== */
+
+function preloadNext(){
+
+    if(Reader.page>=Reader.totalPages){
+
+        return;
+
+    }
+
+    const preload=new Image();
+
+    preload.src=
+        getPageURL(
+            Reader.page+1
+        );
+
+}
+
+
+
+/* ==========================================================
+   PROGRESS BAR
+========================================================== */
+
+function updateProgress(){
+
+    const percent=
+
+    (Reader.page/
+
+    Reader.totalPages)
+
+    *100;
+
+    document
+    .getElementById("progressValue")
+    .style.width=
+
+    percent+"%";
+
+}
+
+
+
+/* ==========================================================
+   SAVE READING
+========================================================== */
+
+function saveReading(){
+
+    localStorage.setItem(
+
+        "reader-progress",
+
+        JSON.stringify({
+
+            comic:Reader.comic.id,
+
+            chapter:Reader.chapter.number,
+
+            page:Reader.page,
+
+            date:new Date()
+
+            .toISOString()
+
+        })
+
+    );
+
+}
+
+/* ==========================================================
+   KEYBOARD
+========================================================== */
+
+function configureKeyboard(){
+
+    document.addEventListener("keydown",(event)=>{
+
+        if(event.target.tagName==="INPUT") return;
+
+        switch(event.key){
+
+            case "ArrowRight":
+            case "d":
+            case "D":
+                nextPage();
+                break;
+
+            case "ArrowLeft":
+            case "a":
+            case "A":
+                previousPage();
+                break;
+
+            case "Home":
+                loadPage(1);
+                break;
+
+            case "End":
+                loadPage(Reader.totalPages);
+                break;
+
+            case "+":
+            case "=":
+                zoomIn();
+                break;
+
+            case "-":
+                zoomOut();
+                break;
+
+            case "f":
+            case "F":
+                toggleFullscreen();
+                break;
+
+            case "w":
+            case "W":
+                fitWidth();
+                break;
+
+            case "h":
+            case "H":
+                fitHeight();
+                break;
+        }
+
+    });
+
+}
+
+/* ==========================================================
+   ZOOM
+========================================================== */
+
+function zoomIn(){
+
+    if(Reader.zoom>=300) return;
+
+    Reader.zoom+=10;
+
+    applyZoom();
+
+}
+
+function zoomOut(){
+
+    if(Reader.zoom<=30) return;
+
+    Reader.zoom-=10;
+
+    applyZoom();
+
+}
+
+function applyZoom(){
+
+    if(!Reader.currentImage) return;
+
+    Reader.currentImage.style.transform=
+        `scale(${Reader.zoom/100})`;
+
+    document.getElementById("zoomValue").textContent=
+        Reader.zoom+"%";
+
+}
+
+/* ==========================================================
+   FIT MODES
+========================================================== */
+
+function fitWidth(){
+
+    if(!Reader.currentImage) return;
+
+    Reader.fitMode="width";
+
+    Reader.currentImage.style.width="100%";
+    Reader.currentImage.style.height="auto";
+    Reader.currentImage.style.maxHeight="none";
+
+}
+
+function fitHeight(){
+
+    if(!Reader.currentImage) return;
+
+    Reader.fitMode="height";
+
+    Reader.currentImage.style.width="auto";
+    Reader.currentImage.style.height="85vh";
+    Reader.currentImage.style.maxWidth="100%";
+
+}
+
+/* ==========================================================
+   FULLSCREEN
+========================================================== */
+
+async function toggleFullscreen(){
+
+    if(!document.fullscreenElement){
+
+        await document.documentElement.requestFullscreen();
+
+        document.body.classList.add("fullscreen");
+
+    }else{
+
+        await document.exitFullscreen();
+
+        document.body.classList.remove("fullscreen");
+
+    }
+
+}
+
+/* ==========================================================
+   BUTTON EVENTS
+========================================================== */
+
+document.getElementById("zoomIn")
+.addEventListener("click",zoomIn);
+
+document.getElementById("zoomOut")
+.addEventListener("click",zoomOut);
+
+document.getElementById("fitWidth")
+.addEventListener("click",fitWidth);
+
+document.getElementById("fitHeight")
+.addEventListener("click",fitHeight);
+
+document.getElementById("fullscreenButton")
+.addEventListener("click",toggleFullscreen);
+
+/* ==========================================================
+   MOUSE WHEEL ZOOM
+========================================================== */
+
+document.getElementById("imageContainer")
+.addEventListener("wheel",(event)=>{
+
+    if(!event.ctrlKey) return;
+
+    event.preventDefault();
+
+    if(event.deltaY<0){
+
+        zoomIn();
+
+    }else{
+
+        zoomOut();
+
+    }
+
+},{passive:false});
