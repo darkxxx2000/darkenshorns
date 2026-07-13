@@ -1,89 +1,161 @@
 /* =========================
-   FOOTER
+   DARKENSHORNS FOOTER
 ========================= */
 
-.main-footer {
+#site-footer{
 
-    margin-top: 80px;
+    margin-top:60px;
 
-    background: var(--bg-secondary);
+    background:#050505;
 
-    border-top: 1px solid var(--border-color);
-
-}
-
-.footer-container {
-
-    padding: 50px 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 18px;
-
-    text-align: center;
+    border-top:1px solid var(--border);
 
 }
 
-.footer-container h3 {
 
-    color: var(--accent);
 
-    font-size: 1.8rem;
+/* =========================
+   FOOTER CONTAINER
+========================= */
 
-    letter-spacing: 2px;
+.footer-container{
 
-}
+    max-width:1400px;
 
-.footer-container p {
+    margin:auto;
 
-    max-width: 700px;
+    padding:35px 20px;
 
-    color: var(--text-secondary);
+    display:flex;
 
-}
+    justify-content:space-between;
 
-.footer-links {
+    align-items:center;
 
-    display: flex;
-
-    gap: 25px;
-
-    flex-wrap: wrap;
-
-    justify-content: center;
+    gap:25px;
 
 }
 
-.footer-links a {
 
-    color: var(--text-secondary);
 
-    transition: var(--transition-fast);
+/* =========================
+   TEXT
+========================= */
+
+.footer-container p{
+
+    margin:0;
+
+    color:var(--text-secondary);
+
+    font-size:14px;
 
 }
 
-.footer-links a:hover {
 
-    color: var(--accent);
+
+/* =========================
+   FOOTER LINKS
+========================= */
+
+.footer-links{
+
+    display:flex;
+
+    gap:20px;
 
 }
 
-.footer-copy {
 
-    margin-top: 20px;
 
-    padding-top: 20px;
+.footer-links a{
 
-    width: 100%;
+    color:#aaa;
 
-    border-top: 1px solid rgba(255,255,255,.08);
+    font-size:14px;
 
-    color: var(--text-dark);
+}
 
-    font-size: .9rem;
+
+
+.footer-links a:hover{
+
+    color:#fff;
+
+}
+
+
+
+/* =========================
+   SOCIAL
+========================= */
+
+.footer-social{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+
+
+.footer-social a{
+
+    width:35px;
+
+    height:35px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--bg-panel);
+
+    border:1px solid var(--border);
+
+}
+
+
+
+.footer-social a:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+
+    .footer-container{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+
+
+    .footer-links{
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+    }
+
 
 }
