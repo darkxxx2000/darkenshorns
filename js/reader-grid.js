@@ -600,3 +600,247 @@ document.getElementById("imageContainer")
     }
 
 },{passive:false});
+
+/* ==========================================================
+   CHAPTER NAVIGATION
+========================================================== */
+
+function nextChapter(){
+
+    const next=Reader.chapters.find(ch=>
+
+        ch.comicId===Reader.comic.id &&
+        ch.number===Reader.chapter.number+1
+
+    );
+
+    if(!next) return;
+
+    window.location.href=
+    `reader-grid.html?id=${Reader.comic.id}&chapter=${next.number}`;
+
+}
+
+
+
+function previousChapter(){
+
+    const previous=Reader.chapters.find(ch=>
+
+        ch.comicId===Reader.comic.id &&
+        ch.number===Reader.chapter.number-1
+
+    );
+
+    if(!previous) return;
+
+    window.location.href=
+    `reader-grid.html?id=${Reader.comic.id}&chapter=${previous.number}`;
+
+}
+
+
+
+/* ==========================================================
+   AUTO CHAPTER
+========================================================== */
+
+function autoNextChapter(){
+
+    if(Reader.page!==Reader.totalPages){
+
+        return;
+
+    }
+
+    nextChapter();
+
+}
+
+
+
+/* ==========================================================
+   WEBTOON
+========================================================== */
+
+function openWebtoon(){
+
+    window.location.href=
+
+    `reader-webtoon.html?id=${Reader.comic.id}&chapter=${Reader.chapter.number}&page=${Reader.page}`;
+
+}
+
+
+
+/* ==========================================================
+   RESTORE
+========================================================== */
+
+function restoreReading(){
+
+    const saved=
+
+    JSON.parse(
+
+        localStorage.getItem("reader-progress")
+
+    );
+
+    if(!saved){
+
+        return;
+
+    }
+
+    if(saved.comic!==Reader.comic.id){
+
+        return;
+
+    }
+
+    if(saved.chapter!==Reader.chapter.number){
+
+        return;
+
+    }
+
+    Reader.page=saved.page;
+
+}
+
+
+
+/* ==========================================================
+   IMAGE CACHE
+========================================================== */
+
+function cacheImage(page){
+
+    if(page<1) return;
+
+    if(page>Reader.totalPages) return;
+
+    if(Reader.imageCache[page]) return;
+
+    const img=new Image();
+
+    img.src=getPageURL(page);
+
+    Reader.imageCache[page]=img;
+
+}
+
+
+
+/* ==========================================================
+   PRELOAD
+========================================================== */
+
+function preloadAround(){
+
+    cacheImage(Reader.page-1);
+
+    cacheImage(Reader.page+1);
+
+    cacheImage(Reader.page+2);
+
+}
+
+
+
+/* ==========================================================
+   CLICK NAVIGATION
+========================================================== */
+
+document
+.getElementById("imageContainer")
+.addEventListener("click",(event)=>{
+
+    const half=
+
+    window.innerWidth/2;
+
+    if(event.clientX<half){
+
+        previousPage();
+
+    }else{
+
+        nextPage();
+
+    }
+
+});
+
+
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+document
+.getElementById("nextChapter")
+.onclick=nextChapter;
+
+document
+.getElementById("previousChapter")
+.onclick=previousChapter;
+
+document
+.getElementById("switchWebtoon")
+.onclick=openWebtoon;
+
+
+
+/* ==========================================================
+   UPDATE LOADPAGE
+========================================================== */
+
+const originalLoadPage=loadPage;
+
+loadPage=function(page){
+
+    originalLoadPage(page);
+
+    preloadAround();
+
+}
+
+
+
+/* ==========================================================
+   AUTO NEXT
+========================================================== */
+
+document
+.getElementById("nextPage")
+.addEventListener("click",()=>{
+
+    if(Reader.page===Reader.totalPages){
+
+        autoNextChapter();
+
+    }
+
+});
+
+
+
+/* ==========================================================
+   START
+========================================================== */
+
+restoreReading();
+
+
+
+/* ==========================================================
+   END
+========================================================== */
+
+console.log(
+
+"DarkensHorns Reader Grid Engine Loaded"
+
+);
