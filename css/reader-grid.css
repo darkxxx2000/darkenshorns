@@ -33,6 +33,7 @@ body{
     padding:25px;
 }
 
+
 /* ===========================
    HEADER
 =========================== */
@@ -78,6 +79,7 @@ body{
     font-weight:400;
 }
 
+
 /* ===========================
    TOOLBAR
 =========================== */
@@ -108,6 +110,7 @@ body{
     font-weight:bold;
 }
 
+
 /* ===========================
    BUTTONS
 =========================== */
@@ -130,6 +133,7 @@ button:hover,
     background:var(--reader-accent);
 }
 
+
 /* ===========================
    READER
 =========================== */
@@ -147,6 +151,7 @@ button:hover,
     justify-content:center;
     align-items:center;
     width:100%;
+    cursor:pointer;
 }
 
 #imageContainer img{
@@ -154,9 +159,11 @@ button:hover,
     max-height:85vh;
     border-radius:10px;
     box-shadow:var(--reader-shadow);
-    transition:transform .25s ease;
+    transition:transform .25s ease,width .25s ease,height .25s ease;
     user-select:none;
+    transform-origin:center center;
 }
+
 
 /* ===========================
    OPTIONS
@@ -176,6 +183,7 @@ button:hover,
     text-align:center;
     font-weight:bold;
 }
+
 
 /* ===========================
    PROGRESS
@@ -201,6 +209,7 @@ button:hover,
     transition:.25s;
 }
 
+
 /* ===========================
    FOOTER NAV
 =========================== */
@@ -211,6 +220,7 @@ button:hover,
     gap:20px;
     margin-top:20px;
 }
+
 
 /* ===========================
    LOADING
@@ -225,6 +235,7 @@ button:hover,
     color:var(--reader-muted);
 }
 
+
 /* ===========================
    ERROR
 =========================== */
@@ -238,6 +249,12 @@ button:hover,
     font-size:24px;
 }
 
+#imageContainer h2{
+    color:#ff5a5a;
+    text-align:center;
+}
+
+
 /* ===========================
    FULLSCREEN
 =========================== */
@@ -249,6 +266,21 @@ body.fullscreen{
 body.fullscreen #reader{
     max-width:100%;
 }
+
+body.fullscreen #reader-toolbar,
+body.fullscreen #reader-options,
+body.fullscreen #reader-progress,
+body.fullscreen #reader-footer-nav{
+    opacity:.35;
+    transition:.3s;
+}
+
+body.fullscreen #reader-toolbar:hover,
+body.fullscreen #reader-options:hover,
+body.fullscreen #reader-footer-nav:hover{
+    opacity:1;
+}
+
 
 /* ===========================
    RESPONSIVE
@@ -269,6 +301,7 @@ body.fullscreen #reader{
     }
 
 }
+
 
 @media(max-width:768px){
 
@@ -295,6 +328,7 @@ body.fullscreen #reader{
     }
 
 }
+
 
 @media(max-width:480px){
 
