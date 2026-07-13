@@ -1,122 +1,139 @@
 /* =========================
-   MAIN NAVIGATION
+   DARKENSHORNS NAVIGATION
 ========================= */
 
-.main-nav {
+.main-navigation{
 
-    display: flex;
+    display:flex;
 
-    align-items: center;
+    align-items:center;
 
-    gap: 10px;
+    gap:28px;
 
 }
+
 
 
 /* =========================
    LINKS
 ========================= */
 
-.main-nav a {
+.main-navigation a{
 
-    position: relative;
+    position:relative;
 
-    padding: 12px 18px;
+    color:#bdbdbd;
 
-    color: var(--text-secondary);
+    font-size:15px;
 
-    font-size: .95rem;
+    font-weight:600;
 
-    font-weight: 600;
+    text-transform:uppercase;
 
-    border-radius: var(--radius-small);
+    letter-spacing:.5px;
 
-    transition: var(--transition-fast);
+    padding:8px 0;
+
+    transition:.25s ease;
 
 }
+
 
 
 /* =========================
    HOVER
 ========================= */
 
-.main-nav a:hover {
+.main-navigation a:hover{
 
-    color: var(--text-main);
-
-    background: rgba(255,255,255,.05);
+    color:#fff;
 
 }
 
-
-/* Línea inferior animada */
-
-.main-nav a::after {
-
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-
-    bottom: 4px;
-
-    width: 0;
-
-    height: 2px;
-
-    background: var(--accent);
-
-    transition: var(--transition-normal);
-
-    transform: translateX(-50%);
-
-}
-
-.main-nav a:hover::after {
-
-    width: 70%;
-
-}
 
 
 /* =========================
-   ACTIVE LINK
+   ACTIVE EFFECT
 ========================= */
 
-.main-nav a.active {
+.main-navigation a::after{
 
-    color: var(--accent);
+    content:"";
 
-    background: rgba(200,155,60,.08);
+    position:absolute;
+
+    left:0;
+
+    bottom:0;
+
+    width:0;
+
+    height:3px;
+
+    background:var(--primary);
+
+    transition:.25s ease;
 
 }
 
-.main-nav a.active::after {
 
-    width: 70%;
+
+.main-navigation a:hover::after{
+
+    width:100%;
 
 }
+
 
 
 /* =========================
-   SMALL SCREENS
+   ACTIVE PAGE
 ========================= */
 
-@media (max-width: 900px) {
+.main-navigation a.active{
 
-    .main-nav {
+    color:#fff;
 
-        gap: 2px;
+}
+
+
+
+.main-navigation a.active::after{
+
+    width:100%;
+
+}
+
+
+
+/* =========================
+   MOBILE MENU
+========================= */
+
+@media(max-width:768px){
+
+
+    .main-navigation{
+
+        width:100%;
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+        gap:18px;
+
+        padding-top:10px;
 
     }
 
-    .main-nav a {
 
-        padding: 10px 12px;
 
-        font-size: .9rem;
+    .main-navigation a{
+
+        font-size:14px;
 
     }
+
 
 }
