@@ -1,0 +1,463 @@
+/* =========================
+   HOME
+========================= */
+
+/* HERO */
+
+.hero{
+
+    position:relative;
+
+    width:100%;
+
+    height:520px;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    margin:30px 0 40px;
+
+    background:#111;
+
+    box-shadow:var(--shadow);
+
+}
+
+.hero img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+        to right,
+        rgba(0,0,0,.88),
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.15)
+    );
+
+}
+
+.hero-content{
+
+    position:absolute;
+
+    left:50px;
+
+    bottom:50px;
+
+    z-index:5;
+
+    max-width:520px;
+
+}
+
+.hero-content h1{
+
+    margin-bottom:18px;
+
+}
+
+.hero-content p{
+
+    margin-bottom:25px;
+
+}
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.hero-buttons a{
+
+    padding:14px 24px;
+
+    border-radius:8px;
+
+    font-weight:600;
+
+}
+
+.hero-primary{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+.hero-primary:hover{
+
+    background:var(--accent);
+
+}
+
+.hero-secondary{
+
+    background:rgba(255,255,255,.08);
+
+    border:1px solid var(--border);
+
+}
+
+.hero-secondary:hover{
+
+    background:rgba(255,255,255,.14);
+
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.home-section{
+
+    margin-bottom:55px;
+
+}
+
+.section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:22px;
+
+}
+
+.section-header a{
+
+    color:var(--primary);
+
+    font-weight:600;
+
+}
+
+.section-header a:hover{
+
+    color:var(--accent);
+
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.comic-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+
+    gap:24px;
+
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.comic-card{
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    transition:.25s;
+
+    box-shadow:var(--shadow);
+
+}
+
+.comic-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--primary);
+
+}
+
+.comic-cover{
+
+    position:relative;
+
+    aspect-ratio:2 / 3;
+
+    overflow:hidden;
+
+}
+
+.comic-cover img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.35s;
+
+}
+
+.comic-card:hover .comic-cover img{
+
+    transform:scale(1.06);
+
+}
+
+
+/* BADGES */
+
+.badge{
+
+    position:absolute;
+
+    top:12px;
+
+    left:12px;
+
+    background:var(--primary);
+
+    color:#fff;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.badge-right{
+
+    left:auto;
+
+    right:12px;
+
+    background:#202020;
+
+}
+
+
+/* INFO */
+
+.comic-info{
+
+    padding:16px;
+
+}
+
+.comic-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+}
+
+.comic-meta{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+    margin-bottom:10px;
+
+}
+
+.comic-description{
+
+    font-size:14px;
+
+    color:var(--text-secondary);
+
+    line-height:1.5;
+
+}
+
+
+/* =========================
+   HORIZONTAL
+========================= */
+
+.horizontal-list{
+
+    display:grid;
+
+    gap:16px;
+
+}
+
+.horizontal-card{
+
+    display:flex;
+
+    gap:18px;
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    transition:.25s;
+
+}
+
+.horizontal-card:hover{
+
+    border-color:var(--primary);
+
+}
+
+.horizontal-card img{
+
+    width:150px;
+
+    object-fit:cover;
+
+}
+
+.horizontal-content{
+
+    padding:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .hero{
+
+        height:430px;
+
+    }
+
+    .hero-content{
+
+        left:30px;
+
+        right:30px;
+
+        bottom:30px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero{
+
+        height:360px;
+
+    }
+
+    .hero-content h1{
+
+        font-size:2rem;
+
+    }
+
+    .comic-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .hero{
+
+        height:300px;
+
+    }
+
+    .hero-content{
+
+        left:20px;
+
+        right:20px;
+
+        bottom:20px;
+
+    }
+
+    .hero-buttons{
+
+        flex-direction:column;
+
+    }
+
+    .comic-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .horizontal-card{
+
+        flex-direction:column;
+
+    }
+
+    .horizontal-card img{
+
+        width:100%;
+
+        height:220px;
+
+    }
+
+}
