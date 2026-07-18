@@ -3,205 +3,237 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>DarkensHorns</title>
+<title>DarkensHorns</title>
 
-    <meta name="description" content="DarkensHorns - Comics, series, galleries and characters.">
+<meta name="description" content="DarkensHorns - Dark Comics, AI Gallery, Characters and Stories">
 
-    <link rel="icon" href="favicon.ico">
+<link rel="icon" href="favicon.ico">
 
-    <!-- CSS -->
-
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/navigation.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/responsive.css">
-
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/animation.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/responsive.css">
 
 </head>
 
-
 <body>
 
+<header id="site-header">
 
-<header class="header">
+<div class="header-container">
 
-    <div class="header-container">
+<a href="index.html" class="logo">
+DarkensHorns
+</a>
 
-        <div class="logo">
-            DarkensHorns
-        </div>
+<button class="menu-toggle" aria-label="Open Menu">
+☰
+</button>
 
+<nav class="main-navigation">
 
-        <button class="menu-toggle">
-            ☰
-        </button>
+<a href="index.html" class="active">
+Home
+</a>
 
+<a href="pages/series.html">
+Series
+</a>
 
-        <nav class="main-nav">
+<a href="pages/search.html">
+Search
+</a>
 
-            <a href="index.html">
-                Home
-            </a>
+<a href="pages/gallery.html">
+Gallery
+</a>
 
-            <a href="pages/series.html">
-                Series
-            </a>
+<a href="pages/characters.html">
+Characters
+</a>
 
-            <a href="pages/search.html">
-                Search
-            </a>
+</nav>
 
-        </nav>
-
-
-    </div>
+</div>
 
 </header>
 
-
-
 <main class="main-container">
-
 
 <section class="hero">
 
-    <h1>
-        Welcome to DarkensHorns
-    </h1>
+<div class="hero-content">
 
-    <p>
-        Discover comics, characters and galleries.
-    </p>
+<h1>
+DarkensHorns
+</h1>
+
+<p>
+Dark Fantasy Comics, AI Gallery, Characters and Stories.
+</p>
+
+<div class="hero-buttons">
+
+<a href="pages/series.html" class="hero-primary">
+Read Comics
+</a>
+
+<a href="pages/search.html" class="hero-secondary">
+Explore
+</a>
+
+</div>
+
+</div>
 
 </section>
 
-
-
-<section class="content">
-
-
-<h2 class="section-title">
-    Latest Comics
-</h2>
-
-
-<div id="latest-comics" class="comic-grid">
-
-</div>
-
-
-
-<h2 class="section-title">
-    Popular Comics
-</h2>
-
-
-<div id="popular-comics" class="comic-grid">
-
-</div>
-
-
-
-<h2 class="section-title">
-    Featured Series
-</h2>
-
-
-<div id="featured-series" class="comic-grid">
-
-</div>
-
-
-</section>
-
-
+<div class="content-layout">
 
 <aside class="sidebar">
 
-
-<section>
+<section class="sidebar-box">
 
 <h3>
-Recent Updates
+Categories
 </h3>
 
-<ul id="recent-list">
+<ul class="category-list">
+
+<li><a href="#">Fantasy</a></li>
+<li><a href="#">Action</a></li>
+<li><a href="#">Adventure</a></li>
+<li><a href="#">Sci-Fi</a></li>
+<li><a href="#">Horror</a></li>
+<li><a href="#">Dark</a></li>
+<li><a href="#">Adult</a></li>
 
 </ul>
 
 </section>
 
+<section class="sidebar-box">
 
+<h3>
+Recent Updates
+</h3>
 
-<section>
+<ul id="recent-list"></ul>
+
+</section>
+
+<section class="sidebar-box">
 
 <h3>
 Characters
 </h3>
 
-<div id="characters-list">
-
-</div>
+<div id="characters-list"></div>
 
 </section>
 
-
 </aside>
 
+<section class="content">
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Latest Comics
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div id="latest-comics" class="comic-grid"></div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Popular Comics
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div id="popular-comics" class="comic-grid"></div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Featured Series
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div id="featured-series" class="comic-grid"></div>
+
+</section>
+
+</section>
+
+</div>
 
 </main>
 
-
-
-
-<!-- MODAL -->
-
-<div class="modal" id="comic-modal">
-
+<div id="comic-modal" class="modal">
 
 <div class="modal-content">
-
 
 <button class="modal-close">
 ×
 </button>
 
-
 <div id="modal-body"></div>
 
+</div>
 
 </div>
 
+<footer id="site-footer">
 
-</div>
-
-
-
-
-<footer class="footer">
+<div class="footer-container">
 
 <p>
-© DarkensHorns
+© 2026 DarkensHorns. All Rights Reserved.
 </p>
+
+</div>
 
 </footer>
 
-
-
-<!-- MAIN JAVASCRIPT -->
-
 <script type="module" src="js/app.js"></script>
-
 
 </body>
 
