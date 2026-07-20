@@ -21,25 +21,6 @@ html{
 
 
 /* =========================
-   BODY
-========================= */
-
-body{
-
-    background:var(--bg-main);
-
-    color:var(--text-main);
-
-    font-family:var(--font-main);
-
-    line-height:1.6;
-
-    overflow-x:hidden;
-
-}
-
-
-/* =========================
    GLOBAL CONTAINER
 ========================= */
 
@@ -285,6 +266,59 @@ p{
     h2{
 
         font-size:1.6rem;
+
+    }
+
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.main-container{
+
+    width:100%;
+    max-width:1600px;
+    margin:40px auto;
+    padding:0 24px;
+
+}
+
+.content-layout{
+
+    display:grid;
+    grid-template-columns:300px minmax(0,1fr);
+    gap:30px;
+    align-items:start;
+
+}
+
+.sidebar{
+
+    position:sticky;
+    top:100px;
+    width:100%;
+
+}
+
+.content{
+
+    min-width:0;
+    width:100%;
+
+}
+
+@media(max-width:992px){
+
+    .content-layout{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .sidebar{
+
+        position:static;
 
     }
 
