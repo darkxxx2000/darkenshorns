@@ -27,11 +27,8 @@ body{
         url("../assets/background.png");
 
     background-position:center;
-
     background-size:cover;
-
     background-repeat:no-repeat;
-
     background-attachment:fixed;
 
     background-color:var(--bg-main);
