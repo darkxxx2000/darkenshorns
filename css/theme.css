@@ -20,20 +20,31 @@ html {
    BODY
 ========================= */
 
-body {
+body{
 
-    background: var(--bg-main);
+    background:
+        linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.88)),
+        url("../assets/background.png");
 
-    color: var(--text-main);
+    background-position:center;
 
-    font-family: var(--font-main);
+    background-size:cover;
 
-    line-height: 1.6;
+    background-repeat:no-repeat;
 
-    overflow-x: hidden;
+    background-attachment:fixed;
+
+    background-color:var(--bg-main);
+
+    color:var(--text-main);
+
+    font-family:var(--font-main);
+
+    line-height:1.6;
+
+    overflow-x:hidden;
 
 }
-
 /* =========================
    LINKS
 ========================= */
