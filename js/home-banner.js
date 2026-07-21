@@ -1,41 +1,56 @@
-const slider=document.getElementById("banner-slider");
+const slider = document.getElementById("banner-slider");
 
-if(slider){
+if (slider) {
 
-fetch("data/home-banner.json")
+    fetch("data/home-banner.json")
 
-.then(r=>r.json())
+        .then(r => r.json())
 
-.then(images=>{
+        .then(images => {
 
-images.forEach(item=>{
+            images.forEach(item => {
 
-const div=document.createElement("div");
+                const div = document.createElement("div");
 
-div.className="banner-slide";
+                div.className = "banner-slide";
 
-div.style.backgroundImage=`url('${item.image}')`;
+                div.style.backgroundImage = `url("${item.image}")`;
 
-slider.appendChild(div);
+                slider.appendChild(div);
 
-});
+            });
 
-let current=0;
+            let current = 0;
 
-setInterval(()=>{
+            function nextSlide() {
 
-current++;
+                const delay = (current === 0) ? 2000 : 5000;
 
-if(current>=images.length){
+                setTimeout(() => {
 
-current=0;
+                    current++;
+
+                    if (current >= images.length) {
+
+                        current = 0;
+
+                    }
+
+                    slider.style.transform = `translateX(-${current * 100}%)`;
+
+                    nextSlide();
+
+                }, delay);
+
+            }
+
+            nextSlide();
+
+        })
+
+        .catch(console.error);
 
 }
-
-slider.style.transform=`translateX(-${current*100}%)`;
-
-},5000);
-
 })
 
 .catch(console.error);
