@@ -272,3 +272,163 @@
         width:100%;
     }
 }
+
+/* ==========================================================
+   CHAPTER READER - NORMAL MODE
+========================================================== */
+
+#preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+/* Miniaturas */
+
+#preview-container:not(.webtoon-mode) img {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    border-radius: 6px;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+/* Efecto al pasar el mouse */
+
+#preview-container:not(.webtoon-mode) img:hover {
+    transform: scale(1.04);
+    opacity: 0.9;
+}
+
+
+/* ==========================================================
+   CHAPTER READER - WEBTOON MODE
+========================================================== */
+
+#preview-container.webtoon-mode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0;
+}
+
+
+/* Imágenes verticales */
+
+#preview-container.webtoon-mode img {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+/* ==========================================================
+   IMAGE VIEWER
+========================================================== */
+
+#image-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.96);
+    overflow: hidden;
+}
+
+
+#image-viewer.active {
+    display: flex;
+}
+
+
+#viewer-image {
+    display: block;
+    max-width: 95vw;
+    max-height: 95vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.1s ease;
+}
+
+
+#viewer-image:active {
+    cursor: grabbing;
+}
+
+
+#viewer-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    z-index: 100000;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 32px;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+
+#viewer-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+
+    #preview-container:not(.webtoon-mode) {
+        gap: 12px;
+        padding: 10px;
+    }
+
+
+    #preview-container:not(.webtoon-mode) img {
+        width: 130px;
+    }
+
+
+    #preview-container.webtoon-mode {
+        width: 100%;
+    }
+
+
+    #preview-container.webtoon-mode img {
+        width: 100%;
+    }
+
+}
