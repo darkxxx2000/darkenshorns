@@ -4,39 +4,75 @@ if (slider) {
 
     fetch("data/home-banner.json")
 
-        .then(r => r.json())
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("No se pudo cargar home-banner.json");
+            }
+
+            return response.json();
+
+        })
 
         .then(images => {
 
+            if (!Array.isArray(images) || images.length === 0) {
+                console.warn("No hay imágenes en home-banner.json");
+                return;
+            }
+
             images.forEach(item => {
 
-                const div = document.createElement("div");
+                const div =
+                    document.createElement("div");
 
-                div.className = "banner-slide";
+                div.className =
+                    "banner-slide";
 
-                div.style.backgroundImage = `url("${item.image}")`;
+                div.style.backgroundImage =
+                    `url("${item.image}")`;
 
                 slider.appendChild(div);
 
             });
 
+
             let current = 0;
+
 
             function nextSlide() {
 
-                const delay = (current === 0) ? 2000 : 5000;
+                /*
+                Primera imagen:
+                2 segundos
+
+                Siguientes imágenes:
+                5 segundos
+                */
+
+                const delay =
+                    current === 0
+                        ? 2000
+                        : 5000;
+
 
                 setTimeout(() => {
 
                     current++;
 
-                    if (current >= images.length) {
+
+                    if (
+                        current >= images.length
+                    ) {
 
                         current = 0;
 
                     }
 
-                    slider.style.transform = `translateX(-${current * 100}%)`;
+
+                    slider.style.transform =
+                        `translateX(-${current * 100}%)`;
+
 
                     nextSlide();
 
@@ -44,15 +80,22 @@ if (slider) {
 
             }
 
+
+            /*
+            Iniciar slider
+            */
+
             nextSlide();
 
         })
 
-        .catch(console.error);
+        .catch(error => {
 
-}
-})
+            console.error(
+                "Error en Home Banner:",
+                error
+            );
 
-.catch(console.error);
+        });
 
 }
