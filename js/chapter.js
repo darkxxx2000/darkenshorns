@@ -635,35 +635,7 @@ function setupReaderLinks() {
 
 function openNormalMode() {
 
-    const pages =
-        getChapterPages();
-
-
-    if (
-        !pages.length
-    ) {
-
-        console.warn(
-            "No chapter pages found."
-        );
-
-        return;
-
-    }
-
-
-    viewerPages =
-        pages;
-
-
-    viewerIndex =
-        0;
-
-
-    createViewer();
-
-
-    showViewerImage();
+    renderPreview();
 
 }
 
