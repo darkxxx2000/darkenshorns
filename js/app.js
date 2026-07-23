@@ -4,7 +4,6 @@
  *************************************************/
 
 import {
-    detectCurrentPage,
     initHomePage
 } from "./ui.js";
 
@@ -34,16 +33,13 @@ import {
  */
 async function initializeApp() {
 
-
     try {
-
 
         /*
         =========================
         GLOBAL
         =========================
         */
-
 
         initNavigation();
 
@@ -58,14 +54,17 @@ async function initializeApp() {
         =========================
         */
 
-
         const page =
-        getCurrentPage();
+            getCurrentPage();
 
 
+        switch (page) {
 
-        switch(page) {
-
+            /*
+            =========================
+            HOME
+            =========================
+            */
 
             case "index":
 
@@ -78,93 +77,121 @@ async function initializeApp() {
                 break;
 
 
+            /*
+            =========================
+            COMIC
+            =========================
+            */
 
             case "comic":
 
-                // Próximamente:
-                // cargar ficha del comic
+                /*
+                comic.html tiene su propio
+                sistema de carga.
+                */
 
                 break;
 
 
+            /*
+            =========================
+            CHAPTER
+            =========================
+            */
 
             case "chapter":
 
-                // Próximamente:
-                // lector de capítulos
+                /*
+                chapter.html carga directamente:
+
+                ../js/chapter.js
+
+                Por eso NO inicializamos
+                el lector aquí.
+                */
 
                 break;
 
 
+            /*
+            =========================
+            SERIES
+            =========================
+            */
 
             case "series":
 
-                // Próximamente:
-                // listado de series
+                /*
+                La página de series
+                puede inicializar su
+                propio sistema.
+                */
 
                 break;
 
 
+            /*
+            =========================
+            SEARCH
+            =========================
+            */
 
             case "search":
 
-                // Próximamente:
-                // buscador avanzado
+                /*
+                El buscador puede
+                inicializar su propio
+                sistema.
+                */
 
                 break;
 
 
+            /*
+            =========================
+            DEFAULT
+            =========================
+            */
 
             default:
 
                 console.log(
-                    "Page:",
+                    "DarkensHorns page:",
                     page
                 );
 
                 break;
 
-
         }
-
 
 
         /*
         =========================
-        Lazy load final
+        LAZY LOAD FINAL
         =========================
         */
-
 
         initLazyLoad();
 
 
-
     }
 
-    catch(error) {
-
+    catch (error) {
 
         console.error(
             "DarkensHorns initialization error:",
             error
         );
 
-
     }
-
 
 }
 
 
-
 /**
- * Arranque
+ * Arranque.
  */
 document.addEventListener(
-
     "DOMContentLoaded",
-
     initializeApp
-
 );
