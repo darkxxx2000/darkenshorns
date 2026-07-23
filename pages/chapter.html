@@ -3,54 +3,22 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Chapter | DarkensHorns</title>
+<title>Chapter | DarkensHorns</title>
 
-    <meta
-        name="description"
-        content="Read chapter on DarkensHorns"
-    >
+<meta name="description" content="Read chapter on DarkensHorns">
 
-    <link
-        rel="icon"
-        href="../favicon.ico"
-    >
+<link rel="icon" href="../favicon.ico">
 
-    <link
-        rel="stylesheet"
-        href="../css/theme.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/layout.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/header.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/navigation.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/footer.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/chapter.css"
-    >
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/header.css">
+<link rel="stylesheet" href="../css/navigation.css">
+<link rel="stylesheet" href="../css/footer.css">
+<link rel="stylesheet" href="../css/chapter.css">
 
 </head>
 
@@ -62,10 +30,7 @@
 
     <div class="header-container">
 
-        <a
-            href="../index.html"
-            class="logo"
-        >
+        <a href="../index.html" class="logo">
             DarkensHorns
         </a>
 
@@ -91,44 +56,35 @@
 </header>
 
 
+
 <main class="chapter-page">
 
 
-    <!-- =====================================================
-         BREADCRUMB
-    ====================================================== -->
+    <!-- BREADCRUMB -->
 
-    <section class="breadcrumb">
+    <div class="breadcrumb">
 
         <a href="../index.html">
             Home
         </a>
 
-        <span>
-            /
-        </span>
+        <span>/</span>
 
-        <a
-            id="comic-link"
-            href="#"
-        >
+        <a id="comic-link" href="#">
             Comic
         </a>
 
-        <span>
-            /
-        </span>
+        <span>/</span>
 
         <span id="chapter-title">
             Chapter
         </span>
 
-    </section>
+    </div>
 
 
-    <!-- =====================================================
-         CHAPTER HEADER
-    ====================================================== -->
+
+    <!-- CHAPTER HEADER -->
 
     <section class="chapter-header">
 
@@ -139,13 +95,6 @@
         <h2 id="chapter-name">
             Loading chapter...
         </h2>
-
-        <p
-            id="chapter-subtitle"
-            class="chapter-subtitle"
-        >
-        </p>
-
 
         <div class="chapter-info">
 
@@ -162,9 +111,8 @@
     </section>
 
 
-    <!-- =====================================================
-         READING MODE
-    ====================================================== -->
+
+    <!-- READING MODE -->
 
     <section class="reading-options">
 
@@ -172,33 +120,15 @@
 
             <button
                 id="grid-reader"
-                class="reader-button active"
-                type="button"
-            >
-                <span class="reader-icon">
-                    ▦
-                </span>
-
-                <span>
-                    Normal Mode
-                </span>
-
+                class="reader-button active">
+                📖 Normal Mode
             </button>
 
 
             <button
                 id="webtoon-reader"
-                class="reader-button"
-                type="button"
-            >
-                <span class="reader-icon">
-                    ☰
-                </span>
-
-                <span>
-                    Webtoon Mode
-                </span>
-
+                class="reader-button">
+                📱 Webtoon Mode
             </button>
 
         </div>
@@ -206,50 +136,41 @@
     </section>
 
 
-    <!-- =====================================================
-         CHAPTER READER
-    ====================================================== -->
+
+    <!-- CHAPTER PAGES -->
 
     <section class="chapter-preview">
 
         <div
             id="preview-container"
-            class="preview-grid normal-mode"
-        >
+            class="preview-grid">
         </div>
 
     </section>
 
 
-    <!-- =====================================================
-         CHAPTER NAVIGATION
-    ====================================================== -->
+
+    <!-- CHAPTER NAVIGATION -->
 
     <section class="chapter-navigation">
 
         <a
             id="previous-chapter"
-            class="button"
-            href="#"
-        >
+            class="button">
             ← Previous Chapter
         </a>
 
 
         <a
             id="back-comic"
-            class="button primary"
-            href="#"
-        >
+            class="button primary">
             Back to Comic
         </a>
 
 
         <a
             id="next-chapter"
-            class="button"
-            href="#"
-        >
+            class="button">
             Next Chapter →
         </a>
 
@@ -257,6 +178,7 @@
 
 
 </main>
+
 
 
 <footer id="site-footer">
@@ -272,8 +194,49 @@
 </footer>
 
 
-<script src="../js/chapter.js"></script>
 
+<!-- IMAGE VIEWER -->
+
+<div
+    id="image-viewer"
+    class="image-viewer">
+
+
+    <button
+        id="viewer-close"
+        class="viewer-close">
+        ×
+    </button>
+
+
+    <button
+        id="viewer-prev"
+        class="viewer-navigation viewer-prev">
+        ‹
+    </button>
+
+
+    <div class="viewer-content">
+
+        <img
+            id="viewer-image"
+            src=""
+            alt="Comic page">
+
+    </div>
+
+
+    <button
+        id="viewer-next"
+        class="viewer-navigation viewer-next">
+        ›
+    </button>
+
+</div>
+
+
+
+<script src="../js/chapter.js"></script>
 
 </body>
 
