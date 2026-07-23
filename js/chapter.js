@@ -2,46 +2,47 @@
 
 /* ==========================================================
    DARKENSHORNS
-   CHAPTER SYSTEM - FIXED
+   CHAPTER SYSTEM
 ========================================================== */
 
+
 let currentComic = null;
+
 let currentChapter = null;
+
 let allChapters = [];
 
 
-/* ==========================================================
-   INIT
-========================================================== */
-
-document.addEventListener("DOMContentLoaded", initChapter);
 
 
-async function initChapter() {
+
+document.addEventListener(
+"DOMContentLoaded",
+initChapter
+);
+
+
+
+
+
+async function initChapter(){
+
 
     const params = new URLSearchParams(
         window.location.search
     );
 
-    /*
-    Accept both formats:
 
-    chapter.html?id=ryuko-matoi&chapter=Chapter-01
-
-    and
-
-    chapter.html?comic=ryuko-matoi&chapter=Chapter-01
-    */
-
-    const comicId =
-        params.get("comic") ||
-        params.get("id");
-
-    const chapterId =
-        params.get("chapter");
+    const comicId = params.get("id");
 
 
-    if (!comicId || !chapterId) {
+    const chapterNumber = Number(
+        params.get("chapter")
+    );
+
+
+
+    if(!comicId || !chapterNumber){
 
         showError(
             "Chapter information missing."
@@ -52,62 +53,49 @@ async function initChapter() {
     }
 
 
-    try {
 
-        /*
-        1. Load the comic JSON
-        */
+    try{
 
-        const comicResponse =
-            await fetch(
-                `../data/comics/${comicId}.json`
+
+        const comics = await loadJSON(
+            "../data/comics.json"
+        );
+
+
+        allChapters = await loadJSON(
+            "../data/chapters.json"
+        );
+
+
+
+        currentComic = comics.find(
+            comic =>
+            comic.id === comicId
+        );
+
+
+
+        if(!currentComic){
+
+            showError(
+                "Comic not found."
             );
 
-
-        if (!comicResponse.ok) {
-
-            throw new Error(
-                `Comic not found: ${comicId}`
-            );
+            return;
 
         }
 
 
-        currentComic =
-            await comicResponse.json();
+
+        currentChapter = allChapters.find(
+            chapter =>
+            chapter.comicId === comicId &&
+            chapter.number === chapterNumber
+        );
 
 
-        /*
-        2. Find the chapter
-        */
 
-        const chapters =
-            Array.isArray(currentComic.chapters)
-                ? currentComic.chapters
-                : [];
-
-
-        const chapterIndex =
-            chapters.findIndex(
-                chapter => {
-
-                    const id =
-                        typeof chapter === "string"
-                            ? chapter
-                            : chapter.id ||
-                              chapter.slug ||
-                              chapter.chapter;
-
-                    return (
-                        String(id).toLowerCase() ===
-                        String(chapterId).toLowerCase()
-                    );
-
-                }
-            );
-
-
-        if (chapterIndex === -1) {
+        if(!currentChapter){
 
             showError(
                 "Chapter not found."
@@ -118,205 +106,92 @@ async function initChapter() {
         }
 
 
-        const chapterInfo =
-            chapters[chapterIndex];
-
-
-        /*
-        3. Get chapter data
-        */
-
-        const folder =
-            typeof chapterInfo === "string"
-                ? ""
-                : chapterInfo.folder || "";
-
-
-        const chapterFile =
-            typeof chapterInfo === "string"
-                ? chapterInfo
-                : chapterInfo.id ||
-                  chapterInfo.slug ||
-                  chapterInfo.chapter;
-
-
-        if (!folder || !chapterFile) {
-
-            showError(
-                "Chapter data is incomplete."
-            );
-
-            return;
-
-        }
-
-
-        /*
-        4. Load physical chapter JSON
-
-        Example:
-
-        data/chapters/
-        ryuko-matoi/
-        Ryuko-vs-Huge-Dildo/
-        Chapter-01.json
-        */
-
-        const chapterResponse =
-            await fetch(
-                `../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(folder)}/${encodeURIComponent(chapterFile)}.json`
-            );
-
-
-        if (!chapterResponse.ok) {
-
-            throw new Error(
-                `Cannot load chapter file: ${chapterFile}`
-            );
-
-        }
-
-
-        currentChapter =
-            await chapterResponse.json();
-
-
-        /*
-        Store navigation data
-        */
-
-        allChapters =
-            chapters.map(
-                (chapter, index) => {
-
-                    if (typeof chapter === "string") {
-
-                        return {
-                            id: chapter,
-                            title: chapter,
-                            folder: "",
-                            index: index
-                        };
-
-                    }
-
-                    return {
-                        ...chapter,
-                        index: index
-                    };
-
-                }
-            );
-
-
-        /*
-        Render everything
-        */
 
         renderChapter();
 
+
         setupReaderLinks();
 
+
         setupNavigation();
+
 
         renderPreview();
 
 
-    } catch (error) {
+    }
+    catch(error){
 
-        console.error(
-            "Chapter loading error:",
-            error
-        );
+
+        console.error(error);
 
 
         showError(
             "Unable to load chapter."
         );
 
+
     }
+
+
 
 }
 
+
+
+
+
+async function loadJSON(url){
+
+
+    const response = await fetch(url);
+
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "Cannot load "+url
+        );
+
+    }
+
+
+
+    return await response.json();
+
+
+}
 
 /* ==========================================================
    RENDER CHAPTER
 ========================================================== */
 
-function renderChapter() {
-
-    const comicTitle =
-        currentComic.title ||
-        "Comic";
-
-
-    const chapterTitle =
-        currentChapter.title ||
-        "Chapter";
-
+function renderChapter(){
 
     document.title =
-        `${comicTitle} - ${chapterTitle}`;
+    `${currentComic.title} - Chapter ${currentChapter.number}`;
 
+    document.getElementById("comic-name").textContent =
+    currentComic.title;
 
-    document.getElementById(
-        "comic-name"
-    ).textContent =
-        comicTitle;
+    document.getElementById("chapter-name").textContent =
+    `Chapter ${currentChapter.number}: ${currentChapter.title}`;
 
+    document.getElementById("chapter-title").textContent =
+    `Chapter ${currentChapter.number}`;
 
-    document.getElementById(
-        "chapter-name"
-    ).textContent =
-        chapterTitle;
+    document.getElementById("chapter-pages").textContent =
+    `Pages: ${currentChapter.pages}`;
 
+    document.getElementById("chapter-date").textContent =
+    `Date: ${currentChapter.releaseDate}`;
 
-    document.getElementById(
-        "chapter-title"
-    ).textContent =
-        chapterTitle;
+    document.getElementById("comic-link").href =
+    `comic.html?id=${currentComic.id}`;
 
-
-    /*
-    Number of pages
-    */
-
-    const pages =
-        getChapterPages();
-
-
-    document.getElementById(
-        "chapter-pages"
-    ).textContent =
-        `Pages: ${pages.length}`;
-
-
-    document.getElementById(
-        "chapter-date"
-    ).textContent =
-        `Date: ${
-            currentChapter.releaseDate ||
-            currentChapter.date ||
-            currentComic.updated ||
-            "-"
-        }`;
-
-
-    /*
-    Back to comic
-    */
-
-    document.getElementById(
-        "comic-link"
-    ).href =
-        `comic.html?id=${encodeURIComponent(currentComic.id)}`;
-
-
-    document.getElementById(
-        "back-comic"
-    ).href =
-        `comic.html?id=${encodeURIComponent(currentComic.id)}`;
-
+    document.getElementById("back-comic").href =
+    `comic.html?id=${currentComic.id}`;
 }
 
 
@@ -324,60 +199,21 @@ function renderChapter() {
    READER LINKS
 ========================================================== */
 
-function setupReaderLinks() {
+function setupReaderLinks(){
 
     const grid =
-        document.getElementById(
-            "grid-reader"
-        );
-
+    document.getElementById("grid-reader");
 
     const webtoon =
-        document.getElementById(
-            "webtoon-reader"
-        );
+    document.getElementById("webtoon-reader");
 
 
-    const comicId =
-        encodeURIComponent(
-            currentComic.id
-        );
+    grid.href =
+    `reader-grid.html?id=${currentComic.id}&chapter=${currentChapter.number}`;
 
 
-    const folder =
-        encodeURIComponent(
-            getCurrentFolder()
-        );
-
-
-    const chapter =
-        encodeURIComponent(
-            getCurrentChapterId()
-        );
-
-
-    /*
-    PAGE MODE
-    */
-
-    if (grid) {
-
-        grid.href =
-            `reader-grid.html?comic=${comicId}&folder=${folder}&chapter=${chapter}`;
-
-    }
-
-
-    /*
-    WEBTOON MODE
-    */
-
-    if (webtoon) {
-
-        webtoon.href =
-            `reader-webtoon.html?comic=${comicId}&folder=${folder}&chapter=${chapter}`;
-
-    }
+    webtoon.href =
+    `reader-webtoon.html?id=${currentComic.id}&chapter=${currentChapter.number}`;
 
 }
 
@@ -386,179 +222,107 @@ function setupReaderLinks() {
    CHAPTER NAVIGATION
 ========================================================== */
 
-function setupNavigation() {
-
-    const currentIndex =
-        allChapters.findIndex(
-            chapter =>
-                String(
-                    chapter.id
-                ).toLowerCase() ===
-                String(
-                    getCurrentChapterId()
-                ).toLowerCase()
-        );
-
+function setupNavigation(){
 
     const previous =
-        currentIndex > 0
-            ? allChapters[currentIndex - 1]
-            : null;
+    allChapters.find(chapter =>
+        chapter.comicId === currentComic.id &&
+        chapter.number === currentChapter.number - 1
+    );
 
 
     const next =
-        currentIndex >= 0 &&
-        currentIndex < allChapters.length - 1
-            ? allChapters[currentIndex + 1]
-            : null;
+    allChapters.find(chapter =>
+        chapter.comicId === currentComic.id &&
+        chapter.number === currentChapter.number + 1
+    );
 
 
     const previousButton =
-        document.getElementById(
-            "previous-chapter"
-        );
+    document.getElementById("previous-chapter");
 
 
     const nextButton =
-        document.getElementById(
-            "next-chapter"
-        );
+    document.getElementById("next-chapter");
 
 
-    if (previous) {
+    if(previous){
 
         previousButton.href =
-            buildChapterURL(
-                previous
-            );
+        `chapter.html?id=${currentComic.id}&chapter=${previous.number}`;
 
-    } else {
+    }else{
 
-        previousButton.style.display =
-            "none";
+        previousButton.style.display="none";
 
     }
 
 
-    if (next) {
+    if(next){
 
         nextButton.href =
-            buildChapterURL(
-                next
-            );
+        `chapter.html?id=${currentComic.id}&chapter=${next.number}`;
 
-    } else {
+    }else{
 
-        nextButton.style.display =
-            "none";
+        nextButton.style.display="none";
 
     }
 
 }
 
-
 /* ==========================================================
-   BUILD CHAPTER URL
+   CHAPTER PREVIEW
 ========================================================== */
 
-function buildChapterURL(
-    chapter
-) {
-
-    return (
-        `chapter.html` +
-        `?comic=${encodeURIComponent(currentComic.id)}` +
-        `&folder=${encodeURIComponent(chapter.folder || "")}` +
-        `&chapter=${encodeURIComponent(chapter.id)}`
-    );
-
-}
-
-
-/* ==========================================================
-   PREVIEW
-========================================================== */
-
-function renderPreview() {
+function renderPreview(){
 
     const container =
-        document.getElementById(
-            "preview-container"
-        );
+    document.getElementById("preview-container");
 
-
-    if (!container) {
-        return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    const pages =
-        getChapterPages();
+    container.innerHTML="";
 
 
     const limit =
-        Math.min(
-            pages.length,
-            12
-        );
+    Math.min(currentChapter.pages,12);
 
 
-    for (
-        let i = 0;
-        i < limit;
-        i++
-    ) {
-
-        const image =
-            document.createElement(
-                "img"
-            );
-
+    for(let i=1;i<=limit;i++){
 
         const page =
-            pages[i];
+        String(i).padStart(3,"0");
 
 
-        const imageURL =
-            getPageImageURL(
-                page,
-                i
-            );
+        const image =
+        document.createElement("img");
 
 
         image.src =
-            imageURL;
+        `../uploads/comics/${currentChapter.folder}/${page}.webp`;
 
 
         image.alt =
-            `Page ${i + 1}`;
+        `Page ${i}`;
 
 
-        image.loading =
-            "lazy";
+        image.loading="lazy";
+
+
+        image.dataset.page=i;
 
 
         image.addEventListener(
             "click",
-            () => {
+            ()=>{
 
                 window.location.href =
-                    `reader-grid.html` +
-                    `?comic=${encodeURIComponent(currentComic.id)}` +
-                    `&folder=${encodeURIComponent(getCurrentFolder())}` +
-                    `&chapter=${encodeURIComponent(getCurrentChapterId())}` +
-                    `&page=${i + 1}`;
+                `reader-grid.html?id=${currentComic.id}&chapter=${currentChapter.number}&page=${i}`;
 
             }
         );
 
 
-        container.appendChild(
-            image
-        );
+        container.appendChild(image);
 
     }
 
@@ -566,260 +330,24 @@ function renderPreview() {
 
 
 /* ==========================================================
-   GET PAGES
+   ERROR MESSAGE
 ========================================================== */
 
-function getChapterPages() {
-
-    /*
-    Supports:
-
-    "pages": []
-
-    or
-
-    "images": []
-
-    or
-
-    "content": []
-    */
-
-    if (
-        Array.isArray(
-            currentChapter.pages
-        )
-    ) {
-
-        return currentChapter.pages;
-
-    }
-
-
-    if (
-        Array.isArray(
-            currentChapter.images
-        )
-    ) {
-
-        return currentChapter.images;
-
-    }
-
-
-    if (
-        Array.isArray(
-            currentChapter.content
-        )
-    ) {
-
-        return currentChapter.content;
-
-    }
-
-
-    /*
-    If pages is a number,
-    generate page names.
-    */
-
-    if (
-        typeof currentChapter.pages ===
-        "number"
-    ) {
-
-        return Array.from(
-            {
-                length:
-                    currentChapter.pages
-            },
-            (_, index) =>
-                index + 1
-        );
-
-    }
-
-
-    return [];
-
-}
-
-
-/* ==========================================================
-   IMAGE URL
-========================================================== */
-
-function getPageImageURL(
-    page,
-    index
-) {
-
-    /*
-    If JSON contains direct URL
-    */
-
-    if (
-        typeof page === "string"
-    ) {
-
-        if (
-            page.startsWith("http://") ||
-            page.startsWith("https://") ||
-            page.startsWith("../")
-        ) {
-
-            return page;
-
-        }
-
-
-        /*
-        Relative image path
-        */
-
-        if (
-            page.includes("/") ||
-            page.includes(".webp") ||
-            page.includes(".jpg") ||
-            page.includes(".png")
-        ) {
-
-            return `../${page}`;
-
-        }
-
-    }
-
-
-    /*
-    If page is an object
-    */
-
-    if (
-        typeof page === "object" &&
-        page !== null
-    ) {
-
-        if (page.url) {
-
-            return page.url;
-
-        }
-
-        if (page.image) {
-
-            return page.image;
-
-        }
-
-        if (page.src) {
-
-            return page.src;
-
-        }
-
-    }
-
-
-    /*
-    Fallback:
-    001.webp
-    002.webp
-    etc.
-
-    Located in:
-
-    data/chapters/
-    comicId/
-    folder/
-    */
-
-    const number =
-        String(
-            index + 1
-        ).padStart(
-            3,
-            "0"
-        );
-
-
-    return (
-        `../data/chapters/` +
-        `${encodeURIComponent(currentComic.id)}/` +
-        `${encodeURIComponent(getCurrentFolder())}/` +
-        `${number}.webp`
-    );
-
-}
-
-
-/* ==========================================================
-   CURRENT FOLDER
-========================================================== */
-
-function getCurrentFolder() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    return (
-        params.get("folder") ||
-        currentChapter.folder ||
-        ""
-    );
-
-}
-
-
-/* ==========================================================
-   CURRENT CHAPTER ID
-========================================================== */
-
-function getCurrentChapterId() {
-
-    return (
-        currentChapter.id ||
-        currentChapter.slug ||
-        currentChapter.chapter ||
-        ""
-    );
-
-}
-
-
-/* ==========================================================
-   ERROR
-========================================================== */
-
-function showError(
-    message
-) {
+function showError(message){
 
     const page =
-        document.querySelector(
-            ".chapter-page"
-        );
+    document.querySelector(".chapter-page");
 
 
-    if (page) {
+    if(page){
 
         page.innerHTML = `
-
         <section class="error-message">
-
-            <h1>
-                ${message}
-            </h1>
-
+            <h1>${message}</h1>
             <a href="../index.html">
-                Return Home
+            Return Home
             </a>
-
         </section>
-
         `;
 
     }
