@@ -1,0 +1,19 @@
+{
+    "id": "comic-01",
+    "title": "Comic 01",
+    "description": "Full description of Comic 01.",
+    "author": "Unknown Author",
+    "cover": "assets/covers/comic-01.webp",
+    "genres": [
+        "Action",
+        "Dark"
+    ],
+    "characters": [
+        "Character One",
+        "Character Two"
+    ],
+    "series": [
+        "series-01",
+        "series-02"
+    ]
+}
