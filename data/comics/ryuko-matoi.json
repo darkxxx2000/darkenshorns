@@ -1,31 +1,26 @@
-{
-    "id": "ryuko-matoi",
-    "title": "Ryuko Matoi",
-    "description": "Ryuko Matoi comic.",
-    "author": "DarkensHorns",
-    "status": "Ongoing",
-    "cover": "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg",
-    "banner": "https://ah-img.luscious.net/darkenshorns/618164/3b_01KXEB1RZJ91XWFQMSX3P51JT0.1280x0.jpg",
-    "rating": "5.0",
-    "updated": "2026-07-21",
-    "genres": [
-        "Action",
-        "Fantasy",
-        "Adult"
-    ],
-    "tags": [
-        "Ryuko Matoi",
-        "Dark",
-        "AI"
-    ],
-    "characters": [
-        "Ryuko Matoi"
-    ],
-    "chapters": [
-        {
-            "id": "Chapter-01",
-            "title": "Chapter 01",
-            "folder": "Ryuko-vs-Huge-Dildo"
-        }
-    ]
+
+    {
+  "id": "ryuko-dildo-01",
+  "title": "Ryuko Matoi",
+  "chapters": [
+    {
+      "id": "ryuko-dildo-chapter-01",
+      "number": 1,
+      "title": "The Beginning",
+      "file": "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg"
+    },
+    {
+      "id": "Chapter-02",
+      "number": 2,
+      "title": "Chapter Two",
+      "file": "Ryuko-vs-Huge-Dildo/Chapter-02.json"
+    },
+    {
+      "id": "Chapter-03",
+      "number": 3,
+      "title": "Chapter Three",
+      "file": "Ryuko-vs-Huge-Dildo/Chapter-03.json"
+    }
+  ]
+}
 }
