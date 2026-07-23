@@ -2,9 +2,10 @@
    DARKENSHORNS - COMIC PAGE
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadComicPage();
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    loadComicPage
+);
 
 
 /* =========================================
@@ -13,37 +14,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadComicPage() {
 
-    const params = new URLSearchParams(window.location.search);
-    const comicId = params.get("id");
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const comicId =
+        params.get("id");
+
 
     if (!comicId) {
-        showComicError("No comic ID specified.");
+
+        showComicError(
+            "No comic ID specified."
+        );
+
         return;
+
     }
+
 
     try {
 
         /*
-        IMPORTANT:
-        comic.html is inside /pages/
-        Therefore ../data/ is required
+        comic.html está dentro de /pages/
         */
 
-        const response = await fetch(`../data/comics/${comicId}.json`);
+        const response =
+            await fetch(
+                `../data/comics/${encodeURIComponent(comicId)}.json`
+            );
+
 
         if (!response.ok) {
-            throw new Error(`Comic not found: ${comicId}`);
+
+            throw new Error(
+                `Comic not found: ${comicId}`
+            );
+
         }
 
-        const comic = await response.json();
 
-        renderComic(comic);
+        const comic =
+            await response.json();
 
-        loadChapters(comicId);
 
-    } catch (error) {
+        /*
+        RENDER COMIC
+        */
 
-        console.error("Error loading comic:", error);
+        renderComic(
+            comic
+        );
+
+
+        /*
+        LOAD CHAPTERS
+        */
+
+        loadChapters(
+            comicId,
+            comic
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading comic:",
+            error
+        );
+
 
         showComicError(
             `Comic "${comicId}" could not be found.`
@@ -58,226 +100,371 @@ async function loadComicPage() {
    RENDER COMIC
 ========================================= */
 
-function renderComic(comic) {
+function renderComic(
+    comic
+) {
 
-    /* TITLE */
+    /*
+    TITLE
+    */
 
-    const title = document.getElementById("comic-title");
+    const title =
+        document.getElementById(
+            "comic-title"
+        );
+
 
     if (title) {
-        title.textContent = comic.title || "Untitled Comic";
+
+        title.textContent =
+            comic.title ||
+            "Untitled Comic";
+
     }
 
 
-    /* BREADCRUMB */
+    /*
+    BREADCRUMB
+    */
 
-    const breadcrumb = document.getElementById("breadcrumb-title");
+    const breadcrumb =
+        document.getElementById(
+            "breadcrumb-title"
+        );
+
 
     if (breadcrumb) {
+
         breadcrumb.textContent =
-            comic.title || "Comic";
+            comic.title ||
+            "Comic";
+
     }
 
 
-    /* COVER */
+    /*
+    COVER
+    */
 
-    const cover = document.getElementById("comic-cover-image");
+    const cover =
+        document.getElementById(
+            "comic-cover-image"
+        );
 
-    if (cover && comic.cover) {
 
-        cover.src = normalizeAssetPath(comic.cover);
+    if (
+        cover &&
+        comic.cover
+    ) {
+
+        cover.src =
+            normalizeAssetPath(
+                comic.cover
+            );
+
 
         cover.alt =
-            comic.title || "Comic Cover";
+            comic.title ||
+            "Comic Cover";
 
     }
 
 
-    /* BANNER */
+    /*
+    BANNER
+    */
 
-    const banner = document.getElementById("comic-banner-image");
+    const banner =
+        document.getElementById(
+            "comic-banner-image"
+        );
 
-    if (banner && comic.banner) {
 
-        banner.src = normalizeAssetPath(comic.banner);
+    if (
+        banner &&
+        comic.banner
+    ) {
+
+        banner.src =
+            normalizeAssetPath(
+                comic.banner
+            );
+
 
         banner.alt =
-            comic.title || "Comic Banner";
+            comic.title ||
+            "Comic Banner";
 
     }
 
 
-    /* AUTHOR */
+    /*
+    AUTHOR
+    */
 
     const author =
-        document.getElementById("comic-author");
+        document.getElementById(
+            "comic-author"
+        );
+
 
     if (author) {
+
         author.textContent =
-            comic.author || "-";
+            comic.author ||
+            "-";
+
     }
 
 
-    /* STATUS */
+    /*
+    STATUS
+    */
 
     const status =
-        document.getElementById("comic-status");
+        document.getElementById(
+            "comic-status"
+        );
+
 
     if (status) {
+
         status.textContent =
-            comic.status || "-";
+            comic.status ||
+            "-";
+
     }
 
 
-    /* UPDATED */
+    /*
+    UPDATED
+    */
 
     const updated =
-        document.getElementById("comic-updated");
+        document.getElementById(
+            "comic-updated"
+        );
+
 
     if (updated) {
+
         updated.textContent =
-            comic.updated || "-";
+            comic.updated ||
+            "-";
+
     }
 
 
-    /* DESCRIPTION */
+    /*
+    DESCRIPTION
+    */
 
     const description =
-        document.getElementById("comic-description");
+        document.getElementById(
+            "comic-description"
+        );
+
 
     if (description) {
+
         description.textContent =
-            comic.description || "";
+            comic.description ||
+            "";
+
     }
 
 
-    /* RATING */
+    /*
+    RATING
+    */
 
     const rating =
-        document.getElementById("comic-rating");
+        document.getElementById(
+            "comic-rating"
+        );
+
 
     if (rating) {
 
-        if (comic.rating) {
-
-            rating.textContent =
-                `★ ${comic.rating}`;
-
-        } else {
-
-            rating.textContent =
-                "★★★★★";
-
-        }
+        rating.textContent =
+            comic.rating
+                ? `★ ${comic.rating}`
+                : "★★★★★";
 
     }
 
 
-    /* GENRES */
+    /*
+    GENRES
+    */
 
     const genresContainer =
-        document.getElementById("comic-genres");
+        document.getElementById(
+            "comic-genres"
+        );
+
 
     if (genresContainer) {
 
-        genresContainer.innerHTML = "";
+        genresContainer.innerHTML =
+            "";
+
 
         const genres =
-            Array.isArray(comic.genres)
+            Array.isArray(
+                comic.genres
+            )
                 ? comic.genres
                 : [];
 
-        genres.forEach(genre => {
 
-            const tag =
-                document.createElement("span");
+        genres.forEach(
+            genre => {
 
-            tag.textContent = genre;
+                const tag =
+                    document.createElement(
+                        "span"
+                    );
 
-            genresContainer.appendChild(tag);
 
-        });
+                tag.textContent =
+                    genre;
+
+
+                genresContainer.appendChild(
+                    tag
+                );
+
+            }
+        );
 
     }
 
 
-    /* TAGS */
+    /*
+    TAGS
+    */
 
     const tagsContainer =
-        document.getElementById("comic-tags");
+        document.getElementById(
+            "comic-tags"
+        );
+
 
     if (tagsContainer) {
 
-        tagsContainer.innerHTML = "";
+        tagsContainer.innerHTML =
+            "";
+
 
         const tags =
-            Array.isArray(comic.tags)
+            Array.isArray(
+                comic.tags
+            )
                 ? comic.tags
                 : [];
 
-        tags.forEach(tagName => {
 
-            const tag =
-                document.createElement("span");
+        tags.forEach(
+            tagName => {
 
-            tag.textContent = tagName;
+                const tag =
+                    document.createElement(
+                        "span"
+                    );
 
-            tagsContainer.appendChild(tag);
 
-        });
+                tag.textContent =
+                    tagName;
+
+
+                tagsContainer.appendChild(
+                    tag
+                );
+
+            }
+        );
 
     }
 
 
-    /* CHARACTERS */
+    /*
+    CHARACTERS
+    */
 
     const charactersContainer =
         document.getElementById(
             "characters-container"
         );
 
+
     if (charactersContainer) {
 
-        charactersContainer.innerHTML = "";
+        charactersContainer.innerHTML =
+            "";
+
 
         const characters =
-            Array.isArray(comic.characters)
+            Array.isArray(
+                comic.characters
+            )
                 ? comic.characters
                 : [];
 
-        characters.forEach(character => {
 
-            const item =
-                document.createElement("div");
+        characters.forEach(
+            character => {
 
-            item.className =
-                "character-card";
+                const item =
+                    document.createElement(
+                        "div"
+                    );
 
-            item.textContent =
-                typeof character === "string"
-                    ? character
-                    : character.name || "";
 
-            charactersContainer.appendChild(item);
+                item.className =
+                    "character-card";
 
-        });
+
+                item.textContent =
+                    typeof character ===
+                    "string"
+
+                        ? character
+
+                        : character.name ||
+                          "";
+
+
+
+                charactersContainer.appendChild(
+                    item
+                );
+
+            }
+        );
 
     }
 
 
-    /* CHAPTER COUNT */
+    /*
+    CHAPTER COUNT
+    */
 
     const chaptersCount =
         document.getElementById(
             "comic-chapters"
         );
 
+
     if (chaptersCount) {
 
         const chapters =
-            Array.isArray(comic.chapters)
+            Array.isArray(
+                comic.chapters
+            )
                 ? comic.chapters
                 : [];
+
 
         chaptersCount.textContent =
             chapters.length;
@@ -285,33 +472,43 @@ function renderComic(comic) {
     }
 
 
-    /* FIRST CHAPTER */
+    /*
+    FIRST CHAPTER
+    */
 
     const firstChapterButton =
         document.getElementById(
             "first-chapter-button"
         );
 
+
     if (
         firstChapterButton &&
-        Array.isArray(comic.chapters) &&
-        comic.chapters.length > 0
+        Array.isArray(
+            comic.chapters
+        ) &&
+        comic.chapters.length
     ) {
 
         const firstChapter =
             comic.chapters[0];
 
+
         const chapterId =
-            typeof firstChapter === "string"
-                ? firstChapter
-                : firstChapter.id ||
-                  firstChapter.slug ||
-                  firstChapter.chapter;
+            getChapterIdentifier(
+                firstChapter
+            );
+
 
         if (chapterId) {
 
             firstChapterButton.href =
-                `chapter.html?id=${comic.id || getComicIdFromURL()}&chapter=${encodeURIComponent(chapterId)}`;
+                buildChapterURL(
+                    comic.id ||
+                    getComicIdFromURL(),
+
+                    chapterId
+                );
 
         }
 
@@ -324,107 +521,123 @@ function renderComic(comic) {
    LOAD CHAPTERS
 ========================================= */
 
-async function loadChapters(comicId) {
+function loadChapters(
+    comicId,
+    comic
+) {
 
     const container =
         document.getElementById(
             "chapters-container"
         );
 
+
     if (!container) {
+
         return;
+
     }
+
 
     try {
 
-        /*
-        We use the chapter information
-        from the comic JSON.
-
-        The comic JSON should contain
-        something like:
-
-        "chapters": [
-            {
-                "id": "Chapter-01",
-                "title": "Chapter 01",
-                "folder": "Ryuko-vs-Huge-Dildo"
-            }
-        ]
-        */
-
-        const response =
-            await fetch(
-                `../data/comics/${comicId}.json`
-            );
-
-        if (!response.ok) {
-            throw new Error(
-                "Comic JSON not found"
-            );
-        }
-
-        const comic =
-            await response.json();
-
         const chapters =
-            Array.isArray(comic.chapters)
+            Array.isArray(
+                comic.chapters
+            )
                 ? comic.chapters
                 : [];
 
-        container.innerHTML = "";
 
-        if (chapters.length === 0) {
+        container.innerHTML =
+            "";
+
+
+        if (
+            chapters.length ===
+            0
+        ) {
 
             container.innerHTML =
                 "<p>No chapters available yet.</p>";
+
 
             return;
 
         }
 
-        chapters.forEach((chapter, index) => {
 
-            const item =
-                document.createElement("a");
+        chapters.forEach(
+            (
+                chapter,
+                index
+            ) => {
 
-            item.className =
-                "chapter-item";
+                /*
+                CHAPTER ID
+                */
 
-            const chapterTitle =
-                typeof chapter === "string"
-                    ? chapter
-                    : chapter.title ||
-                      `Chapter ${index + 1}`;
+                const chapterId =
+                    getChapterIdentifier(
+                        chapter
+                    );
 
-            item.textContent =
-                chapterTitle;
 
-            /*
-            Chapter page link.
-            */
+                /*
+                CHAPTER TITLE
+                */
 
-            const chapterId =
-                typeof chapter === "string"
-                    ? chapter
-                    : chapter.id ||
-                      chapter.slug ||
-                      chapter.chapter ||
-                      "";
+                const chapterTitle =
+                    getChapterTitle(
+                        chapter,
+                        index
+                    );
 
-            item.href =
-                `chapter.html?comic=${encodeURIComponent(comicId)}&chapter=${encodeURIComponent(chapterId)}`;
 
-            container.appendChild(item);
+                /*
+                LINK
+                */
 
-        });
+                const item =
+                    document.createElement(
+                        "a"
+                    );
 
-    } catch (error) {
+
+                item.className =
+                    "chapter-item";
+
+
+                item.textContent =
+                    chapterTitle;
+
+
+                item.href =
+                    buildChapterURL(
+                        comicId,
+                        chapterId
+                    );
+
+
+                /*
+                APPEND
+                */
+
+                container.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+    catch (error) {
 
         console.error(
             "Error loading chapters:",
             error
         );
+
 
         container.innerHTML =
             "<p>Unable to load chapters.</p>";
@@ -435,36 +648,192 @@ async function loadChapters(comicId) {
 
 
 /* =========================================
+   CHAPTER IDENTIFIER
+========================================= */
+
+function getChapterIdentifier(
+    chapter
+) {
+
+    /*
+    String
+    */
+
+    if (
+        typeof chapter ===
+        "string"
+    ) {
+
+        return chapter;
+
+    }
+
+
+    /*
+    Object
+    */
+
+    if (
+        chapter &&
+        typeof chapter ===
+        "object"
+    ) {
+
+        return (
+
+            chapter.id ||
+
+            chapter.slug ||
+
+            chapter.chapter ||
+
+            chapter.number ||
+
+            ""
+
+        );
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =========================================
+   CHAPTER TITLE
+========================================= */
+
+function getChapterTitle(
+    chapter,
+    index
+) {
+
+    /*
+    String
+    */
+
+    if (
+        typeof chapter ===
+        "string"
+    ) {
+
+        return chapter;
+
+    }
+
+
+    /*
+    Object
+    */
+
+    if (
+        chapter &&
+        typeof chapter ===
+        "object"
+    ) {
+
+        if (
+            chapter.title
+        ) {
+
+            return chapter.title;
+
+        }
+
+
+        if (
+            chapter.number
+        ) {
+
+            return `Chapter ${chapter.number}`;
+
+        }
+
+
+        if (
+            chapter.chapter
+        ) {
+
+            return `Chapter ${chapter.chapter}`;
+
+        }
+
+    }
+
+
+    return `Chapter ${index + 1}`;
+
+}
+
+
+/* =========================================
+   BUILD CHAPTER URL
+========================================= */
+
+function buildChapterURL(
+    comicId,
+    chapterId
+) {
+
+    return (
+
+        `chapter.html` +
+
+        `?id=${encodeURIComponent(
+            comicId
+        )}` +
+
+        `&chapter=${encodeURIComponent(
+            chapterId
+        )}`
+
+    );
+
+}
+
+
+/* =========================================
    ERROR
 ========================================= */
 
-function showComicError(message) {
+function showComicError(
+    message
+) {
 
     const title =
         document.getElementById(
             "comic-title"
         );
 
+
     if (title) {
+
         title.textContent =
             "Comic Not Found";
+
     }
+
 
     const description =
         document.getElementById(
             "comic-description"
         );
 
+
     if (description) {
+
         description.textContent =
             message;
+
     }
 
 }
 
 
 /* =========================================
-   GET ID
+   GET COMIC ID
 ========================================= */
 
 function getComicIdFromURL() {
@@ -474,7 +843,13 @@ function getComicIdFromURL() {
             window.location.search
         );
 
-    return params.get("id") || "";
+
+    return (
+
+        params.get("id") ||
+        ""
+
+    );
 
 }
 
@@ -483,35 +858,59 @@ function getComicIdFromURL() {
    ASSET PATH
 ========================================= */
 
-function normalizeAssetPath(path) {
+function normalizeAssetPath(
+    path
+) {
 
-    if (!path) {
+    if (
+        !path
+    ) {
+
         return "";
+
     }
 
+
     /*
-    Paths beginning with ../
-    are already correct.
+    URLs externas
     */
 
     if (
-        path.startsWith("../") ||
-        path.startsWith("http://") ||
-        path.startsWith("https://")
+        path.startsWith(
+            "http://"
+        ) ||
+
+        path.startsWith(
+            "https://"
+        ) ||
+
+        path.startsWith(
+            "//"
+        )
     ) {
 
         return path;
 
     }
 
+
     /*
-    If JSON stores:
+    Rutas ya correctas.
+    */
 
-    assets/comics/ryuko.jpg
+    if (
+        path.startsWith(
+            "../"
+        )
+    ) {
 
-    convert to:
+        return path;
 
-    ../assets/comics/ryuko.jpg
+    }
+
+
+    /*
+    comic.html está en /pages/
     */
 
     return `../${path}`;
