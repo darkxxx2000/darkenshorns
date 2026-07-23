@@ -2,43 +2,25 @@
 
 /* ==========================================================
    DARKENSHORNS
-   UNIVERSAL CHAPTER READER
-
-   NORMAL MODE
-   WEBTOON MODE
-   HD IMAGE VIEWER
-   ZOOM
-   DRAG
-   KEYBOARD NAVIGATION
+   CHAPTER SYSTEM
 ========================================================== */
-
 
 let currentComic = null;
-
 let currentChapter = null;
-
 let allChapters = [];
 
-
-/* ==========================================================
-   VIEWER
-========================================================== */
-
+let viewerPages = [];
 let viewerIndex = 0;
 
-let viewerPages = [];
-
 let viewerScale = 1;
-
-let imagePositionX = 0;
-
-let imagePositionY = 0;
 
 let isDragging = false;
 
 let dragStartX = 0;
-
 let dragStartY = 0;
+
+let imagePositionX = 0;
+let imagePositionY = 0;
 
 
 /* ==========================================================
@@ -50,10 +32,6 @@ document.addEventListener(
     initChapter
 );
 
-
-/* ==========================================================
-   INIT CHAPTER
-========================================================== */
 
 async function initChapter() {
 
@@ -68,15 +46,13 @@ async function initChapter() {
         params.get("comic");
 
 
-    const chapterNumber =
-        Number(
-            params.get("chapter")
-        );
+    const chapterId =
+        params.get("chapter");
 
 
     if (
         !comicId ||
-        !chapterNumber
+        !chapterId
     ) {
 
         showError(
@@ -91,77 +67,50 @@ async function initChapter() {
     try {
 
         /* ==================================================
-           LOAD COMICS
+           LOAD COMIC
         ================================================== */
 
-        const comics =
-            await loadJSON(
-                "../data/comics.json"
-            );
-
-
-        /* ==================================================
-           LOAD CHAPTERS
-        ================================================== */
-
-        allChapters =
-            await loadJSON(
-                "../data/chapters.json"
-            );
-
-
-        /* ==================================================
-           FIND COMIC
-        ================================================== */
-
-        currentComic =
-            comics.find(
-                comic =>
-                    String(
-                        comic.id
-                    ) ===
-                    String(
-                        comicId
-                    )
+        const comicResponse =
+            await fetch(
+                `../data/comics/${encodeURIComponent(comicId)}.json`
             );
 
 
         if (
-            !currentComic
+            !comicResponse.ok
         ) {
 
-            showError(
-                "Comic not found."
+            throw new Error(
+                "Comic JSON not found."
             );
 
-            return;
-
         }
+
+
+        currentComic =
+            await comicResponse.json();
 
 
         /* ==================================================
            FIND CHAPTER
         ================================================== */
 
+        const chapters =
+            Array.isArray(
+                currentComic.chapters
+            )
+                ? currentComic.chapters
+                : [];
+
+
+        allChapters =
+            chapters;
+
+
         currentChapter =
-            allChapters.find(
-                chapter => {
-
-                    return (
-                        String(
-                            chapter.comicId
-                        ) ===
-                        String(
-                            comicId
-                        ) &&
-
-                        Number(
-                            chapter.number
-                        ) ===
-                        chapterNumber
-                    );
-
-                }
+            findChapter(
+                chapters,
+                chapterId
             );
 
 
@@ -179,25 +128,67 @@ async function initChapter() {
 
 
         /* ==================================================
+           LOAD CHAPTER JSON
+        ================================================== */
+
+        if (
+            typeof currentChapter ===
+            "object" &&
+            currentChapter.file
+        ) {
+
+            const chapterResponse =
+                await fetch(
+                    buildChapterJSONPath(
+                        comicId,
+                        currentChapter
+                    )
+                );
+
+
+            if (
+                !chapterResponse.ok
+            ) {
+
+                throw new Error(
+                    "Chapter JSON not found."
+                );
+
+            }
+
+
+            const chapterData =
+                await chapterResponse.json();
+
+
+            currentChapter = {
+
+                ...currentChapter,
+
+                ...chapterData
+
+            };
+
+        }
+
+
+        /* ==================================================
            RENDER
         ================================================== */
 
         renderChapter();
 
-
-        setupReaderModes();
-
+        setupReaderLinks();
 
         setupNavigation();
 
+        renderPreview();
 
-        renderNormalMode();
+        setupViewer();
 
 
     }
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Chapter loading error:",
@@ -215,32 +206,92 @@ async function initChapter() {
 
 
 /* ==========================================================
-   LOAD JSON
+   FIND CHAPTER
 ========================================================== */
 
-async function loadJSON(
-    url
+function findChapter(
+    chapters,
+    chapterId
 ) {
 
-    const response =
-        await fetch(
-            url
-        );
+    const search =
+        String(
+            chapterId
+        ).toLowerCase();
 
+
+    return chapters.find(
+        chapter => {
+
+            if (
+                typeof chapter ===
+                "string"
+            ) {
+
+                return (
+                    chapter
+                        .toLowerCase() ===
+                    search
+                );
+
+            }
+
+
+            if (
+                !chapter ||
+                typeof chapter !==
+                "object"
+            ) {
+
+                return false;
+
+            }
+
+
+            const id =
+                chapter.id ||
+                chapter.slug ||
+                chapter.chapter ||
+                chapter.number ||
+                "";
+
+
+            return (
+                String(
+                    id
+                ).toLowerCase() ===
+                search
+            );
+
+        }
+    );
+
+}
+
+
+/* ==========================================================
+   BUILD CHAPTER JSON PATH
+========================================================== */
+
+function buildChapterJSONPath(
+    comicId,
+    chapter
+) {
 
     if (
-        !response.ok
+        chapter.file
     ) {
 
-        throw new Error(
-            "Cannot load " +
-            url
+        return (
+            `../data/chapters/` +
+            `${encodeURIComponent(comicId)}/` +
+            `${chapter.file}`
         );
 
     }
 
 
-    return await response.json();
+    return "";
 
 }
 
@@ -251,9 +302,19 @@ async function loadJSON(
 
 function renderChapter() {
 
+    const comicTitle =
+        currentComic.title ||
+        "Comic";
+
+
+    const chapterNumber =
+        currentChapter.number ||
+        "";
+
+
     const chapterTitle =
         currentChapter.title ||
-        `Chapter ${currentChapter.number}`;
+        "Chapter";
 
 
     const subtitle =
@@ -261,112 +322,52 @@ function renderChapter() {
         "";
 
 
+    document.title =
+        `${comicTitle} - ${chapterTitle}`;
+
+
+    document.getElementById(
+        "comic-name"
+    ).textContent =
+        comicTitle;
+
+
+    document.getElementById(
+        "chapter-name"
+    ).textContent =
+
+        chapterNumber
+
+            ? `Chapter ${chapterNumber}: ${chapterTitle}`
+
+            : chapterTitle;
+
+
+    document.getElementById(
+        "chapter-title"
+    ).textContent =
+        chapterTitle;
+
+
     const pages =
         getChapterPages();
 
 
-    document.title =
-        `${currentComic.title} - ${chapterTitle}`;
+    document.getElementById(
+        "chapter-pages"
+    ).textContent =
+        `Pages: ${pages.length}`;
 
 
-    const comicName =
-        document.getElementById(
-            "comic-name"
-        );
+    document.getElementById(
+        "chapter-date"
+    ).textContent =
 
-
-    if (
-        comicName
-    ) {
-
-        comicName.textContent =
-            currentComic.title;
-
-    }
-
-
-    const chapterName =
-        document.getElementById(
-            "chapter-name"
-        );
-
-
-    if (
-        chapterName
-    ) {
-
-        chapterName.textContent =
-            `Chapter ${currentChapter.number}: ${chapterTitle}`;
-
-    }
-
-
-    const subtitleElement =
-        document.getElementById(
-            "chapter-subtitle"
-        );
-
-
-    if (
-        subtitleElement
-    ) {
-
-        subtitleElement.textContent =
-            subtitle;
-
-    }
-
-
-    const chapterTitleElement =
-        document.getElementById(
-            "chapter-title"
-        );
-
-
-    if (
-        chapterTitleElement
-    ) {
-
-        chapterTitleElement.textContent =
-            `Chapter ${currentChapter.number}`;
-
-    }
-
-
-    const pagesElement =
-        document.getElementById(
-            "chapter-pages"
-        );
-
-
-    if (
-        pagesElement
-    ) {
-
-        pagesElement.textContent =
-            `Pages: ${pages.length}`;
-
-    }
-
-
-    const dateElement =
-        document.getElementById(
-            "chapter-date"
-        );
-
-
-    if (
-        dateElement
-    ) {
-
-        dateElement.textContent =
-            `Date: ${
-                currentChapter.date ||
-                currentChapter.releaseDate ||
-                "-"
-            }`;
-
-    }
+        `Date: ${
+            currentChapter.date ||
+            currentChapter.releaseDate ||
+            "-"
+        }`;
 
 
     const comicId =
@@ -375,41 +376,42 @@ function renderChapter() {
 
 
     const comicURL =
-        `comic.html?id=${
-            encodeURIComponent(
-                comicId
-            )
-        }`;
+        `comic.html?id=${encodeURIComponent(
+            comicId
+        )}`;
 
 
-    const comicLink =
-        document.getElementById(
-            "comic-link"
-        );
+    document.getElementById(
+        "comic-link"
+    ).href =
+        comicURL;
 
 
-    if (
-        comicLink
-    ) {
-
-        comicLink.href =
-            comicURL;
-
-    }
+    document.getElementById(
+        "back-comic"
+    ).href =
+        comicURL;
 
 
-    const backComic =
-        document.getElementById(
-            "back-comic"
-        );
-
+    /*
+    Subtitle is included
+    in the chapter title area
+    if available.
+    */
 
     if (
-        backComic
+        subtitle
     ) {
 
-        backComic.href =
-            comicURL;
+        document.getElementById(
+            "chapter-name"
+        ).textContent =
+
+            chapterNumber
+
+                ? `Chapter ${chapterNumber}: ${chapterTitle} — ${subtitle}`
+
+                : `${chapterTitle} — ${subtitle}`;
 
     }
 
@@ -420,7 +422,7 @@ function renderChapter() {
    READING MODE BUTTONS
 ========================================================== */
 
-function setupReaderModes() {
+function setupReaderLinks() {
 
     const normalButton =
         document.getElementById(
@@ -442,13 +444,11 @@ function setupReaderModes() {
             "click",
             function() {
 
-                setActiveReaderButton(
-                    normalButton,
-                    webtoonButton
-                );
-
-
                 renderNormalMode();
+
+                setActiveButton(
+                    normalButton
+                );
 
             }
         );
@@ -464,13 +464,11 @@ function setupReaderModes() {
             "click",
             function() {
 
-                setActiveReaderButton(
-                    webtoonButton,
-                    normalButton
-                );
-
-
                 renderWebtoonMode();
+
+                setActiveButton(
+                    webtoonButton
+                );
 
             }
         );
@@ -481,34 +479,210 @@ function setupReaderModes() {
 
 
 /* ==========================================================
-   ACTIVE READER BUTTON
+   ACTIVE BUTTON
 ========================================================== */
 
-function setActiveReaderButton(
-    activeButton,
-    inactiveButton
+function setActiveButton(
+    activeButton
 ) {
 
+    document
+        .querySelectorAll(
+            ".reader-button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    activeButton.classList.add(
+        "active"
+    );
+
+}
+
+
+/* ==========================================================
+   NORMAL MODE
+========================================================== */
+
+function renderNormalMode() {
+
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
+
+
     if (
-        activeButton
+        !container
     ) {
 
-        activeButton.classList.add(
-            "active"
-        );
+        return;
 
     }
 
 
-    if (
-        inactiveButton
-    ) {
+    container.classList.remove(
+        "webtoon-mode"
+    );
 
-        inactiveButton.classList.remove(
-            "active"
+
+    renderImages(
+        container
+    );
+
+}
+
+
+/* ==========================================================
+   WEBTOON MODE
+========================================================== */
+
+function renderWebtoonMode() {
+
+    const container =
+        document.getElementById(
+            "preview-container"
         );
 
+
+    if (
+        !container
+    ) {
+
+        return;
+
     }
+
+
+    container.classList.add(
+        "webtoon-mode"
+    );
+
+
+    renderImages(
+        container
+    );
+
+}
+
+
+/* ==========================================================
+   RENDER PREVIEW
+========================================================== */
+
+function renderPreview() {
+
+    renderNormalMode();
+
+}
+
+
+/* ==========================================================
+   RENDER IMAGES
+========================================================== */
+
+function renderImages(
+    container
+) {
+
+    container.innerHTML =
+        "";
+
+
+    const pages =
+        getChapterPages();
+
+
+    if (
+        !pages.length
+    ) {
+
+        container.innerHTML = `
+
+            <div class="reader-empty">
+
+                No pages available.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    pages.forEach(
+        (
+            page,
+            index
+        ) => {
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                getPageURL(
+                    page
+                );
+
+
+            image.alt =
+                `Page ${index + 1}`;
+
+
+            image.loading =
+                index < 3
+                    ? "eager"
+                    : "lazy";
+
+
+            image.dataset.index =
+                index;
+
+
+            image.addEventListener(
+                "click",
+                function() {
+
+                    openViewer(
+                        index
+                    );
+
+                }
+            );
+
+
+            image.addEventListener(
+                "error",
+                function() {
+
+                    console.error(
+                        "Image failed:",
+                        image.src
+                    );
+
+                }
+            );
+
+
+            container.appendChild(
+                image
+            );
+
+        }
+    );
 
 }
 
@@ -550,275 +724,17 @@ function getChapterPages() {
     }
 
 
-    if (
-        Array.isArray(
-            currentChapter.content
-        )
-    ) {
-
-        return currentChapter.content;
-
-    }
-
-
     return [];
 
 }
 
 
 /* ==========================================================
-   NORMAL MODE
+   IMAGE URL
 ========================================================== */
 
-function renderNormalMode() {
-
-    const container =
-        document.getElementById(
-            "preview-container"
-        );
-
-
-    if (
-        !container
-    ) {
-
-        return;
-
-    }
-
-
-    const pages =
-        getChapterPages();
-
-
-    container.innerHTML =
-        "";
-
-
-    container.classList.remove(
-        "webtoon-mode"
-    );
-
-
-    container.classList.add(
-        "normal-mode"
-    );
-
-
-    if (
-        !pages.length
-    ) {
-
-        container.innerHTML = `
-
-            <div class="reader-empty">
-
-                No pages available.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    pages.forEach(
-        (
-            page,
-            index
-        ) => {
-
-            const image =
-                document.createElement(
-                    "img"
-                );
-
-
-            image.src =
-                getPageImageURL(
-                    page,
-                    index
-                );
-
-
-            image.alt =
-                `Page ${index + 1}`;
-
-
-            image.loading =
-                index < 4
-                    ? "eager"
-                    : "lazy";
-
-
-            image.addEventListener(
-                "click",
-                function() {
-
-                    openImageViewer(
-                        pages,
-                        index
-                    );
-
-                }
-            );
-
-
-            image.addEventListener(
-                "error",
-                function() {
-
-                    console.error(
-                        "Image failed:",
-                        image.src
-                    );
-
-                }
-            );
-
-
-            container.appendChild(
-                image
-            );
-
-        }
-    );
-
-}
-
-
-/* ==========================================================
-   WEBTOON MODE
-========================================================== */
-
-function renderWebtoonMode() {
-
-    const container =
-        document.getElementById(
-            "preview-container"
-        );
-
-
-    if (
-        !container
-    ) {
-
-        return;
-
-    }
-
-
-    const pages =
-        getChapterPages();
-
-
-    container.innerHTML =
-        "";
-
-
-    container.classList.remove(
-        "normal-mode"
-    );
-
-
-    container.classList.add(
-        "webtoon-mode"
-    );
-
-
-    if (
-        !pages.length
-    ) {
-
-        container.innerHTML = `
-
-            <div class="reader-empty">
-
-                No pages available.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    pages.forEach(
-        (
-            page,
-            index
-        ) => {
-
-            const image =
-                document.createElement(
-                    "img"
-                );
-
-
-            image.src =
-                getPageImageURL(
-                    page,
-                    index
-                );
-
-
-            image.alt =
-                `Page ${index + 1}`;
-
-
-            image.loading =
-                index < 3
-                    ? "eager"
-                    : "lazy";
-
-
-            image.addEventListener(
-                "click",
-                function() {
-
-                    openImageViewer(
-                        pages,
-                        index
-                    );
-
-                }
-            );
-
-
-            image.addEventListener(
-                "error",
-                function() {
-
-                    console.error(
-                        "Webtoon image failed:",
-                        image.src
-                    );
-
-                }
-            );
-
-
-            container.appendChild(
-                image
-            );
-
-        }
-    );
-
-}
-
-
-/* ==========================================================
-   GET IMAGE URL
-========================================================== */
-
-function getPageImageURL(
-    page,
-    index
+function getPageURL(
+    page
 ) {
 
     if (
@@ -826,102 +742,23 @@ function getPageImageURL(
         "string"
     ) {
 
-        const value =
-            page.trim();
-
-
-        /*
-        EXTERNAL URL
-        */
-
-        if (
-            value.startsWith(
-                "http://"
-            ) ||
-            value.startsWith(
-                "https://"
-            )
-        ) {
-
-            return value;
-
-        }
-
-
-        /*
-        LOCAL URL
-        */
-
-        if (
-            value.startsWith(
-                "../"
-            ) ||
-            value.startsWith(
-                "./"
-            ) ||
-            value.startsWith(
-                "/"
-            )
-        ) {
-
-            return value;
-
-        }
-
-
-        /*
-        LOCAL FALLBACK
-        */
-
-        return buildLocalImagePath(
-            value
-        );
+        return page;
 
     }
 
 
     if (
+        page &&
         typeof page ===
-        "object" &&
-        page !== null
+        "object"
     ) {
 
-        if (
-            page.url
-        ) {
-
-            return page.url;
-
-        }
-
-
-        if (
-            page.image
-        ) {
-
-            return page.image;
-
-        }
-
-
-        if (
-            page.src
-        ) {
-
-            return page.src;
-
-        }
-
-
-        if (
-            page.file
-        ) {
-
-            return buildLocalImagePath(
-                page.file
-            );
-
-        }
+        return (
+            page.url ||
+            page.image ||
+            page.src ||
+            ""
+        );
 
     }
 
@@ -932,306 +769,55 @@ function getPageImageURL(
 
 
 /* ==========================================================
-   LOCAL IMAGE PATH
+   VIEWER SETUP
 ========================================================== */
 
-function buildLocalImagePath(
-    filename
-) {
+function setupViewer() {
 
-    if (
-        !filename
-    ) {
-
-        return "";
-
-    }
-
-
-    const folder =
-        currentChapter.folder ||
-        "";
-
-
-    if (
-        folder
-    ) {
-
-        return (
-            `../uploads/comics/` +
-            `${encodeURIComponent(
-                folder
-            )}/` +
-            `${encodeURIComponent(
-                filename
-            )}`
-        );
-
-    }
-
-
-    return (
-        `../uploads/comics/` +
-        `${encodeURIComponent(
-            filename
-        )}`
-    );
-
-}
-
-
-/* ==========================================================
-   OPEN IMAGE VIEWER
-========================================================== */
-
-function openImageViewer(
-    pages,
-    index
-) {
-
-    viewerPages =
-        pages;
-
-
-    viewerIndex =
-        index;
-
-
-    createViewer();
-
-
-    showViewerImage();
-
-}
-
-
-/* ==========================================================
-   CREATE VIEWER
-========================================================== */
-
-function createViewer() {
-
-    let viewer =
+    const viewer =
         document.getElementById(
             "image-viewer"
         );
 
 
     if (
-        viewer
+        !viewer
     ) {
-
-        viewer.classList.add(
-            "active"
-        );
-
-        document.body.classList.add(
-            "viewer-open"
-        );
 
         return;
 
     }
 
 
-    viewer =
-        document.createElement(
-            "div"
-        );
-
-
-    viewer.id =
-        "image-viewer";
-
-
-    viewer.innerHTML = `
-
-        <button
-            id="viewer-close"
-            type="button"
-            aria-label="Close viewer">
-            ×
-        </button>
-
-
-        <button
-            id="viewer-prev"
-            type="button"
-            aria-label="Previous image">
-            ‹
-        </button>
-
-
-        <img
-            id="viewer-image"
-            alt="Comic page"
-        >
-
-
-        <button
-            id="viewer-next"
-            type="button"
-            aria-label="Next image">
-            ›
-        </button>
-
-
-        <div
-            id="viewer-counter">
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        viewer
-    );
-
-
-    const closeButton =
-        document.getElementById(
+    document
+        .getElementById(
             "viewer-close"
+        )
+        .addEventListener(
+            "click",
+            closeViewer
         );
 
 
-    const previousButton =
-        document.getElementById(
+    document
+        .getElementById(
             "viewer-prev"
+        )
+        .addEventListener(
+            "click",
+            previousImage
         );
 
 
-    const nextButton =
-        document.getElementById(
+    document
+        .getElementById(
             "viewer-next"
-        );
-
-
-    if (
-        closeButton
-    ) {
-
-        closeButton.addEventListener(
+        )
+        .addEventListener(
             "click",
-            function(event) {
-
-                event.stopPropagation();
-
-                closeImageViewer();
-
-            }
+            nextImage
         );
 
-    }
-
-
-    if (
-        previousButton
-    ) {
-
-        previousButton.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
-
-                previousViewerImage();
-
-            }
-        );
-
-    }
-
-
-    if (
-        nextButton
-    ) {
-
-        nextButton.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
-
-                nextViewerImage();
-
-            }
-        );
-
-    }
-
-
-    /*
-    CLICK ON IMAGE
-    PREVIOUS PAGE
-    */
-
-    viewer.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target.id ===
-                "viewer-image"
-            ) {
-
-                previousViewerImage();
-
-            }
-
-        }
-    );
-
-
-    /*
-    CLICK BACKGROUND
-    CLOSE
-    */
-
-    viewer.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target ===
-                viewer
-            ) {
-
-                closeImageViewer();
-
-            }
-
-        }
-    );
-
-
-    /*
-    RIGHT CLICK
-    NEXT PAGE
-    */
-
-    viewer.addEventListener(
-        "contextmenu",
-        function(event) {
-
-            event.preventDefault();
-
-            if (
-                event.target.id ===
-                "viewer-image"
-            ) {
-
-                nextViewerImage();
-
-            }
-
-        }
-    );
-
-
-    /*
-    MOUSE WHEEL
-    ZOOM
-    */
 
     viewer.addEventListener(
         "wheel",
@@ -1275,135 +861,23 @@ function createViewer() {
     );
 
 
-    /*
-    DRAG START
-    */
-
     viewer.addEventListener(
         "mousedown",
-        function(event) {
-
-            if (
-                event.button !== 0
-            ) {
-
-                return;
-
-            }
-
-
-            if (
-                event.target.id !==
-                "viewer-image"
-            ) {
-
-                return;
-
-            }
-
-
-            isDragging =
-                true;
-
-
-            dragStartX =
-                event.clientX -
-                imagePositionX;
-
-
-            dragStartY =
-                event.clientY -
-                imagePositionY;
-
-
-            const image =
-                document.getElementById(
-                    "viewer-image"
-                );
-
-
-            if (
-                image
-            ) {
-
-                image.classList.add(
-                    "dragging"
-                );
-
-            }
-
-        }
+        startDrag
     );
 
-
-    /*
-    DRAG MOVE
-    */
 
     document.addEventListener(
         "mousemove",
-        function(event) {
-
-            if (
-                !isDragging
-            ) {
-
-                return;
-
-            }
-
-
-            imagePositionX =
-                event.clientX -
-                dragStartX;
-
-
-            imagePositionY =
-                event.clientY -
-                dragStartY;
-
-
-            updateViewerTransform();
-
-        }
+        dragImage
     );
 
-
-    /*
-    DRAG END
-    */
 
     document.addEventListener(
         "mouseup",
-        function() {
-
-            isDragging =
-                false;
-
-
-            const image =
-                document.getElementById(
-                    "viewer-image"
-                );
-
-
-            if (
-                image
-            ) {
-
-                image.classList.remove(
-                    "dragging"
-                );
-
-            }
-
-        }
+        stopDrag
     );
 
-
-    /*
-    KEYBOARD
-    */
 
     document.addEventListener(
         "keydown",
@@ -1422,24 +896,10 @@ function createViewer() {
 
             if (
                 event.key ===
-                "Escape"
-            ) {
-
-                closeImageViewer();
-
-                return;
-
-            }
-
-
-            if (
-                event.key ===
                 "ArrowRight"
             ) {
 
-                nextViewerImage();
-
-                return;
+                nextImage();
 
             }
 
@@ -1449,14 +909,58 @@ function createViewer() {
                 "ArrowLeft"
             ) {
 
-                previousViewerImage();
+                previousImage();
 
-                return;
+            }
+
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeViewer();
 
             }
 
         }
     );
+
+}
+
+
+/* ==========================================================
+   OPEN VIEWER
+========================================================== */
+
+function openViewer(
+    index
+) {
+
+    viewerPages =
+        getChapterPages();
+
+
+    viewerIndex =
+        index;
+
+
+    viewerScale =
+        1;
+
+
+    imagePositionX =
+        0;
+
+
+    imagePositionY =
+        0;
+
+
+    const viewer =
+        document.getElementById(
+            "image-viewer"
+        );
 
 
     viewer.classList.add(
@@ -1464,9 +968,11 @@ function createViewer() {
     );
 
 
-    document.body.classList.add(
-        "viewer-open"
-    );
+    document.body.style.overflow =
+        "hidden";
+
+
+    showViewerImage();
 
 }
 
@@ -1483,12 +989,6 @@ function showViewerImage() {
         );
 
 
-    const counter =
-        document.getElementById(
-            "viewer-counter"
-        );
-
-
     if (
         !image ||
         !viewerPages.length
@@ -1499,81 +999,19 @@ function showViewerImage() {
     }
 
 
-    const page =
-        viewerPages[
-            viewerIndex
-        ];
-
-
     image.src =
-        getPageImageURL(
-            page,
-            viewerIndex
+        getPageURL(
+            viewerPages[
+                viewerIndex
+            ]
         );
 
 
     image.alt =
-        `Page ${
-            viewerIndex + 1
-        }`;
-
-
-    viewerScale =
-        1;
-
-
-    imagePositionX =
-        0;
-
-
-    imagePositionY =
-        0;
+        `Page ${viewerIndex + 1}`;
 
 
     updateViewerTransform();
-
-
-    if (
-        counter
-    ) {
-
-        counter.textContent =
-            `${viewerIndex + 1} / ${viewerPages.length}`;
-
-    }
-
-}
-
-
-/* ==========================================================
-   UPDATE IMAGE TRANSFORM
-========================================================== */
-
-function updateViewerTransform() {
-
-    const image =
-        document.getElementById(
-            "viewer-image"
-        );
-
-
-    if (
-        !image
-    ) {
-
-        return;
-
-    }
-
-
-    image.style.transform =
-        `translate(
-            ${imagePositionX}px,
-            ${imagePositionY}px
-        )
-        scale(
-            ${viewerScale}
-        )`;
 
 }
 
@@ -1582,7 +1020,7 @@ function updateViewerTransform() {
    NEXT IMAGE
 ========================================================== */
 
-function nextViewerImage() {
+function nextImage() {
 
     if (
         !viewerPages.length
@@ -1607,6 +1045,8 @@ function nextViewerImage() {
     }
 
 
+    resetImagePosition();
+
     showViewerImage();
 
 }
@@ -1616,7 +1056,7 @@ function nextViewerImage() {
    PREVIOUS IMAGE
 ========================================================== */
 
-function previousViewerImage() {
+function previousImage() {
 
     if (
         !viewerPages.length
@@ -1640,6 +1080,8 @@ function previousViewerImage() {
     }
 
 
+    resetImagePosition();
+
     showViewerImage();
 
 }
@@ -1649,7 +1091,7 @@ function previousViewerImage() {
    CLOSE VIEWER
 ========================================================== */
 
-function closeImageViewer() {
+function closeViewer() {
 
     const viewer =
         document.getElementById(
@@ -1657,36 +1099,144 @@ function closeImageViewer() {
         );
 
 
-    if (
-        viewer
-    ) {
-
-        viewer.classList.remove(
-            "active"
-        );
-
-    }
-
-
-    document.body.classList.remove(
-        "viewer-open"
+    viewer.classList.remove(
+        "active"
     );
 
 
-    isDragging =
-        false;
+    document.body.style.overflow =
+        "";
 
+}
+
+
+/* ==========================================================
+   RESET IMAGE POSITION
+========================================================== */
+
+function resetImagePosition() {
 
     viewerScale =
         1;
 
-
     imagePositionX =
         0;
 
-
     imagePositionY =
         0;
+
+}
+
+
+/* ==========================================================
+   TRANSFORM
+========================================================== */
+
+function updateViewerTransform() {
+
+    const image =
+        document.getElementById(
+            "viewer-image"
+        );
+
+
+    if (
+        !image
+    ) {
+
+        return;
+
+    }
+
+
+    image.style.transform =
+
+        `translate(
+            ${imagePositionX}px,
+            ${imagePositionY}px
+        )
+        scale(
+            ${viewerScale}
+        )`;
+
+}
+
+
+/* ==========================================================
+   DRAG
+========================================================== */
+
+function startDrag(
+    event
+) {
+
+    if (
+        event.target.id !==
+        "viewer-image"
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        event.button !== 0
+    ) {
+
+        return;
+
+    }
+
+
+    isDragging =
+        true;
+
+
+    dragStartX =
+        event.clientX -
+        imagePositionX;
+
+
+    dragStartY =
+        event.clientY -
+        imagePositionY;
+
+}
+
+
+function dragImage(
+    event
+) {
+
+    if (
+        !isDragging
+    ) {
+
+        return;
+
+    }
+
+
+    imagePositionX =
+        event.clientX -
+        dragStartX;
+
+
+    imagePositionY =
+        event.clientY -
+        dragStartY;
+
+
+    updateViewerTransform();
+
+}
+
+
+function stopDrag() {
+
+    isDragging =
+        false;
 
 }
 
@@ -1703,48 +1253,49 @@ function setupNavigation() {
         );
 
 
-    const previous =
-        allChapters.find(
+    const currentIndex =
+        allChapters.findIndex(
             chapter => {
 
                 return (
                     String(
-                        chapter.comicId
-                    ) ===
-                    String(
-                        currentComic.id
-                    ) &&
+                        getChapterIdentifier(
+                            chapter
+                        )
+                    ).toLowerCase() ===
 
-                    Number(
-                        chapter.number
-                    ) ===
-                    currentNumber - 1
+                    String(
+                        getChapterIdentifier(
+                            currentChapter
+                        )
+                    ).toLowerCase()
                 );
 
             }
         );
+
+
+    const previous =
+        currentIndex > 0
+
+            ? allChapters[
+                currentIndex - 1
+            ]
+
+            : null;
 
 
     const next =
-        allChapters.find(
-            chapter => {
 
-                return (
-                    String(
-                        chapter.comicId
-                    ) ===
-                    String(
-                        currentComic.id
-                    ) &&
+        currentIndex >= 0 &&
+        currentIndex <
+            allChapters.length - 1
 
-                    Number(
-                        chapter.number
-                    ) ===
-                    currentNumber + 1
-                );
+            ? allChapters[
+                currentIndex + 1
+            ]
 
-            }
-        );
+            : null;
 
 
     const previousButton =
@@ -1814,6 +1365,34 @@ function setupNavigation() {
 
 
 /* ==========================================================
+   CHAPTER IDENTIFIER
+========================================================== */
+
+function getChapterIdentifier(
+    chapter
+) {
+
+    if (
+        !chapter
+    ) {
+
+        return "";
+
+    }
+
+
+    return (
+        chapter.id ||
+        chapter.slug ||
+        chapter.chapter ||
+        chapter.number ||
+        ""
+    );
+
+}
+
+
+/* ==========================================================
    BUILD CHAPTER URL
 ========================================================== */
 
@@ -1821,18 +1400,29 @@ function buildChapterURL(
     chapter
 ) {
 
+    const comicId =
+        currentComic.id ||
+        getCurrentComicId();
+
+
+    const chapterId =
+        getChapterIdentifier(
+            chapter
+        );
+
+
     return (
+
         `chapter.html` +
-        `?id=${
-            encodeURIComponent(
-                currentComic.id
-            )
-        }` +
-        `&chapter=${
-            encodeURIComponent(
-                chapter.number
-            )
-        }`
+
+        `?id=${encodeURIComponent(
+            comicId
+        )}` +
+
+        `&chapter=${encodeURIComponent(
+            chapterId
+        )}`
+
     );
 
 }
@@ -1851,12 +1441,8 @@ function getCurrentComicId() {
 
 
     return (
-        params.get(
-            "id"
-        ) ||
-        params.get(
-            "comic"
-        ) ||
+        params.get("id") ||
+        params.get("comic") ||
         ""
     );
 
@@ -1890,9 +1476,7 @@ function showError(
                 </h1>
 
                 <a href="../index.html">
-
                     Return Home
-
                 </a>
 
             </section>
@@ -1900,5 +1484,10 @@ function showError(
         `;
 
     }
+
+
+    console.error(
+        message
+    );
 
 }
