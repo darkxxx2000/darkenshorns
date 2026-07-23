@@ -1,16 +1,21 @@
 {
-    "id": "chapter-01",
-    "seriesId": "series-01",
-    "comicId": "comic-01",
-    "number": 1,
-    "title": "Red",
-    "subtitle": "The Beginning",
-    "date": "2026-07-23",
-    "pages": [
-        "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg",
-        "assets/chapters/comic-01/series-01/chapter-01/002.webp",
-        "assets/chapters/comic-01/series-01/chapter-01/003.webp",
-        "assets/chapters/comic-01/series-01/chapter-01/004.webp",
-        "assets/chapters/comic-01/series-01/chapter-01/005.webp"
+    "id": "ryuko-dildo-01",
+    "title": "Ryuko Matoi",
+    "cover": "assets/comics/ryuko/cover.webp",
+    "banner": "assets/comics/ryuko/banner.webp",
+
+    "chapters": [
+        {
+            "id": "chapter-01",
+            "title": "The First Encounter",
+            "subtitle": "A New Beginning",
+
+            "images": [
+                "assets/comics/ryuko/chapter-01/01.webp",
+                "assets/comics/ryuko/chapter-01/02.webp",
+                "https://example.com/images/03.webp",
+                "https://example.com/images/04.webp"
+            ]
+        }
     ]
 }
