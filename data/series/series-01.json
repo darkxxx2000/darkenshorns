@@ -1,0 +1,13 @@
+{
+    "id": "series-01",
+    "comicId": "comic-01",
+    "title": "Series 01",
+    "subtitle": "The Beginning",
+    "description": "Description of this series.",
+    "cover": "assets/covers/comic-01.webp",
+    "chapters": [
+        "chapter-01",
+        "chapter-02",
+        "chapter-03"
+    ]
+}
