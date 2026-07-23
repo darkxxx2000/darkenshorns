@@ -3,24 +3,54 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>Chapter | DarkensHorns</title>
+    <title>Chapter | DarkensHorns</title>
 
-<meta name="description" content="Read chapter on DarkensHorns">
+    <meta
+        name="description"
+        content="Read chapter on DarkensHorns"
+    >
 
-<link rel="icon" href="../favicon.ico">
+    <link
+        rel="icon"
+        href="../favicon.ico"
+    >
 
+    <link
+        rel="stylesheet"
+        href="../css/theme.css"
+    >
 
-<link rel="stylesheet" href="../css/theme.css">
-<link rel="stylesheet" href="../css/layout.css">
-<link rel="stylesheet" href="../css/header.css">
-<link rel="stylesheet" href="../css/navigation.css">
-<link rel="stylesheet" href="../css/footer.css">
-<link rel="stylesheet" href="../css/chapter.css">
+    <link
+        rel="stylesheet"
+        href="../css/layout.css"
+    >
 
+    <link
+        rel="stylesheet"
+        href="../css/header.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/navigation.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/footer.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/chapter.css"
+    >
 
 </head>
 
@@ -30,31 +60,33 @@
 
 <header id="site-header">
 
-<div class="header-container">
+    <div class="header-container">
 
-<a href="../index.html" class="logo">
-DarkensHorns
-</a>
-
-
-<nav class="main-navigation">
-
-<a href="../index.html">
-Home
-</a>
-
-<a href="series.html">
-Series
-</a>
-
-<a href="search.html">
-Search
-</a>
-
-</nav>
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            DarkensHorns
+        </a>
 
 
-</div>
+        <nav class="main-navigation">
+
+            <a href="../index.html">
+                Home
+            </a>
+
+            <a href="series.html">
+                Series
+            </a>
+
+            <a href="search.html">
+                Search
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
@@ -62,156 +94,166 @@ Search
 <main class="chapter-page">
 
 
+    <!-- =====================================================
+         BREADCRUMB
+    ====================================================== -->
 
-<section class="breadcrumb">
+    <section class="breadcrumb">
 
-<a href="../index.html">
-Home
-</a>
+        <a href="../index.html">
+            Home
+        </a>
 
-<span>
-/
-</span>
+        <span>
+            /
+        </span>
 
-<a id="comic-link">
-Comic
-</a>
+        <a
+            id="comic-link"
+            href="#"
+        >
+            Comic
+        </a>
 
-<span>
-/
-</span>
+        <span>
+            /
+        </span>
 
-<span id="chapter-title">
-Chapter
-</span>
+        <span id="chapter-title">
+            Chapter
+        </span>
 
+    </section>
 
-</section>
 
+    <!-- =====================================================
+         CHAPTER HEADER
+    ====================================================== -->
 
-<section class="chapter-header">
+    <section class="chapter-header">
 
+        <h1 id="comic-name">
+            Loading...
+        </h1>
 
-<h1 id="comic-name">
+        <h2 id="chapter-name">
+            Loading chapter...
+        </h2>
 
-Loading...
+        <p
+            id="chapter-subtitle"
+            class="chapter-subtitle"
+        >
+        </p>
 
-</h1>
 
+        <div class="chapter-info">
 
-<h2 id="chapter-name">
+            <span id="chapter-pages">
+                Pages: -
+            </span>
 
-</h2>
+            <span id="chapter-date">
+                Date: -
+            </span>
 
+        </div>
 
+    </section>
 
-<div class="chapter-info">
 
+    <!-- =====================================================
+         READING MODE
+    ====================================================== -->
 
-<span id="chapter-pages">
-Pages: -
-</span>
+    <section class="reading-options">
 
+        <div class="reader-buttons">
 
-<span id="chapter-date">
-Date: -
-</span>
+            <button
+                id="grid-reader"
+                class="reader-button active"
+                type="button"
+            >
+                <span class="reader-icon">
+                    ▦
+                </span>
 
+                <span>
+                    Normal Mode
+                </span>
 
-</div>
+            </button>
 
 
+            <button
+                id="webtoon-reader"
+                class="reader-button"
+                type="button"
+            >
+                <span class="reader-icon">
+                    ☰
+                </span>
 
-</section>
+                <span>
+                    Webtoon Mode
+                </span>
 
+            </button>
 
+        </div>
 
-<section class="reading-options">
+    </section>
 
 
-<h2>
-Choose Reading Mode
-</h2>
+    <!-- =====================================================
+         CHAPTER READER
+    ====================================================== -->
 
+    <section class="chapter-preview">
 
-<div class="reader-buttons">
+        <div
+            id="preview-container"
+            class="preview-grid normal-mode"
+        >
+        </div>
 
+    </section>
 
-<a id="grid-reader"
-class="reader-button">
 
-📖 Page Mode
+    <!-- =====================================================
+         CHAPTER NAVIGATION
+    ====================================================== -->
 
-</a>
+    <section class="chapter-navigation">
 
+        <a
+            id="previous-chapter"
+            class="button"
+            href="#"
+        >
+            ← Previous Chapter
+        </a>
 
-<a id="webtoon-reader"
-class="reader-button">
 
-📱 Webtoon Mode
+        <a
+            id="back-comic"
+            class="button primary"
+            href="#"
+        >
+            Back to Comic
+        </a>
 
-</a>
 
+        <a
+            id="next-chapter"
+            class="button"
+            href="#"
+        >
+            Next Chapter →
+        </a>
 
-</div>
-
-
-</section>
-
-
-
-
-
-
-
-
-<section class="chapter-preview">
-
-
-<h2>
-Preview
-</h2>
-
-
-<div id="preview-container"
-class="preview-grid">
-
-
-</div>
-
-
-</section>
-
-
-
-<section class="chapter-navigation">
-
-
-<a id="previous-chapter"
-class="button">
-
-Previous Chapter
-
-</a>
-
-
-<a id="back-comic"
-class="button primary">
-
-Back to Comic
-
-</a>
-
-
-<a id="next-chapter"
-class="button">
-
-Next Chapter
-
-</a>
-
-
-</section>
+    </section>
 
 
 </main>
@@ -219,17 +261,19 @@ Next Chapter
 
 <footer id="site-footer">
 
-<div class="footer-container">
+    <div class="footer-container">
 
-<p>
-© DarkensHorns
-</p>
+        <p>
+            © DarkensHorns
+        </p>
 
-</div>
+    </div>
 
 </footer>
 
+
 <script src="../js/chapter.js"></script>
+
 
 </body>
 
