@@ -1,4 +1,3 @@
-```js
 /*************************************************
  * DARKENSHORNS
  * APP
@@ -196,5 +195,3 @@ document.addEventListener(
     "DOMContentLoaded",
     initializeApp
 );
-```
-
