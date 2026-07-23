@@ -138,16 +138,17 @@
 
 /* ==========================================================
    NORMAL MODE
-   SMALL THUMBNAILS
+   SMALL PAGE THUMBNAILS
 ========================================================== */
 
 #preview-container.normal-mode {
     display: grid;
+
     grid-template-columns:
         repeat(
             auto-fill,
             minmax(
-                160px,
+                140px,
                 1fr
             )
         );
@@ -158,6 +159,7 @@
     max-width: 1100px;
 
     margin: 0 auto;
+
     padding: 20px;
 
     box-sizing: border-box;
@@ -168,13 +170,16 @@
     display: block;
 
     width: 100%;
-    max-width: 180px;
 
-    height: 250px;
+    max-width: 160px;
+
+    height: auto;
+
+    aspect-ratio: 2 / 3;
 
     margin: 0 auto;
 
-    object-fit: cover;
+    object-fit: contain;
 
     border-radius: 8px;
 
@@ -190,6 +195,7 @@
 
 #preview-container.normal-mode img:hover {
     transform: scale(1.04);
+
     opacity: 0.9;
 }
 
@@ -245,8 +251,11 @@
 
 .reader-empty {
     width: 100%;
+
     padding: 50px 20px;
+
     text-align: center;
+
     color: var(--text-muted);
 }
 
@@ -461,6 +470,7 @@ body.viewer-open {
 
 
     #preview-container.normal-mode {
+
         grid-template-columns:
             repeat(
                 2,
@@ -477,42 +487,60 @@ body.viewer-open {
 
 
     #preview-container.normal-mode img {
+
         width: 100%;
-        max-width: 140px;
-        height: 200px;
+
+        max-width: 130px;
+
+        height: auto;
+
+        aspect-ratio: 2 / 3;
+
+        object-fit: contain;
     }
 
 
     #preview-container.webtoon-mode {
+
         width: 100%;
     }
 
 
     #preview-container.webtoon-mode img {
+
         width: 100%;
+
+        max-width: 100%;
     }
 
 
     #viewer-image {
+
         max-width: 96vw;
+
         max-height: 90vh;
     }
 
 
     #viewer-prev,
     #viewer-next {
+
         width: 42px;
+
         height: 55px;
+
         font-size: 36px;
     }
 
 
     #viewer-prev {
+
         left: 5px;
     }
 
 
     #viewer-next {
+
         right: 5px;
     }
 
