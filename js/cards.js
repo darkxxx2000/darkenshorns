@@ -1,3 +1,4 @@
+```js
 /*************************************************
  * DARKENSHORNS
  * CARDS
@@ -28,9 +29,145 @@ function getComicPageUrl() {
 
 
 /**
+ * Detecta automáticamente la ruta correcta
+ * para las imágenes.
+ *
+ * Desde Home:
+ * assets/...
+ *
+ * Desde /pages/:
+ * ../assets/...
+ */
+function getAssetUrl(
+    path
+) {
+
+    if (
+        !path
+    ) {
+
+        return getFallbackCover();
+
+    }
+
+
+    /*
+    Si la imagen ya es una URL absoluta,
+    no modificamos la ruta.
+    */
+
+    if (
+        path.startsWith("http://") ||
+        path.startsWith("https://") ||
+        path.startsWith("//") ||
+        path.startsWith("data:")
+    ) {
+
+        return path;
+
+    }
+
+
+    /*
+    Si la ruta empieza con ../,
+    respetamos la ruta original.
+    */
+
+    if (
+        path.startsWith("../")
+    ) {
+
+        return path;
+
+    }
+
+
+    /*
+    Desde /pages/
+    */
+
+    const isInsidePages =
+        window.location.pathname.includes("/pages/");
+
+
+    if (
+        isInsidePages
+    ) {
+
+        return `../${path}`;
+
+    }
+
+
+    /*
+    Desde Home
+    */
+
+    return path;
+
+}
+
+
+/**
+ * Imagen de portada por defecto.
+ */
+function getFallbackCover() {
+
+    const isInsidePages =
+        window.location.pathname.includes("/pages/");
+
+
+    return isInsidePages
+        ? "../assets/placeholders/cover.webp"
+        : "assets/placeholders/cover.webp";
+
+}
+
+
+/**
+ * Obtiene el número de capítulos.
+ *
+ * chapters puede ser:
+ *
+ * - Array de objetos
+ * - Array de strings
+ * - Número
+ * - Undefined
+ */
+function getChapterCount(
+    chapters
+) {
+
+    if (
+        Array.isArray(chapters)
+    ) {
+
+        return chapters.length;
+
+    }
+
+
+    if (
+        typeof chapters ===
+        "number"
+    ) {
+
+        return chapters;
+
+    }
+
+
+    return 0;
+
+}
+
+
+/**
  * Crea una tarjeta de cómic.
  */
-export function createComicCard(comic) {
+export function createComicCard(
+    comic
+) {
 
     const card =
         createElement(
@@ -57,6 +194,30 @@ export function createComicCard(comic) {
 
     /*
     ==========================================
+    PORTADA
+    ==========================================
+    */
+
+    const coverUrl =
+        getAssetUrl(
+            comic.cover
+        );
+
+
+    /*
+    ==========================================
+    CAPÍTULOS
+    ==========================================
+    */
+
+    const chapterCount =
+        getChapterCount(
+            comic.chapters
+        );
+
+
+    /*
+    ==========================================
     TARJETA
     ==========================================
     */
@@ -72,7 +233,7 @@ export function createComicCard(comic) {
             <div class="comic-cover">
 
                 <img
-                    src="${comic.cover || "assets/placeholders/cover.webp"}"
+                    src="${coverUrl}"
                     alt="${comic.title || "Comic"}"
                     loading="lazy"
                 >
@@ -122,11 +283,7 @@ export function createComicCard(comic) {
 
                     <span class="chapter-number">
 
-                        ${
-                            comic.chapters
-                            ? comic.chapters + " Chapters"
-                            : ""
-                        }
+                        ${chapterCount} Chapters
 
                     </span>
 
@@ -159,10 +316,17 @@ export function renderComicCards(
     comics = []
 ) {
 
-    if (!container) return;
+    if (
+        !container
+    ) {
+
+        return;
+
+    }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     if (
@@ -191,7 +355,9 @@ export function renderComicCards(
         comic => {
 
             fragment.appendChild(
-                createComicCard(comic)
+                createComicCard(
+                    comic
+                )
             );
 
         }
@@ -203,3 +369,5 @@ export function renderComicCards(
     );
 
 }
+
+```
