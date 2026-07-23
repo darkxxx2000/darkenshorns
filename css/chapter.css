@@ -1,18 +1,12 @@
 /* ==========================================================
    DARKENSHORNS
-   CHAPTER READER
-========================================================== */
-
-
-/* ==========================================================
    CHAPTER PAGE
 ========================================================== */
 
 .chapter-page {
 
     width: 100%;
-
-    max-width: 1500px;
+    max-width: 1400px;
 
     margin: 0 auto;
 
@@ -30,7 +24,7 @@
    BREADCRUMB
 ========================================================== */
 
-.chapter-page .breadcrumb {
+.breadcrumb {
 
     display: flex;
 
@@ -38,7 +32,7 @@
 
     flex-wrap: wrap;
 
-    gap: 10px;
+    gap: 8px;
 
     margin-bottom: 20px;
 
@@ -50,7 +44,7 @@
 }
 
 
-.chapter-page .breadcrumb a {
+.breadcrumb a {
 
     color:
         var(--accent);
@@ -60,9 +54,10 @@
 }
 
 
-.chapter-page .breadcrumb a:hover {
+.breadcrumb a:hover {
 
-    text-decoration: underline;
+    text-decoration:
+        underline;
 
 }
 
@@ -76,11 +71,9 @@
     text-align: center;
 
     margin:
-        10px auto
-        25px;
-
-    padding:
-        0;
+        10px
+        auto
+        20px;
 
 }
 
@@ -88,17 +81,14 @@
 .chapter-header h1 {
 
     margin:
-        0 0 5px;
+        0
+        5px;
 
     color:
         var(--text);
 
     font-size:
-        clamp(
-            28px,
-            4vw,
-            44px
-        );
+        38px;
 
     line-height:
         1.2;
@@ -109,37 +99,17 @@
 .chapter-header h2 {
 
     margin:
-        0;
+        0
+        10px;
 
     color:
         var(--accent);
 
     font-size:
-        clamp(
-            20px,
-            3vw,
-            28px
-        );
+        24px;
 
-    line-height:
-        1.3;
-
-}
-
-
-.chapter-subtitle {
-
-    margin:
-        6px 0 15px;
-
-    color:
-        var(--text-muted);
-
-    font-size:
-        17px;
-
-    font-style:
-        italic;
+    font-weight:
+        500;
 
 }
 
@@ -171,7 +141,7 @@
 
 
 /* ==========================================================
-   READING OPTIONS
+   READING BUTTONS
 ========================================================== */
 
 .reading-options {
@@ -182,11 +152,10 @@
     justify-content:
         center;
 
-    width:
-        100%;
-
     margin:
-        0 auto 30px;
+        20px
+        auto
+        30px;
 
 }
 
@@ -199,53 +168,21 @@
     justify-content:
         center;
 
-    align-items:
-        center;
-
     gap:
-        12px;
-
-    width:
-        100%;
-
-    max-width:
-        600px;
+        10px;
 
 }
 
 
 .reader-button {
 
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        10px;
-
-    flex:
-        1;
-
-    min-height:
-        52px;
-
     padding:
-        12px
-        20px;
+        11px
+        22px;
 
     border:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
+        var(--card-bg);
 
     border-radius:
         8px;
@@ -256,19 +193,14 @@
     color:
         var(--text);
 
-    font-size:
-        15px;
-
-    font-weight:
-        600;
-
     cursor:
         pointer;
 
+    font-size:
+        15px;
+
     transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
+        0.2s ease;
 
 }
 
@@ -276,9 +208,7 @@
 .reader-button:hover {
 
     transform:
-        translateY(
-            -2px
-        );
+        translateY(-2px);
 
     border-color:
         var(--accent);
@@ -292,7 +222,7 @@
         var(--accent);
 
     color:
-        #ffffff;
+        white;
 
     border-color:
         var(--accent);
@@ -300,19 +230,8 @@
 }
 
 
-.reader-icon {
-
-    font-size:
-        20px;
-
-    line-height:
-        1;
-
-}
-
-
 /* ==========================================================
-   CHAPTER READER CONTAINER
+   CHAPTER CONTENT FRAME
 ========================================================== */
 
 .chapter-preview {
@@ -320,243 +239,29 @@
     width:
         100%;
 
-    margin:
-        0 auto 50px;
-
-}
-
-
-/* ==========================================================
-   NORMAL MODE
-========================================================== */
-
-#preview-container.normal-mode {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(
-                220px,
-                1fr
-            )
-        );
-
-    gap:
-        25px;
-
-    width:
-        100%;
-
     max-width:
-        1250px;
+        1200px;
 
     margin:
-        0 auto;
+        0
+        auto;
 
     padding:
-        30px;
+        25px;
 
     box-sizing:
         border-box;
 
-    border-radius:
-        14px;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.18
-        );
-
-    box-shadow:
-        0 12px 40px
-        rgba(
-            0,
-            0,
-            0,
-            0.35
-        );
-
-}
-
-
-/* ==========================================================
-   NORMAL MODE IMAGES
-========================================================== */
-
-#preview-container.normal-mode img {
-
-    display:
-        block;
-
-    width:
-        100%;
-
-    max-width:
-        100%;
-
-    height:
-        auto;
-
-    margin:
-        0 auto;
-
-    border-radius:
-        7px;
-
-    cursor:
-        pointer;
-
     background:
         var(--card-bg);
 
-    box-shadow:
-        0 8px 20px
-        rgba(
-            0,
-            0,
-            0,
-            0.60
-        ),
-
-        0 2px 6px
-        rgba(
-            0,
-            0,
-            0,
-            0.80
-        );
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-
-}
-
-
-#preview-container.normal-mode img:hover {
-
-    transform:
-        translateY(
-            -4px
-        );
-
-    box-shadow:
-        0 14px 30px
-        rgba(
-            0,
-            0,
-            0,
-            0.75
-        ),
-
-        0 4px 10px
-        rgba(
-            0,
-            0,
-            0,
-            0.90
-        );
-
-}
-
-
-/* ==========================================================
-   WEBTOON MODE
-========================================================== */
-
-#preview-container.webtoon-mode {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    width:
-        100%;
-
-    max-width:
-        1000px;
-
-    margin:
-        0 auto;
-
-    padding:
-        0;
-
-    gap:
-        0;
-
     border-radius:
         14px;
 
-    overflow:
-        hidden;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.18
-        );
-
     box-shadow:
-        0 12px 40px
-        rgba(
-            0,
-            0,
-            0,
-            0.40
-        );
-
-}
-
-
-/* ==========================================================
-   WEBTOON IMAGES
-========================================================== */
-
-#preview-container.webtoon-mode img {
-
-    display:
-        block;
-
-    width:
-        100%;
-
-    max-width:
-        1000px;
-
-    height:
-        auto;
-
-    margin:
-        0;
-
-    padding:
-        0;
-
-    border:
-        none;
-
-    border-radius:
-        0;
-
-    cursor:
-        pointer;
-
-    box-shadow:
-        0 2px 8px
+        0
+        10px
+        35px
         rgba(
             0,
             0,
@@ -568,237 +273,56 @@
 
 
 /* ==========================================================
-   EMPTY READER
+   NORMAL MODE
 ========================================================== */
 
-.reader-empty {
-
-    grid-column:
-        1 / -1;
-
-    padding:
-        70px
-        20px;
-
-    text-align:
-        center;
-
-    color:
-        var(--text-muted);
-
-}
-
-
-/* ==========================================================
-   IMAGE VIEWER
-========================================================== */
-
-#image-viewer {
-
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    z-index:
-        99999;
+.preview-grid {
 
     display:
-        none;
+        grid;
 
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    width:
-        100vw;
-
-    height:
-        100vh;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.97
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(
+                240px,
+                1fr
+            )
         );
 
-    overflow:
-        hidden;
+    gap:
+        25px;
 
-    user-select:
-        none;
-
-}
-
-
-#image-viewer.active {
-
-    display:
-        flex;
+    align-items:
+        start;
 
 }
 
 
-/* ==========================================================
-   VIEWER IMAGE
-========================================================== */
-
-#viewer-image {
+.preview-grid img {
 
     display:
         block;
 
     width:
-        auto;
+        100%;
 
     height:
         auto;
 
     max-width:
-        90vw;
-
-    max-height:
-        90vh;
-
-    object-fit:
-        contain;
-
-    cursor:
-        grab;
-
-    transform-origin:
-        center center;
-
-    will-change:
-        transform;
-
-}
-
-
-#viewer-image.dragging {
-
-    cursor:
-        grabbing;
-
-}
-
-
-/* ==========================================================
-   VIEWER CLOSE
-========================================================== */
-
-#viewer-close {
-
-    position:
-        absolute;
-
-    top:
-        20px;
-
-    right:
-        25px;
-
-    z-index:
-        100002;
-
-    width:
-        48px;
-
-    height:
-        48px;
-
-    border:
-        none;
+        100%;
 
     border-radius:
-        50%;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.75
-        );
-
-    color:
-        #ffffff;
-
-    font-size:
-        32px;
-
-    line-height:
-        1;
+        8px;
 
     cursor:
         pointer;
 
-}
-
-
-#viewer-close:hover {
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.20
-        );
-
-}
-
-
-/* ==========================================================
-   VIEWER NAVIGATION
-========================================================== */
-
-.viewer-navigation {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    pointer-events:
-        none;
-
-}
-
-
-#viewer-prev,
-#viewer-next {
-
-    position:
-        absolute;
-
-    top:
-        50%;
-
-    transform:
-        translateY(
-            -50%
-        );
-
-    z-index:
-        100001;
-
-    width:
-        55px;
-
-    height:
-        75px;
-
-    border:
-        none;
-
-    background:
+    box-shadow:
+        0
+        8px
+        20px
         rgba(
             0,
             0,
@@ -806,106 +330,96 @@
             0.65
         );
 
-    color:
-        #ffffff;
+    transition:
+        transform
+        0.2s
+        ease,
 
-    font-size:
-        48px;
+        box-shadow
+        0.2s
+        ease;
+
+}
+
+
+.preview-grid img:hover {
+
+    transform:
+        translateY(
+            -4px
+        );
+
+    box-shadow:
+        0
+        14px
+        30px
+        rgba(
+            0,
+            0,
+            0,
+            0.8
+        );
+
+}
+
+
+/* ==========================================================
+   WEBTOON MODE
+========================================================== */
+
+.preview-grid.webtoon-mode {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    gap:
+        0;
+
+    padding:
+        0;
+
+}
+
+
+.preview-grid.webtoon-mode img {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    max-width:
+        900px;
+
+    height:
+        auto;
+
+    margin:
+        0;
+
+    border-radius:
+        0;
+
+    box-shadow:
+        none;
 
     cursor:
         pointer;
 
-    pointer-events:
-        auto;
-
 }
 
 
-#viewer-prev {
-
-    left:
-        20px;
-
-}
-
-
-#viewer-next {
-
-    right:
-        20px;
-
-}
-
-
-#viewer-prev:hover,
-#viewer-next:hover {
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.20
-        );
-
-}
-
-
-/* ==========================================================
-   VIEWER COUNTER
-========================================================== */
-
-#viewer-counter {
-
-    position:
-        absolute;
-
-    bottom:
-        20px;
-
-    left:
-        50%;
+.preview-grid.webtoon-mode img:hover {
 
     transform:
-        translateX(
-            -50%
-        );
-
-    z-index:
-        100002;
-
-    padding:
-        8px
-        14px;
-
-    border-radius:
-        20px;
-
-    background:
-        rgba(
-            0,
-            0,
-            0,
-            0.70
-        );
-
-    color:
-        #ffffff;
-
-    font-size:
-        14px;
-
-}
-
-
-/* ==========================================================
-   BODY LOCK
-========================================================== */
-
-body.viewer-open {
-
-    overflow:
-        hidden;
+        none;
 
 }
 
@@ -925,17 +439,19 @@ body.viewer-open {
     align-items:
         center;
 
-    flex-wrap:
-        wrap;
-
     gap:
         15px;
 
-    margin:
-        30px auto 0;
+    flex-wrap:
+        wrap;
 
     max-width:
-        1250px;
+        1200px;
+
+    margin:
+        30px
+        auto
+        0;
 
 }
 
@@ -951,15 +467,9 @@ body.viewer-open {
     justify-content:
         center;
 
-    min-height:
-        44px;
-
     padding:
-        10px
+        11px
         20px;
-
-    border-radius:
-        8px;
 
     background:
         var(--card-bg);
@@ -967,22 +477,22 @@ body.viewer-open {
     color:
         var(--text);
 
+    border-radius:
+        8px;
+
     text-decoration:
         none;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
 
 }
 
 
 .button:hover {
 
-    transform:
-        translateY(
-            -2px
-        );
+    background:
+        var(--accent);
+
+    color:
+        white;
 
 }
 
@@ -993,7 +503,276 @@ body.viewer-open {
         var(--accent);
 
     color:
-        #ffffff;
+        white;
+
+}
+
+
+/* ==========================================================
+   IMAGE VIEWER
+========================================================== */
+
+.image-viewer {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        99999;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.96
+        );
+
+    overflow:
+        hidden;
+
+}
+
+
+.image-viewer.active {
+
+    display:
+        flex;
+
+}
+
+
+.viewer-content {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+
+}
+
+
+#viewer-image {
+
+    max-width:
+        90vw;
+
+    max-height:
+        90vh;
+
+    width:
+        auto;
+
+    height:
+        auto;
+
+    object-fit:
+        contain;
+
+    user-select:
+        none;
+
+    cursor:
+        grab;
+
+    transform-origin:
+        center center;
+
+}
+
+
+#viewer-image:active {
+
+    cursor:
+        grabbing;
+
+}
+
+
+/* ==========================================================
+   VIEWER CLOSE
+========================================================== */
+
+.viewer-close {
+
+    position:
+        absolute;
+
+    top:
+        20px;
+
+    right:
+        25px;
+
+    z-index:
+        100001;
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.7
+        );
+
+    color:
+        white;
+
+    font-size:
+        30px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.viewer-close:hover {
+
+    background:
+        var(--accent);
+
+}
+
+
+/* ==========================================================
+   VIEWER NAVIGATION
+========================================================== */
+
+.viewer-navigation {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    transform:
+        translateY(
+            -50%
+        );
+
+    z-index:
+        100001;
+
+    width:
+        55px;
+
+    height:
+        80px;
+
+    border:
+        none;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.6
+        );
+
+    color:
+        white;
+
+    font-size:
+        55px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.viewer-navigation:hover {
+
+    background:
+        var(--accent);
+
+}
+
+
+.viewer-prev {
+
+    left:
+        20px;
+
+}
+
+
+.viewer-next {
+
+    right:
+        20px;
+
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.error-message {
+
+    text-align:
+        center;
+
+    padding:
+        80px
+        20px;
+
+}
+
+
+.error-message h1 {
+
+    color:
+        var(--text);
+
+}
+
+
+.error-message a {
+
+    color:
+        var(--accent);
 
 }
 
@@ -1016,7 +795,54 @@ body.viewer-open {
     }
 
 
-    #preview-container.normal-mode {
+    .chapter-header h1 {
+
+        font-size:
+            28px;
+
+    }
+
+
+    .chapter-header h2 {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .reader-buttons {
+
+        width:
+            100%;
+
+    }
+
+
+    .reader-button {
+
+        flex:
+            1;
+
+        padding:
+            10px
+            12px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .chapter-preview {
+
+        padding:
+            12px;
+
+    }
+
+
+    .preview-grid {
 
         grid-template-columns:
             repeat(
@@ -1030,78 +856,24 @@ body.viewer-open {
         gap:
             12px;
 
-        padding:
-            15px;
+    }
+
+
+    .preview-grid.webtoon-mode {
+
+        display:
+            flex;
 
     }
 
 
-    .reader-buttons {
-
-        gap:
-            8px;
-
-    }
-
-
-    .reader-button {
-
-        padding:
-            10px
-            12px;
-
-        font-size:
-            13px;
-
-    }
-
-
-    .reader-icon {
-
-        font-size:
-            17px;
-
-    }
-
-
-    #viewer-image {
-
-        max-width:
-            96vw;
-
-        max-height:
-            90vh;
-
-    }
-
-
-    #viewer-prev,
-    #viewer-next {
+    .preview-grid.webtoon-mode img {
 
         width:
-            42px;
+            100%;
 
-        height:
-            58px;
-
-        font-size:
-            36px;
-
-    }
-
-
-    #viewer-prev {
-
-        left:
-            5px;
-
-    }
-
-
-    #viewer-next {
-
-        right:
-            5px;
+        max-width:
+            100%;
 
     }
 
@@ -1124,30 +896,32 @@ body.viewer-open {
 
     }
 
-}
 
+    .viewer-navigation {
 
-@media (
-    max-width: 480px
-) {
+        width:
+            40px;
 
-    #preview-container.normal-mode {
+        height:
+            60px;
 
-        grid-template-columns:
-            1fr;
-
-        padding:
-            12px;
+        font-size:
+            40px;
 
     }
 
 
-    .reader-button {
+    .viewer-prev {
 
-        flex-direction:
-            column;
+        left:
+            5px;
 
-        gap:
+    }
+
+
+    .viewer-next {
+
+        right:
             5px;
 
     }
