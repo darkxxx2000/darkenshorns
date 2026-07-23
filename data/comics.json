@@ -1,101 +1,82 @@
 [
-  {
-    "id":"comic-001",
-    "seriesId":"series-001",
-    "slug":"dark-hunter",
-    "title":"Dark Hunter",
-    "description":"A dark fantasy story where hunters fight demons.",
-    "author":"DarkensHorns",
-    "artist":"DarkensHorns",
-    "publisher":"DarkensHorns",
-    "type":"comic",
-    "status":"ongoing",
-    "language":"en",
-    "cover":"https://ah-img.luscious.net/darkenshorns/618164/17_01KXEB2CGXP668FNJPXZ1908SB.1280x0.jpg",
-    "banner":"https://ah-img.luscious.net/darkenshorns/618164/16_01KXEB2BM0R0PTQDXBD6CNDXEG.1280x0.jpg",
-    "thumbnail":"uploads/thumbnails/dark-hunter.webp",
-    "chapters":12,
-    "genres":["Fantasy","Action"],
-    "tags":["Dark","Demons"],
-    "characters":["char-001","char-002"],
-    "featured":true,
-    "adult":true,
-    "completed":false,
-    "updated":"2026-07-11"
-  },
-
-  {
-    "id":"comic-002",
-    "seriesId":"series-002",
-    "slug":"crimson-moon",
-    "title":"Crimson Moon",
-    "description":"Blood moon fantasy.",
-    "author":"DarkensHorns",
-    "artist":"DarkensHorns",
-    "publisher":"DarkensHorns",
-    "type":"comic",
-    "status":"completed",
-    "language":"en",
-    "cover":"uploads/covers/crimson-moon.webp",
-    "banner":"uploads/banners/crimson-moon.webp",
-    "thumbnail":"uploads/thumbnails/crimson-moon.webp",
-    "chapters":24,
-    "genres":["Fantasy","Horror"],
-    "tags":["Blood","Vampires"],
-    "characters":["char-003"],
-    "featured":true,
-    "adult":true,
-    "completed":true,
-    "updated":"2026-07-09"
-  },
-
-  {
-    "id":"comic-003",
-    "seriesId":"series-003",
-    "slug":"iron-souls",
-    "title":"Iron Souls",
-    "description":"Ancient machines awaken.",
-    "author":"DarkensHorns",
-    "artist":"DarkensHorns",
-    "publisher":"DarkensHorns",
-    "type":"comic",
-    "status":"ongoing",
-    "language":"en",
-    "cover":"uploads/covers/iron-souls.webp",
-    "banner":"uploads/banners/iron-souls.webp",
-    "thumbnail":"uploads/thumbnails/iron-souls.webp",
-    "chapters":8,
-    "genres":["Sci-Fi","Action"],
-    "tags":["Robots","War"],
-    "characters":[],
-    "featured":false,
-    "adult":true,
-    "completed":false,
-    "updated":"2026-07-10"
-  },
-
-  {
-    "id":"comic-004",
-    "seriesId":"series-004",
-    "slug":"fallen-empire",
-    "title":"Fallen Empire",
-    "description":"Forgotten empire ruins.",
-    "author":"DarkensHorns",
-    "artist":"DarkensHorns",
-    "publisher":"DarkensHorns",
-    "type":"comic",
-    "status":"ongoing",
-    "language":"en",
-    "cover":"uploads/covers/fallen-empire.webp",
-    "banner":"uploads/banners/fallen-empire.webp",
-    "thumbnail":"uploads/thumbnails/fallen-empire.webp",
-    "chapters":15,
-    "genres":["Adventure","Fantasy"],
-    "tags":["Ruins","Relics"],
-    "characters":[],
-    "featured":true,
-    "adult":true,
-    "completed":false,
-    "updated":"2026-07-12"
-  }
+    {
+        "id": "comic-01",
+        "title": "Comic 01",
+        "cover": "https://ah-img.luscious.net/darkenshorns/618164/17_01KXEB2CGXP668FNJPXZ1908SB.1280x0.jpg",
+        "description": "Description of Comic 01",
+        "genres": ["Action", "Dark"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-02",
+        "title": "Comic 02",
+        "cover": "assets/covers/comic-02.webp",
+        "description": "Description of Comic 02",
+        "genres": ["Fantasy", "Dark"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-03",
+        "title": "Comic 03",
+        "cover": "assets/covers/comic-03.webp",
+        "description": "Description of Comic 03",
+        "genres": ["Action", "Fantasy"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-04",
+        "title": "Comic 04",
+        "cover": "assets/covers/comic-04.webp",
+        "description": "Description of Comic 04",
+        "genres": ["Drama", "Dark"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-05",
+        "title": "Comic 05",
+        "cover": "assets/covers/comic-05.webp",
+        "description": "Description of Comic 05",
+        "genres": ["Fantasy", "Adventure"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-06",
+        "title": "Comic 06",
+        "cover": "assets/covers/comic-06.webp",
+        "description": "Description of Comic 06",
+        "genres": ["Action", "Drama"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-07",
+        "title": "Comic 07",
+        "cover": "assets/covers/comic-07.webp",
+        "description": "Description of Comic 07",
+        "genres": ["Dark", "Horror"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-08",
+        "title": "Comic 08",
+        "cover": "assets/covers/comic-08.webp",
+        "description": "Description of Comic 08",
+        "genres": ["Action", "Adventure"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-09",
+        "title": "Comic 09",
+        "cover": "assets/covers/comic-09.webp",
+        "description": "Description of Comic 09",
+        "genres": ["Fantasy", "Dark"],
+        "seriesCount": 2
+    },
+    {
+        "id": "comic-10",
+        "title": "Comic 10",
+        "cover": "assets/covers/comic-10.webp",
+        "description": "Description of Comic 10",
+        "genres": ["Drama", "Horror"],
+        "seriesCount": 2
+    }
 ]
