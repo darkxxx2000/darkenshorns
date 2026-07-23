@@ -2,7 +2,7 @@
 
 /* ==========================================================
    DARKENSHORNS
-   CHAPTER SYSTEM - FIXED
+   CHAPTER SYSTEM - FINAL FIXED
 ========================================================== */
 
 let currentComic = null;
@@ -54,7 +54,10 @@ async function initChapter() {
         params.get("folder");
 
 
-    if (!comicId || !chapterId) {
+    if (
+        !comicId ||
+        !chapterId
+    ) {
 
         showError(
             "Chapter information missing."
@@ -77,7 +80,9 @@ async function initChapter() {
             );
 
 
-        if (!comicResponse.ok) {
+        if (
+            !comicResponse.ok
+        ) {
 
             throw new Error(
                 `Comic not found: ${comicId}`
@@ -112,10 +117,15 @@ async function initChapter() {
                     ) {
 
                         return (
-                            String(chapter)
+                            chapter
+                                .replace(
+                                    /\.json$/i,
+                                    ""
+                                )
                                 .toLowerCase() ===
-                            String(chapterId)
-                                .toLowerCase()
+                            String(
+                                chapterId
+                            ).toLowerCase()
                         );
 
                     }
@@ -140,8 +150,18 @@ async function initChapter() {
 
                     return (
                         String(id)
+                            .replace(
+                                /\.json$/i,
+                                ""
+                            )
                             .toLowerCase() ===
-                        String(chapterId)
+                        String(
+                            chapterId
+                        )
+                            .replace(
+                                /\.json$/i,
+                                ""
+                            )
                             .toLowerCase()
                     );
 
@@ -149,7 +169,9 @@ async function initChapter() {
             );
 
 
-        if (chapterIndex === -1) {
+        if (
+            chapterIndex === -1
+        ) {
 
             showError(
                 "Chapter not found."
@@ -170,10 +192,13 @@ async function initChapter() {
            CHAPTER FOLDER
         ================================================== */
 
-        let folder = "";
+        let folder =
+            folderParam ||
+            "";
 
 
         if (
+            !folder &&
             typeof chapterInfo ===
             "object" &&
             chapterInfo !== null
@@ -186,24 +211,12 @@ async function initChapter() {
         }
 
 
-        /*
-        If URL contains folder,
-        use it as priority.
-        */
-
-        if (folderParam) {
-
-            folder =
-                folderParam;
-
-        }
-
-
         /* ==================================================
            CHAPTER FILE
         ================================================== */
 
-        let chapterFile = "";
+        let chapterFile =
+            "";
 
 
         if (
@@ -225,6 +238,13 @@ async function initChapter() {
         }
 
 
+        chapterFile =
+            chapterFile.replace(
+                /\.json$/i,
+                ""
+            );
+
+
         if (
             !chapterFile
         ) {
@@ -238,41 +258,39 @@ async function initChapter() {
         }
 
 
-        /*
-        If the chapter entry itself
-        contains a file name, use it.
-        */
-
-        const chapterFileName =
-            chapterFile.endsWith(
-                ".json"
-            )
-                ? chapterFile
-                : `${chapterFile}.json`;
-
-
         /* ==================================================
            BUILD CHAPTER PATH
         ================================================== */
 
-        let chapterPath =
-            "";
+        let chapterPath;
 
 
-        if (folder) {
+        if (
+            folder
+        ) {
 
             chapterPath =
                 `../data/chapters/` +
-                `${encodeURIComponent(comicId)}/` +
-                `${encodeURIComponent(folder)}/` +
-                `${encodeURIComponent(chapterFileName)}`;
+                `${encodeURIComponent(
+                    comicId
+                )}/` +
+                `${encodeURIComponent(
+                    folder
+                )}/` +
+                `${encodeURIComponent(
+                    chapterFile
+                )}.json`;
 
         } else {
 
             chapterPath =
                 `../data/chapters/` +
-                `${encodeURIComponent(comicId)}/` +
-                `${encodeURIComponent(chapterFileName)}`;
+                `${encodeURIComponent(
+                    comicId
+                )}/` +
+                `${encodeURIComponent(
+                    chapterFile
+                )}.json`;
 
         }
 
@@ -293,7 +311,9 @@ async function initChapter() {
             );
 
 
-        if (!chapterResponse.ok) {
+        if (
+            !chapterResponse.ok
+        ) {
 
             throw new Error(
                 `Cannot load chapter file: ${chapterPath}`
@@ -306,13 +326,12 @@ async function initChapter() {
             await chapterResponse.json();
 
 
-        /*
-        Save folder if missing
-        */
+        /* ==================================================
+           SAVE FOLDER
+        ================================================== */
 
         if (
-            !currentChapter.folder &&
-            folder
+            !currentChapter.folder
         ) {
 
             currentChapter.folder =
@@ -321,25 +340,22 @@ async function initChapter() {
         }
 
 
-        /*
-        Save chapter ID if missing
-        */
+        /* ==================================================
+           SAVE CHAPTER ID
+        ================================================== */
 
         if (
             !currentChapter.id
         ) {
 
             currentChapter.id =
-                chapterFile.replace(
-                    /\.json$/i,
-                    ""
-                );
+                chapterFile;
 
         }
 
 
         /* ==================================================
-           NAVIGATION DATA
+           BUILD ALL CHAPTERS
         ================================================== */
 
         allChapters =
@@ -411,7 +427,9 @@ async function initChapter() {
 
 
     }
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Chapter loading error:",
@@ -455,7 +473,9 @@ function renderChapter() {
         );
 
 
-    if (comicName) {
+    if (
+        comicName
+    ) {
 
         comicName.textContent =
             comicTitle;
@@ -469,7 +489,9 @@ function renderChapter() {
         );
 
 
-    if (chapterName) {
+    if (
+        chapterName
+    ) {
 
         chapterName.textContent =
             chapterTitle;
@@ -483,7 +505,9 @@ function renderChapter() {
         );
 
 
-    if (chapterTitleElement) {
+    if (
+        chapterTitleElement
+    ) {
 
         chapterTitleElement.textContent =
             chapterTitle;
@@ -501,7 +525,9 @@ function renderChapter() {
         );
 
 
-    if (chapterPages) {
+    if (
+        chapterPages
+    ) {
 
         chapterPages.textContent =
             `Pages: ${pages.length}`;
@@ -515,7 +541,9 @@ function renderChapter() {
         );
 
 
-    if (chapterDate) {
+    if (
+        chapterDate
+    ) {
 
         chapterDate.textContent =
             `Date: ${
@@ -545,7 +573,9 @@ function renderChapter() {
         );
 
 
-    if (comicLink) {
+    if (
+        comicLink
+    ) {
 
         comicLink.href =
             comicURL;
@@ -559,7 +589,9 @@ function renderChapter() {
         );
 
 
-    if (backComic) {
+    if (
+        backComic
+    ) {
 
         backComic.href =
             comicURL;
@@ -587,11 +619,9 @@ function setupReaderLinks() {
         );
 
 
-    /*
-    NORMAL MODE
-    */
-
-    if (gridButton) {
+    if (
+        gridButton
+    ) {
 
         gridButton.addEventListener(
             "click",
@@ -607,11 +637,9 @@ function setupReaderLinks() {
     }
 
 
-    /*
-    WEBTOON MODE
-    */
-
-    if (webtoonButton) {
+    if (
+        webtoonButton
+    ) {
 
         webtoonButton.addEventListener(
             "click",
@@ -631,6 +659,7 @@ function setupReaderLinks() {
 
 /* ==========================================================
    NORMAL MODE
+   SHOW ALL PAGES
 ========================================================== */
 
 function openNormalMode() {
@@ -652,11 +681,9 @@ function openWebtoonMode() {
         );
 
 
-    if (!container) {
-
-        console.warn(
-            "#preview-container not found."
-        );
+    if (
+        !container
+    ) {
 
         return;
 
@@ -667,26 +694,37 @@ function openWebtoonMode() {
         getChapterPages();
 
 
-    if (
-        !pages.length
-    ) {
-
-        console.warn(
-            "No chapter pages found."
-        );
-
-        return;
-
-    }
-
-
     container.innerHTML =
         "";
+
+
+    container.classList.remove(
+        "normal-mode"
+    );
 
 
     container.classList.add(
         "webtoon-mode"
     );
+
+
+    if (
+        !pages.length
+    ) {
+
+        container.innerHTML = `
+
+            <div class="reader-empty">
+
+                No pages available.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
 
 
     pages.forEach(
@@ -738,13 +776,10 @@ function openWebtoonMode() {
                     viewerPages =
                         pages;
 
-
                     viewerIndex =
                         index;
 
-
                     createViewer();
-
 
                     showViewerImage();
 
@@ -764,6 +799,7 @@ function openWebtoonMode() {
 
 /* ==========================================================
    NORMAL PREVIEW
+   SHOW ALL PAGES
 ========================================================== */
 
 function renderPreview() {
@@ -774,11 +810,17 @@ function renderPreview() {
         );
 
 
-    if (!container) {
+    if (
+        !container
+    ) {
 
         return;
 
     }
+
+
+    const pages =
+        getChapterPages();
 
 
     container.innerHTML =
@@ -790,8 +832,9 @@ function renderPreview() {
     );
 
 
-    const pages =
-        getChapterPages();
+    container.classList.add(
+        "normal-mode"
+    );
 
 
     if (
@@ -813,85 +856,72 @@ function renderPreview() {
     }
 
 
-    const limit =
-        Math.min(
-            pages.length,
-            12
-        );
+    pages.forEach(
+        (
+            page,
+            index
+        ) => {
 
-
-    for (
-        let i = 0;
-        i < limit;
-        i++
-    ) {
-
-        const image =
-            document.createElement(
-                "img"
-            );
-
-
-        const page =
-            pages[i];
-
-
-        image.src =
-            getPageImageURL(
-                page,
-                i
-            );
-
-
-        image.alt =
-            `Page ${i + 1}`;
-
-
-        image.loading =
-            i < 3
-                ? "eager"
-                : "lazy";
-
-
-        image.addEventListener(
-            "error",
-            function() {
-
-                console.error(
-                    "Preview image failed:",
-                    image.src
+            const image =
+                document.createElement(
+                    "img"
                 );
 
-            }
-        );
+
+            image.src =
+                getPageImageURL(
+                    page,
+                    index
+                );
 
 
-        image.addEventListener(
-            "click",
-            function() {
-
-                viewerPages =
-                    pages;
+            image.alt =
+                `Page ${index + 1}`;
 
 
-                viewerIndex =
-                    i;
+            image.loading =
+                index < 4
+                    ? "eager"
+                    : "lazy";
 
 
-                createViewer();
+            image.addEventListener(
+                "error",
+                function() {
+
+                    console.error(
+                        "Preview image failed:",
+                        image.src
+                    );
+
+                }
+            );
 
 
-                showViewerImage();
+            image.addEventListener(
+                "click",
+                function() {
 
-            }
-        );
+                    viewerPages =
+                        pages;
+
+                    viewerIndex =
+                        index;
+
+                    createViewer();
+
+                    showViewerImage();
+
+                }
+            );
 
 
-        container.appendChild(
-            image
-        );
+            container.appendChild(
+                image
+            );
 
-    }
+        }
+    );
 
 }
 
@@ -908,7 +938,9 @@ function createViewer() {
         );
 
 
-    if (!viewer) {
+    if (
+        !viewer
+    ) {
 
         viewer =
             document.createElement(
@@ -924,6 +956,7 @@ function createViewer() {
 
             <button
                 id="viewer-close"
+                type="button"
                 aria-label="Close">
                 ×
             </button>
@@ -946,7 +979,9 @@ function createViewer() {
             );
 
 
-        if (closeButton) {
+        if (
+            closeButton
+        ) {
 
             closeButton.addEventListener(
                 "click",
@@ -956,10 +991,9 @@ function createViewer() {
         }
 
 
-        /*
-        RIGHT CLICK
-        NEXT IMAGE
-        */
+        /* ==================================================
+           RIGHT CLICK = NEXT
+        ================================================== */
 
         viewer.addEventListener(
             "contextmenu",
@@ -973,10 +1007,9 @@ function createViewer() {
         );
 
 
-        /*
-        LEFT CLICK
-        PREVIOUS IMAGE
-        */
+        /* ==================================================
+           LEFT CLICK IMAGE = PREVIOUS
+        ================================================== */
 
         viewer.addEventListener(
             "click",
@@ -995,10 +1028,9 @@ function createViewer() {
         );
 
 
-        /*
-        MOUSE WHEEL
-        ZOOM
-        */
+        /* ==================================================
+           MOUSE WHEEL = ZOOM
+        ================================================== */
 
         viewer.addEventListener(
             "wheel",
@@ -1041,9 +1073,9 @@ function createViewer() {
         );
 
 
-        /*
-        DRAG START
-        */
+        /* ==================================================
+           DRAG START
+        ================================================== */
 
         viewer.addEventListener(
             "mousedown",
@@ -1085,9 +1117,9 @@ function createViewer() {
         );
 
 
-        /*
-        DRAG MOVE
-        */
+        /* ==================================================
+           DRAG MOVE
+        ================================================== */
 
         document.addEventListener(
             "mousemove",
@@ -1118,9 +1150,9 @@ function createViewer() {
         );
 
 
-        /*
-        DRAG END
-        */
+        /* ==================================================
+           DRAG END
+        ================================================== */
 
         document.addEventListener(
             "mouseup",
@@ -1170,14 +1202,8 @@ function showViewerImage() {
         );
 
 
-    if (!image) {
-
-        return;
-
-    }
-
-
     if (
+        !image ||
         !viewerPages.length
     ) {
 
@@ -1232,7 +1258,9 @@ function updateViewerTransform() {
         );
 
 
-    if (!image) {
+    if (
+        !image
+    ) {
 
         return;
 
@@ -1330,7 +1358,9 @@ function closeImageViewer() {
         );
 
 
-    if (viewer) {
+    if (
+        viewer
+    ) {
 
         viewer.classList.remove(
             "active"
@@ -1365,10 +1395,20 @@ function setupNavigation() {
                         chapter.slug ||
                         chapter.chapter ||
                         ""
-                    ).toLowerCase() ===
+                    )
+                        .replace(
+                            /\.json$/i,
+                            ""
+                        )
+                        .toLowerCase() ===
                     String(
                         currentChapterId
-                    ).toLowerCase()
+                    )
+                        .replace(
+                            /\.json$/i,
+                            ""
+                        )
+                        .toLowerCase()
                 );
 
             }
@@ -1411,7 +1451,9 @@ function setupNavigation() {
         previousButton
     ) {
 
-        if (previous) {
+        if (
+            previous
+        ) {
 
             previousButton.href =
                 buildChapterURL(
@@ -1435,7 +1477,9 @@ function setupNavigation() {
         nextButton
     ) {
 
-        if (next) {
+        if (
+            next
+        ) {
 
             nextButton.href =
                 buildChapterURL(
@@ -1484,7 +1528,7 @@ function buildChapterURL(
 
 
     return (
-        `chapter.html` +
+        `chapters.html` +
         `?comic=${encodeURIComponent(
             comicId
         )}` +
@@ -1514,10 +1558,6 @@ function getChapterPages() {
     }
 
 
-    /*
-    pages: []
-    */
-
     if (
         Array.isArray(
             currentChapter.pages
@@ -1528,10 +1568,6 @@ function getChapterPages() {
 
     }
 
-
-    /*
-    images: []
-    */
 
     if (
         Array.isArray(
@@ -1544,10 +1580,6 @@ function getChapterPages() {
     }
 
 
-    /*
-    content: []
-    */
-
     if (
         Array.isArray(
             currentChapter.content
@@ -1559,10 +1591,6 @@ function getChapterPages() {
     }
 
 
-    /*
-    pages as number
-    */
-
     if (
         typeof currentChapter.pages ===
         "number"
@@ -1573,7 +1601,6 @@ function getChapterPages() {
                 length:
                     currentChapter.pages
             },
-
             (
                 _,
                 index
@@ -1582,7 +1609,6 @@ function getChapterPages() {
                 return index + 1;
 
             }
-
         );
 
     }
@@ -1602,12 +1628,6 @@ function getPageImageURL(
     index
 ) {
 
-    /*
-    ================================================
-    STRING
-    ================================================
-    */
-
     if (
         typeof page ===
         "string"
@@ -1616,10 +1636,6 @@ function getPageImageURL(
         const value =
             page.trim();
 
-
-        /*
-        Absolute URL
-        */
 
         if (
             value.startsWith(
@@ -1638,10 +1654,6 @@ function getPageImageURL(
         }
 
 
-        /*
-        Already relative from chapter page
-        */
-
         if (
             value.startsWith(
                 "../"
@@ -1659,11 +1671,6 @@ function getPageImageURL(
         }
 
 
-        /*
-        If the value contains a folder path,
-        use it relative to the site root.
-        */
-
         if (
             value.includes("/")
         ) {
@@ -1675,13 +1682,6 @@ function getPageImageURL(
         }
 
 
-        /*
-        Plain filename:
-        001.webp
-        page-01.jpg
-        image.png
-        */
-
         return buildImagePath(
             value
         );
@@ -1689,21 +1689,11 @@ function getPageImageURL(
     }
 
 
-    /*
-    ================================================
-    OBJECT
-    ================================================
-    */
-
     if (
         typeof page ===
         "object" &&
         page !== null
     ) {
-
-        /*
-        url
-        */
 
         if (
             typeof page.url ===
@@ -1717,10 +1707,6 @@ function getPageImageURL(
         }
 
 
-        /*
-        image
-        */
-
         if (
             typeof page.image ===
             "string"
@@ -1732,10 +1718,6 @@ function getPageImageURL(
 
         }
 
-
-        /*
-        src
-        */
 
         if (
             typeof page.src ===
@@ -1749,10 +1731,6 @@ function getPageImageURL(
         }
 
 
-        /*
-        file
-        */
-
         if (
             typeof page.file ===
             "string"
@@ -1764,10 +1742,6 @@ function getPageImageURL(
 
         }
 
-
-        /*
-        filename
-        */
 
         if (
             typeof page.filename ===
@@ -1782,23 +1756,6 @@ function getPageImageURL(
 
     }
 
-
-    /*
-    ================================================
-    FALLBACK
-    ================================================
-
-    If JSON says:
-
-    "pages": 10
-
-    Generates:
-
-    001.webp
-    002.webp
-    003.webp
-    etc.
-    */
 
     const number =
         String(
@@ -1833,11 +1790,6 @@ function buildImagePath(
     }
 
 
-    /*
-    If filename already has
-    a full or relative path.
-    */
-
     if (
         filename.startsWith(
             "../"
@@ -1870,17 +1822,6 @@ function buildImagePath(
         getCurrentFolder();
 
 
-    /*
-    Standard chapter structure:
-
-    data/
-      chapters/
-        comic-id/
-          folder/
-            001.webp
-            002.webp
-    */
-
     if (
         folder
     ) {
@@ -1900,11 +1841,6 @@ function buildImagePath(
 
     }
 
-
-    /*
-    Fallback if chapter has
-    no folder.
-    */
 
     return (
         `../data/chapters/` +
@@ -2046,8 +1982,20 @@ function getCurrentFolder() {
                 ) {
 
                     return (
-                        chapter ===
-                        currentId
+                        chapter
+                            .replace(
+                                /\.json$/i,
+                                ""
+                            )
+                            .toLowerCase() ===
+                        String(
+                            currentId
+                        )
+                            .replace(
+                                /\.json$/i,
+                                ""
+                            )
+                            .toLowerCase()
                     );
 
                 }
@@ -2068,10 +2016,20 @@ function getCurrentFolder() {
                         chapter.slug ||
                         chapter.chapter ||
                         ""
-                    ).toLowerCase() ===
+                    )
+                        .replace(
+                            /\.json$/i,
+                            ""
+                        )
+                        .toLowerCase() ===
                     String(
                         currentId
-                    ).toLowerCase()
+                    )
+                        .replace(
+                            /\.json$/i,
+                            ""
+                        )
+                        .toLowerCase()
                 );
 
             }
@@ -2172,7 +2130,9 @@ function showError(
         );
 
 
-    if (page) {
+    if (
+        page
+    ) {
 
         page.innerHTML = `
 
@@ -2194,11 +2154,6 @@ function showError(
 
     }
 
-
-    /*
-    Fallback if chapter-page
-    does not exist.
-    */
 
     console.error(
         message
