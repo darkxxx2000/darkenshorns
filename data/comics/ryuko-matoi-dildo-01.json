@@ -1,18 +1,20 @@
-{
-    "id": "ryuko-matoi-dildo-01",
-    "title": "Ryuko vs Huge Dildo - Bedroom",
-    "description": "Full description of Comic 01.",
-    "author": "Darkens Horns",
-    "cover": "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg",
-    "genres": [
-        "Huge Dildo",
-        "Self"
-    ],
-    "characters": [
-        "Ryuko Matoi"
-    ],
-    "series": [
-        "Kill la Kill",
-        "series-02"
-    ]
+   {
+  "id": "ryuko-matoi",
+  "title": "Ryuko Matoi",
+  "cover": "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg",
+  "description": "La historia de Ryuko Matoi.",
+  "author": "DarkensHorns",
+  "status": "Ongoing",
+  "genres": ["Action", "Dark", "Adult"],
+  "tags": ["Ryuko", "Anime"],
+  "characters": ["Ryuko Matoi"],
+  "chapters": [
+    {
+      "id": "ryuko-matoi-dildo-01",
+      "number": 1,
+      "title": "Ryuko vs Huge Dildo",
+      "subtitle": "The First Encounter",
+      "file": "ryuko-matoi-dildo-01.json"
+    }
+  ]
 }
