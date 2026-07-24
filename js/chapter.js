@@ -279,19 +279,38 @@ function buildChapterJSONPath(
 ) {
 
     if (
-        chapter.file
+        !chapter
     ) {
 
-        return (
-            `../data/chapters/` +
-            `${encodeURIComponent(comicId)}/` +
-            `${chapter.file}`
-        );
+        return "";
 
     }
 
 
-    return "";
+    const folder =
+        chapter.folder || "";
+
+
+    const file =
+        chapter.file || "";
+
+
+    if (
+        !folder ||
+        !file
+    ) {
+
+        return "";
+
+    }
+
+
+    return (
+        `../data/chapters/` +
+        `${encodeURIComponent(comicId)}/` +
+        `${encodeURIComponent(folder)}/` +
+        `${encodeURIComponent(file)}`
+    );
 
 }
 
