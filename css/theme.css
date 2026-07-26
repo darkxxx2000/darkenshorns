@@ -194,3 +194,32 @@ p {
     color: white;
 
 }
+
+/* ==========================================================
+   DARKENSHORNS
+   FUN TITLE TYPOGRAPHY
+========================================================== */
+
+h1,
+h2,
+h3,
+.card-title,
+.comic-title,
+.series-title {
+
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
+
+    font-weight:
+        900;
+
+    text-shadow:
+        2px
+        2px
+        0
+        #000;
+
+}
