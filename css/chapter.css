@@ -85,13 +85,28 @@
         5px;
 
     color:
-        var(--text);
+        var(--accent);
 
     font-size:
-        38px;
+        42px;
 
     line-height:
         1.2;
+
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
+
+    font-weight:
+        900;
+
+    text-shadow:
+        3px
+        3px
+        0
+        #000;
 
 }
 
@@ -103,13 +118,25 @@
         10px;
 
     color:
-        var(--accent);
+        var(--text);
 
     font-size:
-        24px;
+        26px;
+
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
 
     font-weight:
-        500;
+        800;
+
+    text-shadow:
+        2px
+        2px
+        0
+        #000;
 
 }
 
