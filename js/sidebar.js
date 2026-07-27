@@ -39,7 +39,8 @@ function renderRecentUpdates(comics = []) {
             document.createElement("a");
 
         link.href =
-    `pages/series.html?character=${encodeURIComponent(character.name)}`;
+    link.href =
+    `pages/characters.html?id=${encodeURIComponent(character.id)}`;
 
         link.textContent =
             comic.title;
