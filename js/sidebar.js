@@ -5,7 +5,9 @@
 
 import {
     loadComics,
-    loadCharacters
+    loadCharacters,
+    loadSeries,
+    loadGenres
 } from "./data-loader.js";
 
 
@@ -51,81 +53,169 @@ function renderRecentUpdates(comics = []) {
 }
 
 
+/**
+ * Renderiza géneros.
+ */
+function renderGenres(genres = []) {
+
+    const container =
+        document.querySelector("#categories-list");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    genres
+        .slice(0, 5)
+        .forEach(genre => {
+
+            const item =
+                document.createElement("li");
+
+            const link =
+                document.createElement("a");
+
+            const id =
+                typeof genre === "object"
+                    ? genre.id
+                    : genre;
+
+            const name =
+                typeof genre === "object"
+                    ? genre.name
+                    : genre;
+
+            link.href =
+                `pages/series.html?genre=${encodeURIComponent(id)}`;
+
+            link.textContent =
+                name;
+
+            item.appendChild(link);
+
+            container.appendChild(item);
+
+        });
+
+}
+
+
+/**
+ * Renderiza series.
+ */
+function renderSeries(series = []) {
+
+    const container =
+        document.querySelector("#series-list");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    series
+        .slice(0, 5)
+        .forEach(serie => {
+
+            const item =
+                document.createElement("li");
+
+            const link =
+                document.createElement("a");
+
+            const id =
+                typeof serie === "object"
+                    ? serie.id
+                    : serie;
+
+            const name =
+                typeof serie === "object"
+                    ? serie.title || serie.name
+                    : serie;
+
+            link.href =
+                `pages/series.html?id=${encodeURIComponent(id)}`;
+
+            link.textContent =
+                name;
+
+            item.appendChild(link);
+
+            container.appendChild(item);
+
+        });
+
+}
+
 
 /**
  * Renderiza personajes.
  */
 function renderCharacters(characters = []) {
 
-
     const container =
-    document.querySelector(
-        "#characters-list"
-    );
-
+        document.querySelector("#characters-list");
 
     if (!container) return;
 
-
     container.innerHTML = "";
 
-
     characters
+        .slice(0, 5)
+        .forEach(character => {
 
-    .slice(0,5)
+            const item =
+                document.createElement("div");
 
-    .forEach(character => {
+            item.className =
+                "character-item";
 
+            const link =
+                document.createElement("a");
 
-        const item =
-        document.createElement("div");
+            link.href =
+                `pages/characters.html?id=${encodeURIComponent(character.id)}`;
 
+            link.className =
+                "character-link";
 
-        item.className =
-        "character-item";
+            link.innerHTML = `
 
+                <div class="character-avatar">
 
-        item.innerHTML = `
+                    <img
+                        src="${character.image ||
+                        "assets/placeholders/avatar.webp"}"
 
-            <div class="character-avatar">
+                        alt="${character.name}"
+                    >
 
-                <img
-                src="${character.image ||
-                "assets/placeholders/avatar.webp"}"
+                </div>
 
-                alt="${character.name}">
+                <div class="character-info">
 
-            </div>
+                    <span class="character-name">
 
+                        ${character.name}
 
-            <div class="character-info">
+                    </span>
 
-                <span class="character-name">
+                    <span class="character-series">
 
-                    ${character.name}
+                        ${character.series || ""}
 
-                </span>
+                    </span>
 
+                </div>
 
-                <span class="character-series">
+            `;
 
-                    ${character.series || ""}
+            item.appendChild(link);
 
-                </span>
+            container.appendChild(item);
 
-            </div>
-
-        `;
-
-
-        container.appendChild(item);
-
-
-    });
-
+        });
 
 }
-
 
 
 /**
@@ -133,23 +223,33 @@ function renderCharacters(characters = []) {
  */
 export async function initSidebar() {
 
-
     const comics =
-    await loadComics();
-
+        await loadComics();
 
     const characters =
-    await loadCharacters();
+        await loadCharacters();
+
+    const series =
+        await loadSeries();
+
+    const genres =
+        await loadGenres();
 
 
     renderRecentUpdates(
         comics
     );
 
-
     renderCharacters(
         characters
     );
 
+    renderSeries(
+        series
+    );
+
+    renderGenres(
+        genres
+    );
 
 }
