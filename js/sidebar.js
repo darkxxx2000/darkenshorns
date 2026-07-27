@@ -6,24 +6,41 @@
 
 import {
 loadComics,
-loadCharacters,
-loadGenres,
-loadSeries
+loadCharacters
 } from "./data-loader.js";
 
 /* ==========================================================
-PATH HELPER
+PAGE URL
 ========================================================== */
 
 /**
 
-* Detecta si estamos en Home o dentro de /pages/
+* Detecta automáticamente la ruta hacia comic.html.
 *
 * Desde Home:
-* pages/series.html
+* pages/comic.html
 *
 * Desde /pages/:
-* series.html
+* comic.html
+  */
+  function getComicPageUrl() {
+
+  const isInsidePages =
+  window.location.pathname.includes("/pages/");
+
+  return isInsidePages
+  ? "comic.html"
+  : "pages/comic.html";
+
+}
+
+/* ==========================================================
+SERIES PAGE URL
+========================================================== */
+
+/**
+
+* Detecta automáticamente la ruta hacia series.html.
   */
   function getSeriesPageUrl() {
 
@@ -36,15 +53,21 @@ PATH HELPER
 
 }
 
+/* ==========================================================
+SLUG
+========================================================== */
+
 /**
 
-* Convierte un texto en un slug.
+* Convierte un nombre en un identificador.
 *
 * Ejemplo:
 *
-* "Dark Fantasy"
+* Ryuko Matoi
+*
 * →
-* "dark-fantasy"
+*
+* ryuko-matoi
   */
   function createSlug(
   value
@@ -90,7 +113,7 @@ RECENT UPDATES
 
 /**
 
-* Renderiza lista de actualizaciones recientes.
+* Renderiza las actualizaciones recientes.
   */
   function renderRecentUpdates(
   comics = []
@@ -194,37 +217,18 @@ RECENT UPDATES
 }
 
 /* ==========================================================
-COMIC PAGE URL
-========================================================== */
-
-function getComicPageUrl() {
-
-```
-const isInsidePages =
-    window.location.pathname.includes("/pages/");
-
-
-return isInsidePages
-    ? "comic.html"
-    : "pages/comic.html";
-```
-
-}
-
-/* ==========================================================
 GENRES
 ========================================================== */
 
 /**
 
-* Renderiza los géneros.
+* Obtiene todos los géneros directamente
+* desde los cómics cargados.
 *
-* Cada género enlaza a:
-*
-* series.html?genre=action
+* No necesita genres.json.
   */
   function renderGenres(
-  genres = []
+  comics = []
   ) {
 
   const container =
@@ -243,68 +247,64 @@ GENRES
   container.innerHTML =
   "";
 
-  /*
-  Evita duplicados.
-  */
+  const genres =
+  new Map();
 
-  const uniqueGenres =
-  [];
-
-  genres.forEach(
-  genre => {
+  comics.forEach(
+  comic => {
 
   ```
-       let name = "";
-
-
-       /*
-       Soporta:
-
-       "Action"
-
-       o:
-
-       {
-           "id": "action",
-           "name": "Action"
-       }
-       */
-
        if (
-           typeof genre ===
-           "string"
-       ) {
-
-           name =
-               genre;
-
-       } else if (
-           genre &&
-           typeof genre ===
-           "object"
-       ) {
-
-           name =
-               genre.name ||
-               genre.title ||
-               genre.id ||
-               "";
-
-       }
-
-
-       if (
-           name &&
-           !uniqueGenres.includes(
-               name
+           !Array.isArray(
+               comic.genres
            )
        ) {
 
-           uniqueGenres.push(
-               name
-           );
+           return;
 
        }
+
+
+       comic.genres.forEach(
+           genre => {
+
+               if (
+                   !genre
+               ) {
+
+                   return;
+
+               }
+
+
+               const name =
+                   String(
+                       genre
+                   ).trim();
+
+
+               const slug =
+                   createSlug(
+                       name
+                   );
+
+
+               if (
+                   slug &&
+                   !genres.has(
+                       slug
+                   )
+               ) {
+
+                   genres.set(
+                       slug,
+                       name
+                   );
+
+               }
+
+           }
+       );
 
    }
   ```
@@ -312,7 +312,7 @@ GENRES
   );
 
   if (
-  uniqueGenres.length === 0
+  genres.size === 0
   ) {
 
   ```
@@ -329,8 +329,11 @@ GENRES
 
   }
 
-  uniqueGenres.forEach(
-  genre => {
+  genres.forEach(
+  (
+  name,
+  slug
+  ) => {
 
   ```
        const item =
@@ -339,199 +342,17 @@ GENRES
            );
 
 
-       const slug =
-           createSlug(
-               genre
-           );
+       item.innerHTML = `
 
+           <a
+               href="${getSeriesPageUrl()}?genre=${encodeURIComponent(slug)}"
+           >
 
-       const link =
-           document.createElement(
-               "a"
-           );
+               ${name}
 
+           </a>
 
-       link.href =
-           `${getSeriesPageUrl()}?genre=${encodeURIComponent(slug)}`;
-
-
-       link.textContent =
-           genre;
-
-
-       item.appendChild(
-           link
-       );
-
-
-       container.appendChild(
-           item
-       );
-
-   }
-  ```
-
-  );
-
-}
-
-/* ==========================================================
-SERIES
-========================================================== */
-
-/**
-
-* Renderiza las series disponibles.
-*
-* Busca:
-*
-* #series-list
-*
-* Si no existe, intenta:
-*
-* #categories-list
-*
-* Esto permite mantener compatibilidad
-* con la estructura actual del Home.
-  */
-  function renderSeries(
-  series = []
-  ) {
-
-  let container =
-  document.querySelector(
-  "#series-list"
-  );
-
-  /*
-  Si todavía no existe
-  #series-list, no rompe el Home.
-
-  La sección de Series puede
-  agregarse posteriormente.
-  */
-
-  if (!container) {
-
-  ```
-   return;
-  ```
-
-  }
-
-  container.innerHTML =
-  "";
-
-  if (
-  !Array.isArray(series) ||
-  series.length === 0
-  ) {
-
-  ```
-   container.innerHTML = `
-
-       <li>
-           No series available.
-       </li>
-
-   `;
-
-   return;
-  ```
-
-  }
-
-  series.forEach(
-  serie => {
-
-  ```
-       let id = "";
-       let name = "";
-
-
-       /*
-       Soporta:
-
-       {
-           "id": "ryuko-matoi",
-           "title": "Ryuko Matoi"
-       }
-
-       o:
-
-       {
-           "id": "ryuko-matoi",
-           "name": "Ryuko Matoi"
-       }
-       */
-
-       if (
-           typeof serie ===
-           "string"
-       ) {
-
-           id =
-               createSlug(
-                   serie
-               );
-
-           name =
-               serie;
-
-       } else if (
-           serie &&
-           typeof serie ===
-           "object"
-       ) {
-
-           id =
-               serie.id ||
-               serie.slug ||
-               createSlug(
-                   serie.name ||
-                   serie.title
-               );
-
-
-           name =
-               serie.name ||
-               serie.title ||
-               serie.id ||
-               "Untitled";
-
-       }
-
-
-       if (!id) {
-
-           return;
-
-       }
-
-
-       const item =
-           document.createElement(
-               "li"
-           );
-
-
-       const link =
-           document.createElement(
-               "a"
-           );
-
-
-       link.href =
-           `${getSeriesPageUrl()}?series=${encodeURIComponent(id)}`;
-
-
-       link.textContent =
-           name;
-
-
-       item.appendChild(
-           link
-       );
+       `;
 
 
        container.appendChild(
@@ -553,11 +374,8 @@ CHARACTERS
 
 * Renderiza personajes.
 *
-* Cada personaje es clickeable.
-*
-* Ejemplo:
-*
-* series.html?character=ryuko-matoi
+* Los personajes se obtienen
+* desde characters.json.
   */
   function renderCharacters(
   characters = []
@@ -618,8 +436,7 @@ CHARACTERS
 
 
            /*
-           Soporta personajes
-           como string.
+           PERSONAJE COMO STRING
            */
 
            if (
@@ -639,8 +456,7 @@ CHARACTERS
 
 
            /*
-           Soporta personajes
-           como objetos.
+           PERSONAJE COMO OBJETO
            */
 
            else if (
@@ -688,36 +504,33 @@ CHARACTERS
                "character-item";
 
 
+           const isInsidePages =
+               window.location.pathname.includes("/pages/");
+
+
+           const fallback =
+               isInsidePages
+                   ? "../assets/placeholders/avatar.webp"
+                   : "assets/placeholders/avatar.webp";
+
+
+           const characterURL =
+               `${getSeriesPageUrl()}?character=${encodeURIComponent(id)}`;
+
+
            item.innerHTML = `
 
                <a
-                   href="${getSeriesPageUrl()}?character=${encodeURIComponent(id)}"
+                   href="${characterURL}"
                    class="character-link"
                >
 
                    <div class="character-avatar">
 
                        <img
-                           src="${
-                               image ||
-                               (
-                                   window.location.pathname.includes("/pages/")
-                                       ? "../assets/placeholders/avatar.webp"
-                                       : "assets/placeholders/avatar.webp"
-                               )
-                           }"
-
+                           src="${image || fallback}"
                            alt="${name}"
-
                            loading="lazy"
-
-                           onerror="
-                               this.src='${
-                                   window.location.pathname.includes("/pages/")
-                                       ? "../assets/placeholders/avatar.webp"
-                                       : "assets/placeholders/avatar.webp"
-                               }'
-                           "
                        >
 
                    </div>
@@ -767,41 +580,25 @@ INITIALIZE SIDEBAR
 
 /**
 
-* Inicializa todo el Sidebar.
-*
-* Carga:
-*
-* * Comics
-* * Characters
-* * Genres
-* * Series
-    */
-    export async function initSidebar() {
+* Inicializa el Sidebar.
+  */
+  export async function initSidebar() {
 
   try {
 
   ```
    /*
-   Cargar todos los datasets
-   en paralelo.
+   Cargar solamente
+   los datos que ya sabemos
+   que existen.
    */
 
-   const [
-       comics,
-       characters,
-       genres,
-       series
-   ] = await Promise.all([
+   const comics =
+       await loadComics();
 
-       loadComics(),
 
-       loadCharacters(),
-
-       loadGenres(),
-
-       loadSeries()
-
-   ]);
+   const characters =
+       await loadCharacters();
 
 
    /*
@@ -818,7 +615,7 @@ INITIALIZE SIDEBAR
    */
 
    renderGenres(
-       genres
+       comics
    );
 
 
@@ -828,15 +625,6 @@ INITIALIZE SIDEBAR
 
    renderCharacters(
        characters
-   );
-
-
-   /*
-   Series
-   */
-
-   renderSeries(
-       series
    );
   ```
 
