@@ -47,7 +47,7 @@ function renderRecentUpdates(comics = []) {
 
         item.innerHTML = `
 
-            <a href="pages/comic.html?id=${comic.id}">
+            <a href="/darkenshorns/pages/comic.html?id=${comic.id}">
 
                 ${comic.title}
 
