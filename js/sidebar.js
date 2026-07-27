@@ -14,53 +14,39 @@ import {
  */
 function renderRecentUpdates(comics = []) {
 
-
     const container =
-    document.querySelector(
-        "#recent-list"
-    );
-
+        document.querySelector("#recent-list");
 
     if (!container) return;
 
-
     container.innerHTML = "";
 
-
     const recent = [...comics]
-
-        .sort((a,b) =>
+        .sort((a, b) =>
             new Date(b.updated || 0) -
             new Date(a.updated || 0)
         )
-
-        .slice(0,5);
-
-
+        .slice(0, 5);
 
     recent.forEach(comic => {
 
-
         const item =
-        document.createElement("li");
+            document.createElement("li");
 
+        const link =
+            document.createElement("a");
 
-        item.innerHTML = `
+        link.href =
+            `pages/comic.html?id=${encodeURIComponent(comic.id)}`;
 
-            <a href="/darkenshorns/pages/comic.html?id=${comic.id}">
+        link.textContent =
+            comic.title;
 
-                ${comic.title}
-
-            </a>
-
-        `;
-
+        item.appendChild(link);
 
         container.appendChild(item);
 
-
     });
-
 
 }
 
