@@ -1,23 +1,14 @@
 [
-  {
-    "id":"chapter-001",
-    "seriesId":"series-001",
-    "comicId":"comic-001",
-    "number":1,
-    "title":"The Beginning",
-    "pages":32,
-    "folder":"dark-hunter/chapter-001",
-    "releaseDate":"2026-07-10"
-  },
-
-  {
-    "id":"chapter-002",
-    "seriesId":"series-001",
-    "comicId":"comic-001",
-    "number":2,
-    "title":"Dark Arrival",
-    "pages":29,
-    "folder":"dark-hunter/chapter-002",
-    "releaseDate":"2026-07-12"
-  }
+    {
+        "name": "Ryuko Matoi",
+        "image": "https://ah-img.luscious.net/darkenshorns/618164/1_01KXEB1MP5H0T6BDY6RJCD4G19.1280x0.jpg"
+    },
+    {
+        "name": "Mai Shiranui",
+        "image": "assets/characters/mai-shiranui.jpg"
+    },
+    {
+        "name": "Dark Hunter",
+        "image": "https://url-de-tu-imagen.com/dark-hunter.jpg"
+    }
 ]
