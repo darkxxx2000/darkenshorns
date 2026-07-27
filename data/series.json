@@ -1,45 +1,73 @@
-[
+  [
   {
-    "id": "series-001",
-    "slug": "dark-hunter",
-    "title": "Dark Hunter",
-    "description": "Official Dark Hunter universe.",
+    "id": "ryuko-matoi-stories",
+    "title": "Ryuko Matoi Stories",
+    "description": "Dark stories featuring Ryuko Matoi.",
     "cover": "https://ah-img.luscious.net/darkenshorns/618164/15_01KXEB2A845KY6VD7K44P99XNP.1280x0.jpg",
-    "banner": "https://ah-img.luscious.net/darkenshorns/618164/15_01KXEB2A845KY6VD7K44P99XNP.1280x0.jpg",
-    "type": "comic",
-    "adult": true
+    "type": "comic"
   },
-
   {
-    "id": "series-002",
-    "slug": "crimson-moon",
-    "title": "Crimson Moon",
-    "description": "Blood fantasy universe.",
-    "cover": "uploads/series/crimson-moon.webp",
-    "banner": "uploads/series/crimson-moon-banner.webp",
-    "type": "comic",
-    "adult": true
+    "id": "Ai-Chan-stories",
+    "title": "Ai-Chan Stories",
+    "description": "Dark adventures featuring Ai-Chan.",
+    "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
+    "type": "comic"
   },
-
   {
-    "id": "series-003",
-    "slug": "iron-souls",
-    "title": "Iron Souls",
-    "description": "Sci-fi universe.",
-    "cover": "uploads/series/iron-souls.webp",
-    "banner": "uploads/series/iron-souls-banner.webp",
-    "type": "comic",
-    "adult": true
+    "id": "dark-hunter-chronicles",
+    "title": "Dark Hunter Chronicles",
+    "description": "The chronicles of a mysterious hunter.",
+    "cover": "https://example.com/images/series/dark-hunter.jpg",
+    "type": "comic"
   },
-
   {
-    "id": "series-004",
-    "slug": "fallen-empire",
-    "title": "Fallen Empire",
-    "description": "Fantasy world.",
-    "cover": "uploads/series/fallen-empire.webp",
-    "banner": "uploads/series/fallen-empire-banner.webp",
-    "type": "comic",
-    "adult": true
+    "id": "crimson-moon-chronicles",
+    "title": "Crimson Moon Chronicles",
+    "description": "A supernatural story under the blood moon.",
+    "cover": "https://example.com/images/series/crimson-moon.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "iron-souls-saga",
+    "title": "Iron Souls Saga",
+    "description": "A cyberpunk story about machines and souls.",
+    "cover": "https://example.com/images/series/iron-souls.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "dark-stories-collection",
+    "title": "Dark Stories Collection",
+    "description": "A collection of independent dark stories.",
+    "cover": "https://example.com/images/series/dark-stories.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "shadow-witch-saga",
+    "title": "Shadow Witch Saga",
+    "description": "The story of a witch surrounded by living shadows.",
+    "cover": "https://example.com/images/series/shadow-witch.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "blood-queen-saga",
+    "title": "Blood Queen Saga",
+    "description": "The return of a forgotten queen.",
+    "cover": "https://example.com/images/series/blood-queen.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "cyber-demon-chronicles",
+    "title": "Cyber Demon Chronicles",
+    "description": "A digital demon enters the real world.",
+    "cover": "https://example.com/images/series/cyber-demon.jpg",
+    "type": "comic"
+  },
+  {
+    "id": "fallen-angel-saga",
+    "title": "Fallen Angel Saga",
+    "description": "An angel falls into a world of darkness.",
+    "cover": "https://example.com/images/series/fallen-angel.jpg",
+    "type": "comic"
   }
+]
 ]
