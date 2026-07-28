@@ -46,86 +46,101 @@ loadGenres
   ".sidebar-toggle"
   );
 
+  console.log(
+  "Sidebar toggles encontrados:",
+  toggles.length
+  );
+
   toggles.forEach(toggle => {
 
   ```
-   toggle.addEventListener(
-       "click",
-       function () {
+   /*
+    * CLICK
+    */
 
-           const section =
-               this.closest(
-                   ".sidebar-box"
-               );
+   toggle.onclick = function () {
 
-
-           if (!section) return;
-
-
-           const content =
-               section.querySelector(
-                   ".sidebar-content"
-               );
+       const section =
+           this.closest(
+               ".sidebar-box"
+           );
 
 
-           const arrow =
-               this.querySelector(
-                   ".sidebar-arrow"
-               );
+       if (!section) return;
 
 
-           if (!content) return;
+       const content =
+           section.querySelector(
+               ".sidebar-content"
+           );
 
 
-           const isOpen =
-               section.classList.contains(
-                   "open"
-               );
+       if (!content) return;
 
 
-           if (isOpen) {
-
-               section.classList.remove(
-                   "open"
-               );
-
-               this.setAttribute(
-                   "aria-expanded",
-                   "false"
-               );
+       const arrow =
+           this.querySelector(
+               ".sidebar-arrow"
+           );
 
 
-               if (arrow) {
-
-                   arrow.textContent =
-                       "+";
-
-               }
-
-           } else {
-
-               section.classList.add(
-                   "open"
-               );
-
-               this.setAttribute(
-                   "aria-expanded",
-                   "true"
-               );
+       const isOpen =
+           section.classList.contains(
+               "open"
+           );
 
 
-               if (arrow) {
+       if (isOpen) {
 
-                   arrow.textContent =
-                       "−";
+           section.classList.remove(
+               "open"
+           );
 
-               }
+
+           this.setAttribute(
+               "aria-expanded",
+               "false"
+           );
+
+
+           if (arrow) {
+
+               arrow.textContent =
+                   "+";
+
+           }
+
+       } else {
+
+           section.classList.add(
+               "open"
+           );
+
+
+           this.setAttribute(
+               "aria-expanded",
+               "true"
+           );
+
+
+           if (arrow) {
+
+               arrow.textContent =
+                   "−";
 
            }
 
        }
-   );
 
+   };
+
+
+   /*
+    * TECLADO
+    *
+    * Enter o espacio
+    * también abre/cierra.
+    */
 
    toggle.addEventListener(
        "keydown",
@@ -153,11 +168,16 @@ loadGenres
 /**
 
 * Renderiza Recent Updates.
+*
+* Muestra solamente los 10
+* cómics actualizados más recientemente.
   */
   function renderRecentUpdates(comics = []) {
 
   const container =
-  document.querySelector("#recent-list");
+  document.querySelector(
+  "#recent-list"
+  );
 
   if (!container) return;
 
@@ -174,15 +194,22 @@ loadGenres
   recent.forEach(comic => {
 
   ```
-   if (!comic || !comic.id) return;
+   if (
+       !comic ||
+       !comic.id
+   ) return;
 
 
    const item =
-       document.createElement("li");
+       document.createElement(
+           "li"
+       );
 
 
    const link =
-       document.createElement("a");
+       document.createElement(
+           "a"
+       );
 
 
    link.href =
@@ -215,6 +242,8 @@ loadGenres
 /**
 
 * Renderiza géneros.
+*
+* Muestra todos los géneros.
   */
   function renderGenres(genres = []) {
 
@@ -252,7 +281,10 @@ loadGenres
            : genre;
 
 
-   if (!id || !name) return;
+   if (
+       !id ||
+       !name
+   ) return;
 
 
    const item =
@@ -296,6 +328,8 @@ loadGenres
 /**
 
 * Renderiza series.
+*
+* Muestra todas las series.
   */
   function renderSeries(series = []) {
 
@@ -335,7 +369,10 @@ loadGenres
            : serie;
 
 
-   if (!id || !name) return;
+   if (
+       !id ||
+       !name
+   ) return;
 
 
    const item =
@@ -379,6 +416,8 @@ loadGenres
 /**
 
 * Renderiza personajes.
+*
+* Muestra todos los personajes.
   */
   function renderCharacters(
   characters = []
@@ -478,6 +517,7 @@ loadGenres
 
            this.onerror =
                null;
+
 
            this.src =
                getAssetsPath() +
@@ -611,6 +651,11 @@ loadGenres
        genres
    );
 
+
+   /*
+    * Inicializa los clics
+    * después de cargar todo.
+    */
 
    initSidebarAccordions();
   ```
