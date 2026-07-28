@@ -1,208 +1,94 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkensHorns</title>
+<meta name="description" content="DarkensHorns - Dark Comics, AI Gallery, Characters and Stories">
+<link rel="icon" href="favicon.ico">
 
-<meta name="viewport"
-   content="width=device-width, initial-scale=1.0">
-
-<title>
-DarkensHorns
-</title>
-
-<meta
- name="description"
- content="DarkensHorns - Dark Comics, AI Gallery, Characters and Stories">
-
-<link
-    rel="icon"
-    href="favicon.ico">
-
-<link
-    rel="stylesheet"
-    href="css/variables.css">
-
-<link
-    rel="stylesheet"
-    href="css/theme.css">
-
-<link
-    rel="stylesheet"
-    href="css/layout.css">
-
-<link
-    rel="stylesheet"
-    href="css/header.css">
-
-<link
-    rel="stylesheet"
-    href="css/navigation.css">
-
-<link
-    rel="stylesheet"
-    href="css/cards.css">
-
-<link
-    rel="stylesheet"
-    href="css/sidebar.css">
-
-<link
-    rel="stylesheet"
-    href="css/footer.css">
-
-<link
-    rel="stylesheet"
-    href="css/animation.css">
-
-<link
-    rel="stylesheet"
-    href="css/home.css">
-
-<link
-    rel="stylesheet"
-    href="css/home-banner.css">
-
-<link
-    rel="stylesheet"
-    href="css/responsive.css">
-
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/animation.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/home-banner.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
 
 <header id="site-header">
-
-```
 <div class="header-container">
 
+<a href="index.html" class="logo">
+DarkensHorns
+</a>
 
-    <a
-        href="index.html"
-        class="logo">
+<button class="menu-toggle" aria-label="Open Menu">
+☰
+</button>
 
-        DarkensHorns
+<nav class="main-navigation">
 
-    </a>
+<a href="index.html" class="active">
+Home
+</a>
 
+<a href="pages/series.html">
+Series
+</a>
 
-    <button
-        class="menu-toggle"
-        aria-label="Open Menu">
+<a href="pages/search.html">
+Search
+</a>
 
-        ☰
+<a href="pages/gallery.html">
+Gallery
+</a>
 
-    </button>
+<a href="pages/characters.html">
+Characters
+</a>
 
-
-    <nav class="main-navigation">
-
-
-        <a
-            href="index.html"
-            class="active">
-
-            Home
-
-        </a>
-
-
-        <a
-            href="pages/series.html">
-
-            Series
-
-        </a>
-
-
-        <a
-            href="pages/search.html">
-
-            Search
-
-        </a>
-
-
-        <a
-            href="pages/gallery.html">
-
-            Gallery
-
-        </a>
-
-
-        <a
-            href="pages/characters.html">
-
-            Characters
-
-        </a>
-
-
-    </nav>
-
-
+</nav>
 </div>
-```
-
 </header>
 
 <main class="main-container">
 
 <section id="home-banner">
 
-```
 <div id="banner-slider"></div>
-
 
 <div class="banner-content">
 
+<h1>
+DarkensHorns
+</h1>
 
-    <h1>
+<p>
+Dark Fantasy Comics, AI Gallery, Characters and Stories.
+</p>
 
-        DarkensHorns
+<div class="hero-buttons">
 
-    </h1>
+<a href="pages/series.html" class="hero-primary">
+Read Comics
+</a>
 
-
-    <p>
-
-        Dark Fantasy Comics,
-        AI Gallery,
-        Characters and Stories.
-
-    </p>
-
-
-    <div class="hero-buttons">
-
-
-        <a
-            href="pages/series.html"
-            class="hero-primary">
-
-            Read Comics
-
-        </a>
-
-
-        <a
-            href="pages/search.html"
-            class="hero-secondary">
-
-            Explore
-
-        </a>
-
-
-    </div>
-
+<a href="pages/search.html" class="hero-secondary">
+Explore
+</a>
 
 </div>
-```
-
+</div>
 </section>
 
 <div class="content-layout">
@@ -211,207 +97,125 @@ DarkensHorns
 
 <aside class="sidebar">
 
-```
 <!-- GENRES -->
 
+<section class="sidebar-box sidebar-genres">
 
-<section
-    class="sidebar-box sidebar-genres">
+<h3
+class="sidebar-toggle"
+tabindex="0"
+role="button"
+aria-expanded="false">
 
+<span>
+Genres
+</span>
 
-    <h3
-        class="sidebar-toggle"
-        tabindex="0"
-        role="button"
-        aria-expanded="false">
+<span class="sidebar-arrow">
++
+</span>
 
+</h3>
 
-        <span>
+<div class="sidebar-content">
 
-            Genres
+<ul
+id="categories-list"
+class="category-list">
+</ul>
 
-        </span>
-
-
-        <span
-            class="sidebar-arrow">
-
-            +
-
-        </span>
-
-
-    </h3>
-
-
-
-    <div
-        class="sidebar-content">
-
-
-        <ul
-            id="categories-list"
-            class="category-list">
-
-        </ul>
-
-
-    </div>
-
+</div>
 
 </section>
-
-
 
 <!-- SERIES -->
 
+<section class="sidebar-box sidebar-series">
 
-<section
-    class="sidebar-box sidebar-series">
+<h3
+class="sidebar-toggle"
+tabindex="0"
+role="button"
+aria-expanded="false">
 
+<span>
+Series
+</span>
 
-    <h3
-        class="sidebar-toggle"
-        tabindex="0"
-        role="button"
-        aria-expanded="false">
+<span class="sidebar-arrow">
++
+</span>
 
+</h3>
 
-        <span>
+<div class="sidebar-content">
 
-            Series
+<ul
+id="series-list"
+class="category-list">
+</ul>
 
-        </span>
-
-
-        <span
-            class="sidebar-arrow">
-
-            +
-
-        </span>
-
-
-    </h3>
-
-
-
-    <div
-        class="sidebar-content">
-
-
-        <ul
-            id="series-list"
-            class="category-list">
-
-        </ul>
-
-
-    </div>
-
+</div>
 
 </section>
-
-
 
 <!-- RECENT UPDATES -->
 
+<section class="sidebar-box sidebar-recent">
 
-<section
-    class="sidebar-box sidebar-recent">
+<h3
+class="sidebar-toggle"
+tabindex="0"
+role="button"
+aria-expanded="false">
 
+<span>
+Recent Updates
+</span>
 
-    <h3
-        class="sidebar-toggle"
-        tabindex="0"
-        role="button"
-        aria-expanded="false">
+<span class="sidebar-arrow">
++
+</span>
 
+</h3>
 
-        <span>
+<div class="sidebar-content">
 
-            Recent Updates
+<ul id="recent-list">
+</ul>
 
-        </span>
-
-
-        <span
-            class="sidebar-arrow">
-
-            +
-
-        </span>
-
-
-    </h3>
-
-
-
-    <div
-        class="sidebar-content">
-
-
-        <ul
-            id="recent-list">
-
-        </ul>
-
-
-    </div>
-
+</div>
 
 </section>
-
-
 
 <!-- CHARACTERS -->
 
+<section class="sidebar-box sidebar-characters">
 
-<section
-    class="sidebar-box sidebar-characters">
+<h3
+class="sidebar-toggle"
+tabindex="0"
+role="button"
+aria-expanded="false">
 
+<span>
+Characters
+</span>
 
-    <h3
-        class="sidebar-toggle"
-        tabindex="0"
-        role="button"
-        aria-expanded="false">
+<span class="sidebar-arrow">
++
+</span>
 
+</h3>
 
-        <span>
+<div class="sidebar-content">
 
-            Characters
+<div id="characters-list">
+</div>
 
-        </span>
-
-
-        <span
-            class="sidebar-arrow">
-
-            +
-
-        </span>
-
-
-    </h3>
-
-
-
-    <div
-        class="sidebar-content">
-
-
-        <div
-            id="characters-list">
-
-        </div>
-
-
-    </div>
-
+</div>
 
 </section>
-```
 
 </aside>
 
@@ -419,178 +223,109 @@ DarkensHorns
 
 <section class="content">
 
-```
 <section class="home-section">
 
+<div class="section-header">
 
-    <div class="section-header">
+<h2 class="section-title">
+Latest Comics
+</h2>
 
-
-        <h2 class="section-title">
-
-            Latest Comics
-
-        </h2>
-
-
-        <a
-            href="pages/series.html">
-
-            View All
-
-        </a>
-
-
-    </div>
-
-
-
-    <div
-        id="latest-comics"
-        class="comic-grid">
-
-    </div>
-
-
-</section>
-
-
-
-<section class="home-section">
-
-
-    <div class="section-header">
-
-
-        <h2 class="section-title">
-
-            Popular Comics
-
-        </h2>
-
-
-        <a
-            href="pages/series.html">
-
-            View All
-
-        </a>
-
-
-    </div>
-
-
-
-    <div
-        id="popular-comics"
-        class="comic-grid">
-
-    </div>
-
-
-</section>
-
-
-
-<section class="home-section">
-
-
-    <div class="section-header">
-
-
-        <h2 class="section-title">
-
-            Featured Series
-
-        </h2>
-
-
-        <a
-            href="pages/series.html">
-
-            View All
-
-        </a>
-
-
-    </div>
-
-
-
-    <div
-        id="featured-series"
-        class="comic-grid">
-
-    </div>
-
-
-</section>
-```
-
-</section>
+<a href="pages/series.html">
+View All
+</a>
 
 </div>
 
+<div
+id="latest-comics"
+class="comic-grid">
+</div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Popular Comics
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div
+id="popular-comics"
+class="comic-grid">
+</div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Featured Series
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div
+id="featured-series"
+class="comic-grid">
+</div>
+
+</section>
+
+</section>
+</div>
 </main>
 
-<div
-    id="comic-modal"
-    class="modal">
+<div id="comic-modal" class="modal">
 
-```
-<div
-    class="modal-content">
+<div class="modal-content">
 
+<button class="modal-close">
+×
+</button>
 
-    <button
-        class="modal-close">
-
-        ×
-
-    </button>
-
-
-    <div
-        id="modal-body">
-
-    </div>
-
+<div id="modal-body">
+</div>
 
 </div>
-```
-
 </div>
 
 <footer id="site-footer">
 
-```
 <div class="footer-container">
 
-
-    <p>
-
-        © 2026 DarkensHorns.
-        All Rights Reserved.
-
-    </p>
-
+<p>
+© 2026 DarkensHorns. All Rights Reserved.
+</p>
 
 </div>
-```
-
 </footer>
 
 <script
-    type="module"
-    src="js/app.js">
+type="module"
+src="js/app.js">
 </script>
 
 <script
-    type="module"
-    src="js/home-banner.js">
+type="module"
+src="js/home-banner.js">
 </script>
 
 </body>
-
 </html>
+
 
