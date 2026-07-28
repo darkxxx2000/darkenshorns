@@ -38,9 +38,6 @@ loadGenres
 /**
 
 * Inicializa los acordeones del sidebar.
-*
-* Todas las secciones comienzan cerradas.
-* Al hacer click se abren o se cierran.
   */
   function initSidebarAccordions() {
 
@@ -48,8 +45,6 @@ loadGenres
   document.querySelectorAll(
   ".sidebar-toggle"
   );
-
-  if (!toggles.length) return;
 
   toggles.forEach(toggle => {
 
@@ -94,7 +89,6 @@ loadGenres
                    "open"
                );
 
-
                this.setAttribute(
                    "aria-expanded",
                    "false"
@@ -114,7 +108,6 @@ loadGenres
                    "open"
                );
 
-
                this.setAttribute(
                    "aria-expanded",
                    "true"
@@ -132,6 +125,25 @@ loadGenres
 
        }
    );
+
+
+   toggle.addEventListener(
+       "keydown",
+       function (event) {
+
+           if (
+               event.key === "Enter" ||
+               event.key === " "
+           ) {
+
+               event.preventDefault();
+
+               this.click();
+
+           }
+
+       }
+   );
   ```
 
   });
@@ -141,9 +153,6 @@ loadGenres
 /**
 
 * Renderiza Recent Updates.
-*
-* Muestra solamente los 10
-* cómics actualizados más recientemente.
   */
   function renderRecentUpdates(comics = []) {
 
@@ -206,8 +215,6 @@ loadGenres
 /**
 
 * Renderiza géneros.
-*
-* Muestra todos los géneros.
   */
   function renderGenres(genres = []) {
 
@@ -289,8 +296,6 @@ loadGenres
 /**
 
 * Renderiza series.
-*
-* Muestra todas las series.
   */
   function renderSeries(series = []) {
 
@@ -374,8 +379,6 @@ loadGenres
 /**
 
 * Renderiza personajes.
-*
-* Muestra todos los personajes.
   */
   function renderCharacters(
   characters = []
@@ -608,10 +611,6 @@ loadGenres
        genres
    );
 
-
-   /* -------------------------
-      ACORDEONES
-   ------------------------- */
 
    initSidebarAccordions();
   ```
