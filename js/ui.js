@@ -5,7 +5,8 @@
   *************************************************/
 
 import {
-loadComics
+loadComics,
+loadSeries
 } from "./data-loader.js";
 
 import {
@@ -28,49 +29,28 @@ renderComicCards
   "#popular-comics"
   );
 
+  const featuredSeriesContainer =
+  document.querySelector(
+  "#featured-series"
+  );
+
   /* -------------------------
-  CARGAR CÓMICS
+  CÓMICS
   ------------------------- */
 
   const comics =
   await loadComics();
 
-  if (!Array.isArray(comics)) {
-
-  ```
-   console.error(
-       "No se pudieron cargar los cómics."
-   );
-
-   return;
-  ```
-
-  }
-
   /* -------------------------
-  LATEST UPDATES
+  LATEST
   ------------------------- */
 
   if (latestContainer) {
 
   ```
-   const latest =
-       [...comics]
-           .sort(
-               (a, b) =>
-                   new Date(
-                       b.updated || 0
-                   ) -
-                   new Date(
-                       a.updated || 0
-                   )
-           )
-           .slice(0, 8);
-
-
    renderComicCards(
        latestContainer,
-       latest
+       comics.slice(0, 8)
    );
   ```
 
@@ -83,19 +63,34 @@ renderComicCards
   if (popularContainer) {
 
   ```
-   const popular =
+   renderComicCards(
+       popularContainer,
+
        [...comics]
            .sort(
                (a, b) =>
                    (b.views || 0) -
                    (a.views || 0)
            )
-           .slice(0, 8);
+           .slice(0, 8)
+   );
+  ```
 
+  }
 
+  /* -------------------------
+  FEATURED SERIES
+  ------------------------- */
+
+  const series =
+  await loadSeries();
+
+  if (featuredSeriesContainer) {
+
+  ```
    renderComicCards(
-       popularContainer,
-       popular
+       featuredSeriesContainer,
+       series.slice(0, 6)
    );
   ```
 
