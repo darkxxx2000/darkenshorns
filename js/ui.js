@@ -1,83 +1,180 @@
 /*************************************************
- * DARKENSHORNS
- * UI
- *************************************************/
 
-import { loadComics, loadSeries } from "./data-loader.js";
-import { renderComicCards } from "./cards.js";
+* DARKENSHORNS
+* UI
+  *************************************************/
+
+import {
+loadComics
+} from "./data-loader.js";
+
+import {
+renderComicCards
+} from "./cards.js";
 
 /**
- * Inicializa la página de inicio.
- */
-export async function initHomePage() {
 
-    const latestContainer = document.querySelector("#latest-comics");
-    const popularContainer = document.querySelector("#popular-comics");
-    const featuredSeriesContainer = document.querySelector("#featured-series");
+* Inicializa la página de inicio.
+  */
+  export async function initHomePage() {
 
-    /* -------------------------
-       CÓMICS
-    ------------------------- */
+  const latestContainer =
+  document.querySelector(
+  "#latest-comics"
+  );
 
-    const comics = await loadComics();
+  const popularContainer =
+  document.querySelector(
+  "#popular-comics"
+  );
 
-    if (latestContainer) {
+  /* -------------------------
+  CARGAR CÓMICS
+  ------------------------- */
 
-        renderComicCards(
-            latestContainer,
-            comics.slice(0, 8)
-        );
+  const comics =
+  await loadComics();
 
-    }
+  if (!Array.isArray(comics)) {
 
-    if (popularContainer) {
+  ```
+   console.error(
+       "No se pudieron cargar los cómics."
+   );
 
-        renderComicCards(
-            popularContainer,
-            [...comics]
-                .sort((a, b) => (b.views || 0) - (a.views || 0))
-                .slice(0, 8)
-        );
+   return;
+  ```
 
-    }
+  }
 
-    /* -------------------------
-       SERIES
-    ------------------------- */
+  /* -------------------------
+  LATEST UPDATES
+  ------------------------- */
 
-    const series = await loadSeries();
+  if (latestContainer) {
 
-    if (featuredSeriesContainer) {
+  ```
+   const latest =
+       [...comics]
+           .sort(
+               (a, b) =>
+                   new Date(
+                       b.updated || 0
+                   ) -
+                   new Date(
+                       a.updated || 0
+                   )
+           )
+           .slice(0, 8);
 
-        renderComicCards(
-            featuredSeriesContainer,
-            series.slice(0, 6)
-        );
 
-    }
+   renderComicCards(
+       latestContainer,
+       latest
+   );
+  ```
+
+  }
+
+  /* -------------------------
+  POPULAR
+  ------------------------- */
+
+  if (popularContainer) {
+
+  ```
+   const popular =
+       [...comics]
+           .sort(
+               (a, b) =>
+                   (b.views || 0) -
+                   (a.views || 0)
+           )
+           .slice(0, 8);
+
+
+   renderComicCards(
+       popularContainer,
+       popular
+   );
+  ```
+
+  }
 
 }
 
 /**
- * Detecta automáticamente la página actual.
- */
-export function detectCurrentPage() {
 
-    const path = window.location.pathname.toLowerCase();
+* Detecta automáticamente
+* la página actual.
+  */
+  export function detectCurrentPage() {
 
-    if (
-        path.endsWith("/") ||
-        path.endsWith("index.html")
-    ) {
-        return "home";
-    }
+  const path =
+  window.location.pathname
+  .toLowerCase();
 
-    if (path.includes("series")) return "series";
-    if (path.includes("comic")) return "comic";
-    if (path.includes("chapter")) return "chapter";
-    if (path.includes("gallery")) return "gallery";
-    if (path.includes("search")) return "search";
+  if (
+  path.endsWith("/") ||
+  path.endsWith("index.html")
+  ) {
 
-    return "unknown";
+  ```
+   return "home";
+  ```
+
+  }
+
+  if (
+  path.includes("series")
+  ) {
+
+  ```
+   return "series";
+  ```
+
+  }
+
+  if (
+  path.includes("comic")
+  ) {
+
+  ```
+   return "comic";
+  ```
+
+  }
+
+  if (
+  path.includes("chapter")
+  ) {
+
+  ```
+   return "chapter";
+  ```
+
+  }
+
+  if (
+  path.includes("gallery")
+  ) {
+
+  ```
+   return "gallery";
+  ```
+
+  }
+
+  if (
+  path.includes("search")
+  ) {
+
+  ```
+   return "search";
+  ```
+
+  }
+
+  return "unknown";
 
 }
