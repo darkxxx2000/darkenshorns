@@ -25,7 +25,7 @@ loadGenres
 
 /**
 
-* Renderiza lista de actualizaciones.
+* Renderiza Recent Updates.
   */
   function renderRecentUpdates(comics = []) {
 
@@ -36,7 +36,8 @@ loadGenres
 
   container.innerHTML = "";
 
-  const recent = [...comics]
+  const recent =
+  [...comics]
   .sort((a, b) =>
   new Date(b.updated || 0) -
   new Date(a.updated || 0)
@@ -55,7 +56,9 @@ loadGenres
        document.createElement("a");
 
    link.href =
-       `${getPagesPath()}comic.html?id=${encodeURIComponent(comic.id)}`;
+       getPagesPath() +
+       "comic.html?id=" +
+       encodeURIComponent(comic.id);
 
    link.textContent =
        comic.title || "Untitled";
@@ -85,12 +88,6 @@ loadGenres
   genres.forEach(genre => {
 
   ```
-   const item =
-       document.createElement("li");
-
-   const link =
-       document.createElement("a");
-
    const id =
        typeof genre === "object"
            ? genre.id
@@ -103,8 +100,16 @@ loadGenres
 
    if (!id || !name) return;
 
+   const item =
+       document.createElement("li");
+
+   const link =
+       document.createElement("a");
+
    link.href =
-       `${getPagesPath()}series.html?genre=${encodeURIComponent(id)}`;
+       getPagesPath() +
+       "series.html?genre=" +
+       encodeURIComponent(id);
 
    link.textContent =
        name;
@@ -134,12 +139,6 @@ loadGenres
   series.forEach(serie => {
 
   ```
-   const item =
-       document.createElement("li");
-
-   const link =
-       document.createElement("a");
-
    const id =
        typeof serie === "object"
            ? serie.id
@@ -152,8 +151,16 @@ loadGenres
 
    if (!id || !name) return;
 
+   const item =
+       document.createElement("li");
+
+   const link =
+       document.createElement("a");
+
    link.href =
-       `${getPagesPath()}series.html?id=${encodeURIComponent(id)}`;
+       getPagesPath() +
+       "series.html?id=" +
+       encodeURIComponent(id);
 
    link.textContent =
        name;
@@ -195,47 +202,91 @@ loadGenres
        document.createElement("a");
 
    link.href =
-       `${getPagesPath()}characters.html?id=${encodeURIComponent(
+       getPagesPath() +
+       "characters.html?id=" +
+       encodeURIComponent(
            character.id || character.name
-       )}`;
+       );
 
    link.className =
        "character-link";
 
-   link.innerHTML = `
 
-       <div class="character-avatar">
+   const avatar =
+       document.createElement("div");
 
-           <img
-               src="${character.image ||
-               "assets/placeholders/avatar.webp"}"
+   avatar.className =
+       "character-avatar";
 
-               alt="${character.name}"
-           >
 
-       </div>
+   const image =
+       document.createElement("img");
 
-       <div class="character-info">
+   image.src =
+       character.image ||
+       "assets/placeholders/avatar.webp";
 
-           <span class="character-name">
+   image.alt =
+       character.name;
 
-               ${character.name}
 
-           </span>
+   avatar.appendChild(
+       image
+   );
 
-           <span class="character-series">
 
-               ${character.series || ""}
+   const info =
+       document.createElement("div");
 
-           </span>
+   info.className =
+       "character-info";
 
-       </div>
 
-   `;
+   const name =
+       document.createElement("span");
 
-   item.appendChild(link);
+   name.className =
+       "character-name";
 
-   container.appendChild(item);
+   name.textContent =
+       character.name;
+
+
+   const series =
+       document.createElement("span");
+
+   series.className =
+       "character-series";
+
+   series.textContent =
+       character.series || "";
+
+
+   info.appendChild(
+       name
+   );
+
+   info.appendChild(
+       series
+   );
+
+
+   link.appendChild(
+       avatar
+   );
+
+   link.appendChild(
+       info
+   );
+
+
+   item.appendChild(
+       link
+   );
+
+   container.appendChild(
+       item
+   );
   ```
 
   });
@@ -293,4 +344,3 @@ loadGenres
   }
 
 }
-
