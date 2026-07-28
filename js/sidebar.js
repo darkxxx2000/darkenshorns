@@ -1,675 +1,674 @@
+```javascript
 /*************************************************
-
-* DARKENSHORNS
-* SIDEBAR
-  *************************************************/
+ * DARKENSHORNS
+ * SIDEBAR
+ *************************************************/
 
 import {
-loadComics,
-loadCharacters,
-loadSeries,
-loadGenres
+    loadComics,
+    loadCharacters,
+    loadSeries,
+    loadGenres
 } from "./data-loader.js";
 
+
 /**
+ * Detecta la ruta correcta hacia las páginas.
+ */
+function getPagesPath() {
 
-* Detecta la ruta correcta hacia las páginas.
-  */
-  function getPagesPath() {
-
-  return window.location.pathname.includes("/pages/")
-  ? ""
-  : "pages/";
+    return window.location.pathname.includes("/pages/")
+        ? ""
+        : "pages/";
 
 }
 
+
 /**
+ * Detecta la ruta correcta hacia los assets.
+ */
+function getAssetsPath() {
 
-* Detecta la ruta correcta hacia los assets.
-  */
-  function getAssetsPath() {
-
-  return window.location.pathname.includes("/pages/")
-  ? "../assets/"
-  : "assets/";
+    return window.location.pathname.includes("/pages/")
+        ? "../assets/"
+        : "assets/";
 
 }
 
+
 /**
+ * Inicializa los acordeones del sidebar.
+ */
+function initSidebarAccordions() {
 
-* Inicializa los acordeones del sidebar.
-  */
-  function initSidebarAccordions() {
-
-  const toggles =
-  document.querySelectorAll(
-  ".sidebar-toggle"
-  );
-
-  console.log(
-  "Sidebar toggles encontrados:",
-  toggles.length
-  );
-
-  toggles.forEach(toggle => {
-
-  ```
-   /*
-    * CLICK
-    */
-
-   toggle.onclick = function () {
-
-       const section =
-           this.closest(
-               ".sidebar-box"
-           );
+    const toggles =
+        document.querySelectorAll(
+            ".sidebar-toggle"
+        );
 
 
-       if (!section) return;
+    console.log(
+        "Sidebar toggles encontrados:",
+        toggles.length
+    );
 
 
-       const content =
-           section.querySelector(
-               ".sidebar-content"
-           );
+    toggles.forEach(toggle => {
+
+        /*
+         * CLICK
+         */
+        toggle.addEventListener(
+            "click",
+            function () {
+
+                const section =
+                    this.closest(
+                        ".sidebar-box"
+                    );
 
 
-       if (!content) return;
+                if (!section) return;
 
 
-       const arrow =
-           this.querySelector(
-               ".sidebar-arrow"
-           );
+                const arrow =
+                    this.querySelector(
+                        ".sidebar-arrow"
+                    );
 
 
-       const isOpen =
-           section.classList.contains(
-               "open"
-           );
+                const isOpen =
+                    section.classList.contains(
+                        "open"
+                    );
 
 
-       if (isOpen) {
+                if (isOpen) {
 
-           section.classList.remove(
-               "open"
-           );
-
-
-           this.setAttribute(
-               "aria-expanded",
-               "false"
-           );
+                    section.classList.remove(
+                        "open"
+                    );
 
 
-           if (arrow) {
-
-               arrow.textContent =
-                   "+";
-
-           }
-
-       } else {
-
-           section.classList.add(
-               "open"
-           );
+                    this.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
 
 
-           this.setAttribute(
-               "aria-expanded",
-               "true"
-           );
+                    if (arrow) {
+
+                        arrow.textContent =
+                            "+";
+
+                    }
+
+                } else {
+
+                    section.classList.add(
+                        "open"
+                    );
 
 
-           if (arrow) {
-
-               arrow.textContent =
-                   "−";
-
-           }
-
-       }
-
-   };
+                    this.setAttribute(
+                        "aria-expanded",
+                        "true"
+                    );
 
 
-   /*
-    * TECLADO
-    *
-    * Enter o espacio
-    * también abre/cierra.
-    */
+                    if (arrow) {
 
-   toggle.addEventListener(
-       "keydown",
-       function (event) {
+                        arrow.textContent =
+                            "−";
 
-           if (
-               event.key === "Enter" ||
-               event.key === " "
-           ) {
+                    }
 
-               event.preventDefault();
+                }
 
-               this.click();
+            }
+        );
 
-           }
 
-       }
-   );
-  ```
+        /*
+         * TECLADO
+         *
+         * Enter o espacio
+         * también abre/cierra.
+         */
+        toggle.addEventListener(
+            "keydown",
+            function (event) {
 
-  });
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    this.click();
+
+                }
+
+            }
+        );
+
+    });
 
 }
 
+
 /**
+ * Renderiza Recent Updates.
+ *
+ * Muestra solamente los 10
+ * cómics actualizados más recientemente.
+ */
+function renderRecentUpdates(
+    comics = []
+) {
 
-* Renderiza Recent Updates.
-*
-* Muestra solamente los 10
-* cómics actualizados más recientemente.
-  */
-  function renderRecentUpdates(comics = []) {
-
-  const container =
-  document.querySelector(
-  "#recent-list"
-  );
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  const recent =
-  [...comics]
-  .sort((a, b) =>
-  new Date(b.updated || 0) -
-  new Date(a.updated || 0)
-  )
-  .slice(0, 10);
-
-  recent.forEach(comic => {
-
-  ```
-   if (
-       !comic ||
-       !comic.id
-   ) return;
+    const container =
+        document.querySelector(
+            "#recent-list"
+        );
 
 
-   const item =
-       document.createElement(
-           "li"
-       );
+    if (!container) return;
 
 
-   const link =
-       document.createElement(
-           "a"
-       );
+    container.innerHTML = "";
 
 
-   link.href =
-       getPagesPath() +
-       "comic.html?id=" +
-       encodeURIComponent(
-           comic.id
-       );
+    const recent =
+        [...comics]
+            .sort((a, b) =>
+                new Date(b.updated || 0) -
+                new Date(a.updated || 0)
+            )
+            .slice(0, 10);
 
 
-   link.textContent =
-       comic.title ||
-       "Untitled";
+    recent.forEach(comic => {
+
+        if (
+            !comic ||
+            !comic.id
+        ) return;
 
 
-   item.appendChild(
-       link
-   );
+        const item =
+            document.createElement(
+                "li"
+            );
 
 
-   container.appendChild(
-       item
-   );
-  ```
+        const link =
+            document.createElement(
+                "a"
+            );
 
-  });
+
+        link.href =
+            getPagesPath() +
+            "comic.html?id=" +
+            encodeURIComponent(
+                comic.id
+            );
+
+
+        link.textContent =
+            comic.title ||
+            "Untitled";
+
+
+        item.appendChild(
+            link
+        );
+
+
+        container.appendChild(
+            item
+        );
+
+    });
 
 }
 
+
 /**
+ * Renderiza géneros.
+ *
+ * Muestra todos los géneros.
+ */
+function renderGenres(
+    genres = []
+) {
 
-* Renderiza géneros.
-*
-* Muestra todos los géneros.
-  */
-  function renderGenres(genres = []) {
-
-  const container =
-  document.querySelector(
-  "#categories-list"
-  );
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  if (!Array.isArray(genres)) {
-
-  ```
-   return;
-  ```
-
-  }
-
-  genres.forEach(genre => {
-
-  ```
-   const id =
-       typeof genre === "object"
-           ? genre.id
-           : genre;
+    const container =
+        document.querySelector(
+            "#categories-list"
+        );
 
 
-   const name =
-       typeof genre === "object"
-           ? genre.name ||
-             genre.title ||
-             genre.id
-           : genre;
+    if (!container) return;
 
 
-   if (
-       !id ||
-       !name
-   ) return;
+    container.innerHTML = "";
 
 
-   const item =
-       document.createElement(
-           "li"
-       );
+    if (!Array.isArray(genres)) {
+
+        return;
+
+    }
 
 
-   const link =
-       document.createElement(
-           "a"
-       );
+    genres.forEach(genre => {
+
+        const id =
+            typeof genre === "object"
+                ? genre.id
+                : genre;
 
 
-   link.href =
-       getPagesPath() +
-       "series.html?genre=" +
-       encodeURIComponent(
-           id
-       );
+        const name =
+            typeof genre === "object"
+                ? (
+                    genre.name ||
+                    genre.title ||
+                    genre.id
+                )
+                : genre;
 
 
-   link.textContent =
-       name;
+        if (
+            !id ||
+            !name
+        ) return;
 
 
-   item.appendChild(
-       link
-   );
+        const item =
+            document.createElement(
+                "li"
+            );
 
 
-   container.appendChild(
-       item
-   );
-  ```
+        const link =
+            document.createElement(
+                "a"
+            );
 
-  });
+
+        link.href =
+            getPagesPath() +
+            "series.html?genre=" +
+            encodeURIComponent(
+                id
+            );
+
+
+        link.textContent =
+            name;
+
+
+        item.appendChild(
+            link
+        );
+
+
+        container.appendChild(
+            item
+        );
+
+    });
 
 }
 
+
 /**
+ * Renderiza series.
+ *
+ * Muestra todas las series.
+ */
+function renderSeries(
+    series = []
+) {
 
-* Renderiza series.
-*
-* Muestra todas las series.
-  */
-  function renderSeries(series = []) {
-
-  const container =
-  document.querySelector(
-  "#series-list"
-  );
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  if (!Array.isArray(series)) {
-
-  ```
-   return;
-  ```
-
-  }
-
-  series.forEach(serie => {
-
-  ```
-   const id =
-       typeof serie === "object"
-           ? serie.id
-           : serie;
+    const container =
+        document.querySelector(
+            "#series-list"
+        );
 
 
-   const name =
-       typeof serie === "object"
-           ? (
-               serie.title ||
-               serie.name ||
-               serie.id
-           )
-           : serie;
+    if (!container) return;
 
 
-   if (
-       !id ||
-       !name
-   ) return;
+    container.innerHTML = "";
 
 
-   const item =
-       document.createElement(
-           "li"
-       );
+    if (!Array.isArray(series)) {
+
+        return;
+
+    }
 
 
-   const link =
-       document.createElement(
-           "a"
-       );
+    series.forEach(serie => {
+
+        const id =
+            typeof serie === "object"
+                ? serie.id
+                : serie;
 
 
-   link.href =
-       getPagesPath() +
-       "series.html?id=" +
-       encodeURIComponent(
-           id
-       );
+        const name =
+            typeof serie === "object"
+                ? (
+                    serie.title ||
+                    serie.name ||
+                    serie.id
+                )
+                : serie;
 
 
-   link.textContent =
-       name;
+        if (
+            !id ||
+            !name
+        ) return;
 
 
-   item.appendChild(
-       link
-   );
+        const item =
+            document.createElement(
+                "li"
+            );
 
 
-   container.appendChild(
-       item
-   );
-  ```
+        const link =
+            document.createElement(
+                "a"
+            );
 
-  });
+
+        link.href =
+            getPagesPath() +
+            "series.html?id=" +
+            encodeURIComponent(
+                id
+            );
+
+
+        link.textContent =
+            name;
+
+
+        item.appendChild(
+            link
+        );
+
+
+        container.appendChild(
+            item
+        );
+
+    });
 
 }
 
+
 /**
+ * Renderiza personajes.
+ *
+ * Muestra todos los personajes.
+ */
+function renderCharacters(
+    characters = []
+) {
 
-* Renderiza personajes.
-*
-* Muestra todos los personajes.
-  */
-  function renderCharacters(
-  characters = []
-  ) {
+    const container =
+        document.querySelector(
+            "#characters-list"
+        );
 
-  const container =
-  document.querySelector(
-  "#characters-list"
-  );
 
-  if (!container) return;
+    if (!container) return;
 
-  container.innerHTML = "";
 
-  if (!Array.isArray(characters)) {
+    container.innerHTML = "";
 
-  ```
-   return;
-  ```
 
-  }
+    if (!Array.isArray(characters)) {
 
-  characters.forEach(character => {
+        return;
 
-  ```
-   if (
-       !character ||
-       !character.name
-   ) {
+    }
 
-       return;
 
-   }
+    characters.forEach(character => {
 
+        if (
+            !character ||
+            !character.name
+        ) {
 
-   const item =
-       document.createElement(
-           "div"
-       );
+            return;
 
+        }
 
-   item.className =
-       "character-item";
 
+        const item =
+            document.createElement(
+                "div"
+            );
 
-   const link =
-       document.createElement(
-           "a"
-       );
 
+        item.className =
+            "character-item";
 
-   link.href =
-       getPagesPath() +
-       "characters.html?id=" +
-       encodeURIComponent(
-           character.id ||
-           character.name
-       );
 
+        const link =
+            document.createElement(
+                "a"
+            );
 
-   link.className =
-       "character-link";
 
+        link.href =
+            getPagesPath() +
+            "characters.html?id=" +
+            encodeURIComponent(
+                character.id ||
+                character.name
+            );
 
-   const avatar =
-       document.createElement(
-           "div"
-       );
 
+        link.className =
+            "character-link";
 
-   avatar.className =
-       "character-avatar";
 
+        const avatar =
+            document.createElement(
+                "div"
+            );
 
-   const image =
-       document.createElement(
-           "img"
-       );
 
+        avatar.className =
+            "character-avatar";
 
-   image.src =
-       character.image ||
-       getAssetsPath() +
-       "placeholders/avatar.webp";
 
+        const image =
+            document.createElement(
+                "img"
+            );
 
-   image.alt =
-       character.name;
 
+        image.src =
+            character.image ||
+            getAssetsPath() +
+            "placeholders/avatar.webp";
 
-   image.loading =
-       "lazy";
 
+        image.alt =
+            character.name;
 
-   image.onerror =
-       function () {
 
-           this.onerror =
-               null;
+        image.loading =
+            "lazy";
 
 
-           this.src =
-               getAssetsPath() +
-               "placeholders/avatar.webp";
+        image.onerror =
+            function () {
 
-       };
+                this.onerror =
+                    null;
 
 
-   avatar.appendChild(
-       image
-   );
+                this.src =
+                    getAssetsPath() +
+                    "placeholders/avatar.webp";
 
+            };
 
-   const info =
-       document.createElement(
-           "div"
-       );
 
+        avatar.appendChild(
+            image
+        );
 
-   info.className =
-       "character-info";
 
+        const info =
+            document.createElement(
+                "div"
+            );
 
-   const name =
-       document.createElement(
-           "span"
-       );
 
+        info.className =
+            "character-info";
 
-   name.className =
-       "character-name";
 
+        const name =
+            document.createElement(
+                "span"
+            );
 
-   name.textContent =
-       character.name;
 
+        name.className =
+            "character-name";
 
-   const series =
-       document.createElement(
-           "span"
-       );
 
+        name.textContent =
+            character.name;
 
-   series.className =
-       "character-series";
 
+        const series =
+            document.createElement(
+                "span"
+            );
 
-   series.textContent =
-       character.series ||
-       "";
 
+        series.className =
+            "character-series";
 
-   info.appendChild(
-       name
-   );
 
+        series.textContent =
+            character.series ||
+            "";
 
-   info.appendChild(
-       series
-   );
 
+        info.appendChild(
+            name
+        );
 
-   link.appendChild(
-       avatar
-   );
 
+        info.appendChild(
+            series
+        );
 
-   link.appendChild(
-       info
-   );
 
+        link.appendChild(
+            avatar
+        );
 
-   item.appendChild(
-       link
-   );
 
+        link.appendChild(
+            info
+        );
 
-   container.appendChild(
-       item
-   );
-  ```
 
-  });
+        item.appendChild(
+            link
+        );
+
+
+        container.appendChild(
+            item
+        );
+
+    });
 
 }
 
+
 /**
+ * Inicializa sidebar.
+ */
+export async function initSidebar() {
 
-* Inicializa sidebar.
-  */
-  export async function initSidebar() {
+    try {
 
-  try {
+        const [
+            comics,
+            characters,
+            series,
+            genres
+        ] =
+            await Promise.all([
 
-  ```
-   const [
-       comics,
-       characters,
-       series,
-       genres
-   ] =
-       await Promise.all([
+                loadComics(),
 
-           loadComics(),
+                loadCharacters(),
 
-           loadCharacters(),
+                loadSeries(),
 
-           loadSeries(),
+                loadGenres()
 
-           loadGenres()
-
-       ]);
+            ]);
 
 
-   renderRecentUpdates(
-       comics
-   );
+        renderRecentUpdates(
+            comics
+        );
 
 
-   renderCharacters(
-       characters
-   );
+        renderCharacters(
+            characters
+        );
 
 
-   renderSeries(
-       series
-   );
+        renderSeries(
+            series
+        );
 
 
-   renderGenres(
-       genres
-   );
+        renderGenres(
+            genres
+        );
 
 
-   /*
-    * Inicializa los clics
-    * después de cargar todo.
-    */
+        /*
+         * Inicializa los clics
+         * después de cargar todo.
+         */
+        initSidebarAccordions();
 
-   initSidebarAccordions();
-  ```
 
-  } catch (error) {
+    } catch (error) {
 
-  ```
-   console.error(
-       "DarkensHorns sidebar error:",
-       error
-   );
-  ```
+        console.error(
+            "DarkensHorns sidebar error:",
+            error
+        );
 
-  }
+    }
 
 }
+```
 
