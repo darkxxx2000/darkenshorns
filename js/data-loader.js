@@ -86,7 +86,7 @@ export const loadTags =
 
 
 export const loadGalleries =
-    () => loadJSON("galleries.json");
+    () => loadJSON("gallery.json");
 
 
 export const loadShortComics =
