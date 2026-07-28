@@ -1,257 +1,296 @@
-```js
 /*************************************************
- * DARKENSHORNS
- * SIDEBAR
- *************************************************/
+
+* DARKENSHORNS
+* SIDEBAR
+  *************************************************/
 
 import {
-    loadComics,
-    loadCharacters,
-    loadSeries,
-    loadGenres
+loadComics,
+loadCharacters,
+loadSeries,
+loadGenres
 } from "./data-loader.js";
 
-
 /**
- * Renderiza lista de actualizaciones.
- */
-function renderRecentUpdates(comics = []) {
 
-    const container =
-        document.querySelector("#recent-list");
+* Detecta la ruta correcta hacia las páginas.
+  */
+  function getPagesPath() {
 
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    const recent = [...comics]
-        .sort((a, b) =>
-            new Date(b.updated || 0) -
-            new Date(a.updated || 0)
-        )
-        .slice(0, 5);
-
-    recent.forEach(comic => {
-
-        const item =
-            document.createElement("li");
-
-        const link =
-            document.createElement("a");
-
-        link.href =
-            `pages/comic.html?id=${encodeURIComponent(comic.id)}`;
-
-        link.textContent =
-            comic.title;
-
-        item.appendChild(link);
-
-        container.appendChild(item);
-
-    });
+  return window.location.pathname.includes("/pages/")
+  ? ""
+  : "pages/";
 
 }
 
-
 /**
- * Renderiza géneros.
- */
-function renderGenres(genres = []) {
 
-    const container =
-        document.querySelector("#categories-list");
+* Renderiza lista de actualizaciones.
+  */
+  function renderRecentUpdates(comics = []) {
 
-    if (!container) return;
+  const container =
+  document.querySelector("#recent-list");
 
-    container.innerHTML = "";
+  if (!container) return;
 
-    genres
-        .slice(0, 5)
-        .forEach(genre => {
+  container.innerHTML = "";
 
-            const item =
-                document.createElement("li");
+  const recent = [...comics]
+  .sort((a, b) =>
+  new Date(b.updated || 0) -
+  new Date(a.updated || 0)
+  )
+  .slice(0, 10);
 
-            const link =
-                document.createElement("a");
+  recent.forEach(comic => {
 
-            const id =
-                typeof genre === "object"
-                    ? genre.id
-                    : genre;
+  ```
+   if (!comic || !comic.id) return;
 
-            const name =
-                typeof genre === "object"
-                    ? genre.name
-                    : genre;
+   const item =
+       document.createElement("li");
 
-            link.href =
-                `pages/series.html?genre=${encodeURIComponent(id)}`;
+   const link =
+       document.createElement("a");
 
-            link.textContent =
-                name;
+   link.href =
+       `${getPagesPath()}comic.html?id=${encodeURIComponent(comic.id)}`;
 
-            item.appendChild(link);
+   link.textContent =
+       comic.title || "Untitled";
 
-            container.appendChild(item);
+   item.appendChild(link);
 
-        });
+   container.appendChild(item);
+  ```
+
+  });
 
 }
 
-
 /**
- * Renderiza series.
- */
-function renderSeries(series = []) {
 
-    const container =
-        document.querySelector("#series-list");
+* Renderiza géneros.
+  */
+  function renderGenres(genres = []) {
 
-    if (!container) return;
+  const container =
+  document.querySelector("#categories-list");
 
-    container.innerHTML = "";
+  if (!container) return;
 
-    series
-        .slice(0, 5)
-        .forEach(serie => {
+  container.innerHTML = "";
 
-            const item =
-                document.createElement("li");
+  genres.forEach(genre => {
 
-            const link =
-                document.createElement("a");
+  ```
+   const item =
+       document.createElement("li");
 
-            const id =
-                typeof serie === "object"
-                    ? serie.id
-                    : serie;
+   const link =
+       document.createElement("a");
 
-            const name =
-                typeof serie === "object"
-                    ? serie.title || serie.name
-                    : serie;
+   const id =
+       typeof genre === "object"
+           ? genre.id
+           : genre;
 
-            link.href =
-                `pages/series.html?id=${encodeURIComponent(id)}`;
+   const name =
+       typeof genre === "object"
+           ? genre.name
+           : genre;
 
-            link.textContent =
-                name;
+   if (!id || !name) return;
 
-            item.appendChild(link);
+   link.href =
+       `${getPagesPath()}series.html?genre=${encodeURIComponent(id)}`;
 
-            container.appendChild(item);
+   link.textContent =
+       name;
 
-        });
+   item.appendChild(link);
+
+   container.appendChild(item);
+  ```
+
+  });
 
 }
 
-
 /**
- * Renderiza personajes.
- */
-function renderCharacters(characters = []) {
 
-    const container =
-        document.querySelector("#characters-list");
+* Renderiza series.
+  */
+  function renderSeries(series = []) {
 
-    if (!container) return;
+  const container =
+  document.querySelector("#series-list");
 
-    container.innerHTML = "";
+  if (!container) return;
 
-    characters
-        .slice(0, 5)
-        .forEach(character => {
+  container.innerHTML = "";
 
-            const item =
-                document.createElement("div");
+  series.forEach(serie => {
 
-            item.className =
-                "character-item";
+  ```
+   const item =
+       document.createElement("li");
 
-            const link =
-                document.createElement("a");
+   const link =
+       document.createElement("a");
 
-            link.href =
-                `pages/characters.html?id=${encodeURIComponent(character.id)}`;
+   const id =
+       typeof serie === "object"
+           ? serie.id
+           : serie;
 
-            link.className =
-                "character-link";
+   const name =
+       typeof serie === "object"
+           ? serie.title || serie.name
+           : serie;
 
-            link.innerHTML = `
+   if (!id || !name) return;
 
-                <div class="character-avatar">
+   link.href =
+       `${getPagesPath()}series.html?id=${encodeURIComponent(id)}`;
 
-                    <img
-                        src="${character.image ||
-                        "assets/placeholders/avatar.webp"}"
+   link.textContent =
+       name;
 
-                        alt="${character.name}"
-                    >
+   item.appendChild(link);
 
-                </div>
+   container.appendChild(item);
+  ```
 
-                <div class="character-info">
-
-                    <span class="character-name">
-
-                        ${character.name}
-
-                    </span>
-
-                    <span class="character-series">
-
-                        ${character.series || ""}
-
-                    </span>
-
-                </div>
-
-            `;
-
-            item.appendChild(link);
-
-            container.appendChild(item);
-
-        });
+  });
 
 }
 
-
 /**
- * Inicializa sidebar.
- */
-export async function initSidebar() {
 
-    const comics =
-        await loadComics();
+* Renderiza personajes.
+  */
+  function renderCharacters(characters = []) {
 
-    const characters =
-        await loadCharacters();
+  const container =
+  document.querySelector("#characters-list");
 
-    const series =
-        await loadSeries();
+  if (!container) return;
 
-    const genres =
-        await loadGenres();
+  container.innerHTML = "";
 
+  characters.forEach(character => {
 
-    renderRecentUpdates(
-        comics
-    );
+  ```
+   if (!character || !character.name) return;
 
-    renderCharacters(
-        characters
-    );
+   const item =
+       document.createElement("div");
 
-    renderSeries(
-        series
-    );
+   item.className =
+       "character-item";
 
-    renderGenres(
-        genres
-    );
+   const link =
+       document.createElement("a");
+
+   link.href =
+       `${getPagesPath()}characters.html?id=${encodeURIComponent(
+           character.id || character.name
+       )}`;
+
+   link.className =
+       "character-link";
+
+   link.innerHTML = `
+
+       <div class="character-avatar">
+
+           <img
+               src="${character.image ||
+               "assets/placeholders/avatar.webp"}"
+
+               alt="${character.name}"
+           >
+
+       </div>
+
+       <div class="character-info">
+
+           <span class="character-name">
+
+               ${character.name}
+
+           </span>
+
+           <span class="character-series">
+
+               ${character.series || ""}
+
+           </span>
+
+       </div>
+
+   `;
+
+   item.appendChild(link);
+
+   container.appendChild(item);
+  ```
+
+  });
 
 }
-```
+
+/**
+
+* Inicializa sidebar.
+  */
+  export async function initSidebar() {
+
+  try {
+
+  ```
+   const comics =
+       await loadComics();
+
+   const characters =
+       await loadCharacters();
+
+   const series =
+       await loadSeries();
+
+   const genres =
+       await loadGenres();
+
+
+   renderRecentUpdates(
+       comics
+   );
+
+   renderCharacters(
+       characters
+   );
+
+   renderSeries(
+       series
+   );
+
+   renderGenres(
+       genres
+   );
+  ```
+
+  } catch (error) {
+
+  ```
+   console.error(
+       "DarkensHorns sidebar error:",
+       error
+   );
+  ```
+
+  }
+
+}
+
