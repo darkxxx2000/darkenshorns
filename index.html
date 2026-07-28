@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -12,7 +13,6 @@
 <meta name="description" content="DarkensHorns - Dark Comics, AI Gallery, Characters and Stories">
 
 <link rel="icon" href="favicon.ico">
-    
 
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/theme.css">
@@ -39,9 +39,10 @@
 DarkensHorns
 </a>
 
-<button class="menu-toggle" aria-label="Open Menu">
-☰
-</button>
+<button
+ class="menu-toggle"
+ aria-label="Open Menu">
+☰ </button>
 
 <nav class="main-navigation">
 
@@ -75,129 +76,238 @@ Characters
 
 <section id="home-banner">
 
-    <div id="banner-slider"></div>
+<div id="banner-slider"></div>
 
-    <div class="banner-content">
+<div class="banner-content">
 
-        <h1>DarkensHorns</h1>
+<h1>
+DarkensHorns
+</h1>
 
-        <p>
-            Dark Fantasy Comics, AI Gallery, Characters and Stories.
-        </p>
+<p>
+Dark Fantasy Comics, AI Gallery, Characters and Stories.
+</p>
 
-        <div class="hero-buttons">
+<div class="hero-buttons">
 
-            <a href="pages/series.html" class="hero-primary">
-                Read Comics
-            </a>
+<a
+ href="pages/series.html"
+ class="hero-primary">
+Read Comics </a>
 
-            <a href="pages/search.html" class="hero-secondary">
-                Explore
-            </a>
+<a
+ href="pages/search.html"
+ class="hero-secondary">
+Explore </a>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </section>
 
 <div class="content-layout">
 
-    <!-- COLUMNA IZQUIERDA -->
-    <aside class="sidebar">
+<!-- COLUMNA IZQUIERDA -->
 
-        <section class="sidebar-box sidebar-genres">
-            <h3>Genres</h3>
-            <ul id="categories-list" class="category-list"></ul>
-        </section>
+<aside class="sidebar">
 
-        <section class="sidebar-box sidebar-series">
-            <h3>Series</h3>
-            <ul id="series-list" class="category-list"></ul>
-        </section>
+<!-- GENRES -->
 
-        <section class="sidebar-box sidebar-recent">
-            <h3>Recent Updates</h3>
-            <ul id="recent-list"></ul>
-        </section>
+<section class="sidebar-box sidebar-genres">
 
-        <section class="sidebar-box sidebar-characters">
-            <h3>Characters</h3>
-            <div id="characters-list"></div>
-        </section>
+<button
+ type="button"
+ class="sidebar-toggle"
+ aria-expanded="false">
 
-    </aside>
+<span>
+Genres
+</span>
 
+<span class="sidebar-arrow">
++
+</span>
 
-    <!-- COLUMNA DERECHA -->
-    <section class="content">
+</button>
 
-        <section class="home-section">
+<div class="sidebar-content">
 
-            <div class="section-header">
-                <h2 class="section-title">
-                    Latest Comics
-                </h2>
+<ul
+    id="categories-list"
+    class="category-list">
+</ul>
 
-                <a href="pages/series.html">
-                    View All
-                </a>
-            </div>
+</div>
 
-            <div
-                id="latest-comics"
-                class="comic-grid">
-            </div>
+</section>
 
-        </section>
+<!-- SERIES -->
 
+<section class="sidebar-box sidebar-series">
 
-        <section class="home-section">
+<button
+ type="button"
+ class="sidebar-toggle"
+ aria-expanded="false">
 
-            <div class="section-header">
-                <h2 class="section-title">
-                    Popular Comics
-                </h2>
+<span>
+Series
+</span>
 
-                <a href="pages/series.html">
-                    View All
-                </a>
-            </div>
+<span class="sidebar-arrow">
++
+</span>
 
-            <div
-                id="popular-comics"
-                class="comic-grid">
-            </div>
+</button>
 
-        </section>
+<div class="sidebar-content">
 
+<ul
+    id="series-list"
+    class="category-list">
+</ul>
 
-        <section class="home-section">
+</div>
 
-            <div class="section-header">
-                <h2 class="section-title">
-                    Featured Series
-                </h2>
+</section>
 
-                <a href="pages/series.html">
-                    View All
-                </a>
-            </div>
+<!-- RECENT UPDATES -->
 
-            <div
-                id="featured-series"
-                class="comic-grid">
-            </div>
+<section class="sidebar-box sidebar-recent">
 
-        </section>
+<button
+ type="button"
+ class="sidebar-toggle"
+ aria-expanded="false">
 
-    </section>
+<span>
+Recent Updates
+</span>
+
+<span class="sidebar-arrow">
++
+</span>
+
+</button>
+
+<div class="sidebar-content">
+
+<ul
+    id="recent-list">
+</ul>
+
+</div>
+
+</section>
+
+<!-- CHARACTERS -->
+
+<section class="sidebar-box sidebar-characters">
+
+<button
+ type="button"
+ class="sidebar-toggle"
+ aria-expanded="false">
+
+<span>
+Characters
+</span>
+
+<span class="sidebar-arrow">
++
+</span>
+
+</button>
+
+<div class="sidebar-content">
+
+<div
+    id="characters-list">
+</div>
+
+</div>
+
+</section>
+
+</aside>
+
+<!-- COLUMNA DERECHA -->
+
+<section class="content">
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Latest Comics
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div
+    id="latest-comics"
+    class="comic-grid">
+</div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Popular Comics
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div
+    id="popular-comics"
+    class="comic-grid">
+</div>
+
+</section>
+
+<section class="home-section">
+
+<div class="section-header">
+
+<h2 class="section-title">
+Featured Series
+</h2>
+
+<a href="pages/series.html">
+View All
+</a>
+
+</div>
+
+<div
+    id="featured-series"
+    class="comic-grid">
+</div>
+
+</section>
+
+</section>
 
 </div>
 
 </main>
 
-<div id="comic-modal" class="modal">
+<div
+    id="comic-modal"
+    class="modal">
 
 <div class="modal-content">
 
@@ -223,8 +333,15 @@ Characters
 
 </footer>
 
-<script type="module" src="js/app.js"></script>
-<script type="module" src="js/home-banner.js"></script>
+<script
+    type="module"
+    src="js/app.js">
+</script>
+
+<script
+    type="module"
+    src="js/home-banner.js">
+</script>
 
 </body>
 
