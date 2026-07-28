@@ -1,518 +1,631 @@
 /*************************************************
- * DARKENSHORNS
- * SIDEBAR
- *************************************************/
+
+* DARKENSHORNS
+* SIDEBAR
+  *************************************************/
 
 import {
-    loadComics,
-    loadCharacters,
-    loadSeries,
-    loadGenres
+loadComics,
+loadCharacters,
+loadSeries,
+loadGenres
 } from "./data-loader.js";
 
-
 /**
- * Detecta la ruta correcta hacia las páginas.
- */
-function getPagesPath() {
 
-    return window.location.pathname.includes("/pages/")
-        ? ""
-        : "pages/";
+* Detecta la ruta correcta hacia las páginas.
+  */
+  function getPagesPath() {
+
+  return window.location.pathname.includes("/pages/")
+  ? ""
+  : "pages/";
 
 }
 
-
 /**
- * Detecta la ruta correcta hacia los assets.
- */
-function getAssetsPath() {
 
-    return window.location.pathname.includes("/pages/")
-        ? "../assets/"
-        : "assets/";
+* Detecta la ruta correcta hacia los assets.
+  */
+  function getAssetsPath() {
+
+  return window.location.pathname.includes("/pages/")
+  ? "../assets/"
+  : "assets/";
 
 }
 
-
 /**
- * Renderiza Recent Updates.
- *
- * Muestra solamente los 10
- * cómics actualizados más recientemente.
- */
-function renderRecentUpdates(comics = []) {
 
-    const container =
-        document.querySelector("#recent-list");
+* Inicializa los acordeones del sidebar.
+*
+* Todas las secciones comienzan cerradas.
+* Al hacer click se abren o se cierran.
+  */
+  function initSidebarAccordions() {
 
+  const toggles =
+  document.querySelectorAll(
+  ".sidebar-toggle"
+  );
 
-    if (!container) return;
+  if (!toggles.length) return;
 
+  toggles.forEach(toggle => {
 
-    container.innerHTML = "";
+  ```
+   toggle.addEventListener(
+       "click",
+       function () {
 
-
-    const recent =
-        [...comics]
-            .sort((a, b) =>
-                new Date(b.updated || 0) -
-                new Date(a.updated || 0)
-            )
-            .slice(0, 10);
-
-
-    recent.forEach(comic => {
-
-        if (!comic || !comic.id) return;
+           const section =
+               this.closest(
+                   ".sidebar-box"
+               );
 
 
-        const item =
-            document.createElement("li");
+           if (!section) return;
 
 
-        const link =
-            document.createElement("a");
+           const content =
+               section.querySelector(
+                   ".sidebar-content"
+               );
 
 
-        link.href =
-            getPagesPath() +
-            "comic.html?id=" +
-            encodeURIComponent(
-                comic.id
-            );
+           const arrow =
+               this.querySelector(
+                   ".sidebar-arrow"
+               );
 
 
-        link.textContent =
-            comic.title ||
-            "Untitled";
+           if (!content) return;
 
 
-        item.appendChild(
-            link
-        );
+           const isOpen =
+               section.classList.contains(
+                   "open"
+               );
 
 
-        container.appendChild(
-            item
-        );
+           if (isOpen) {
 
-    });
+               section.classList.remove(
+                   "open"
+               );
+
+
+               this.setAttribute(
+                   "aria-expanded",
+                   "false"
+               );
+
+
+               if (arrow) {
+
+                   arrow.textContent =
+                       "+";
+
+               }
+
+           } else {
+
+               section.classList.add(
+                   "open"
+               );
+
+
+               this.setAttribute(
+                   "aria-expanded",
+                   "true"
+               );
+
+
+               if (arrow) {
+
+                   arrow.textContent =
+                       "−";
+
+               }
+
+           }
+
+       }
+   );
+  ```
+
+  });
 
 }
 
-
 /**
- * Renderiza géneros.
- *
- * Muestra todos los géneros.
- */
-function renderGenres(genres = []) {
 
-    const container =
-        document.querySelector(
-            "#categories-list"
-        );
+* Renderiza Recent Updates.
+*
+* Muestra solamente los 10
+* cómics actualizados más recientemente.
+  */
+  function renderRecentUpdates(comics = []) {
 
+  const container =
+  document.querySelector("#recent-list");
 
-    if (!container) return;
+  if (!container) return;
 
+  container.innerHTML = "";
 
-    container.innerHTML = "";
+  const recent =
+  [...comics]
+  .sort((a, b) =>
+  new Date(b.updated || 0) -
+  new Date(a.updated || 0)
+  )
+  .slice(0, 10);
 
+  recent.forEach(comic => {
 
-    if (!Array.isArray(genres)) {
-
-        return;
-
-    }
-
-
-    genres.forEach(genre => {
-
-        const id =
-            typeof genre === "object"
-                ? genre.id
-                : genre;
+  ```
+   if (!comic || !comic.id) return;
 
 
-        const name =
-            typeof genre === "object"
-                ? genre.name ||
-                  genre.title ||
-                  genre.id
-                : genre;
+   const item =
+       document.createElement("li");
 
 
-        if (!id || !name) return;
+   const link =
+       document.createElement("a");
 
 
-        const item =
-            document.createElement(
-                "li"
-            );
+   link.href =
+       getPagesPath() +
+       "comic.html?id=" +
+       encodeURIComponent(
+           comic.id
+       );
 
 
-        const link =
-            document.createElement(
-                "a"
-            );
+   link.textContent =
+       comic.title ||
+       "Untitled";
 
 
-        link.href =
-            getPagesPath() +
-            "series.html?genre=" +
-            encodeURIComponent(
-                id
-            );
+   item.appendChild(
+       link
+   );
 
 
-        link.textContent =
-            name;
+   container.appendChild(
+       item
+   );
+  ```
 
-
-        item.appendChild(
-            link
-        );
-
-
-        container.appendChild(
-            item
-        );
-
-    });
+  });
 
 }
 
-
 /**
- * Renderiza series.
- *
- * Muestra todas las series.
- */
-function renderSeries(series = []) {
 
-    const container =
-        document.querySelector(
-            "#series-list"
-        );
+* Renderiza géneros.
+*
+* Muestra todos los géneros.
+  */
+  function renderGenres(genres = []) {
 
+  const container =
+  document.querySelector(
+  "#categories-list"
+  );
 
-    if (!container) return;
+  if (!container) return;
 
+  container.innerHTML = "";
 
-    container.innerHTML = "";
+  if (!Array.isArray(genres)) {
 
+  ```
+   return;
+  ```
 
-    if (!Array.isArray(series)) {
+  }
 
-        return;
+  genres.forEach(genre => {
 
-    }
-
-
-    series.forEach(serie => {
-
-        const id =
-            typeof serie === "object"
-                ? serie.id
-                : serie;
-
-
-        const name =
-            typeof serie === "object"
-                ? (
-                    serie.title ||
-                    serie.name ||
-                    serie.id
-                )
-                : serie;
+  ```
+   const id =
+       typeof genre === "object"
+           ? genre.id
+           : genre;
 
 
-        if (!id || !name) return;
+   const name =
+       typeof genre === "object"
+           ? genre.name ||
+             genre.title ||
+             genre.id
+           : genre;
 
 
-        const item =
-            document.createElement(
-                "li"
-            );
+   if (!id || !name) return;
 
 
-        const link =
-            document.createElement(
-                "a"
-            );
+   const item =
+       document.createElement(
+           "li"
+       );
 
 
-        link.href =
-            getPagesPath() +
-            "series.html?id=" +
-            encodeURIComponent(
-                id
-            );
+   const link =
+       document.createElement(
+           "a"
+       );
 
 
-        link.textContent =
-            name;
+   link.href =
+       getPagesPath() +
+       "series.html?genre=" +
+       encodeURIComponent(
+           id
+       );
 
 
-        item.appendChild(
-            link
-        );
+   link.textContent =
+       name;
 
 
-        container.appendChild(
-            item
-        );
+   item.appendChild(
+       link
+   );
 
-    });
+
+   container.appendChild(
+       item
+   );
+  ```
+
+  });
 
 }
 
-
 /**
- * Renderiza personajes.
- *
- * Muestra todos los personajes.
- */
-function renderCharacters(
-    characters = []
-) {
 
-    const container =
-        document.querySelector(
-            "#characters-list"
-        );
+* Renderiza series.
+*
+* Muestra todas las series.
+  */
+  function renderSeries(series = []) {
 
+  const container =
+  document.querySelector(
+  "#series-list"
+  );
 
-    if (!container) return;
+  if (!container) return;
 
+  container.innerHTML = "";
 
-    container.innerHTML = "";
+  if (!Array.isArray(series)) {
 
+  ```
+   return;
+  ```
 
-    if (!Array.isArray(characters)) {
+  }
 
-        return;
+  series.forEach(serie => {
 
-    }
+  ```
+   const id =
+       typeof serie === "object"
+           ? serie.id
+           : serie;
 
 
-    characters.forEach(character => {
+   const name =
+       typeof serie === "object"
+           ? (
+               serie.title ||
+               serie.name ||
+               serie.id
+           )
+           : serie;
 
-        if (
-            !character ||
-            !character.name
-        ) {
 
-            return;
+   if (!id || !name) return;
 
-        }
 
+   const item =
+       document.createElement(
+           "li"
+       );
 
-        const item =
-            document.createElement(
-                "div"
-            );
 
+   const link =
+       document.createElement(
+           "a"
+       );
 
-        item.className =
-            "character-item";
 
+   link.href =
+       getPagesPath() +
+       "series.html?id=" +
+       encodeURIComponent(
+           id
+       );
 
-        const link =
-            document.createElement(
-                "a"
-            );
 
+   link.textContent =
+       name;
 
-        link.href =
-            getPagesPath() +
-            "characters.html?id=" +
-            encodeURIComponent(
-                character.id ||
-                character.name
-            );
 
+   item.appendChild(
+       link
+   );
 
-        link.className =
-            "character-link";
 
+   container.appendChild(
+       item
+   );
+  ```
 
-        const avatar =
-            document.createElement(
-                "div"
-            );
-
-
-        avatar.className =
-            "character-avatar";
-
-
-        const image =
-            document.createElement(
-                "img"
-            );
-
-
-        image.src =
-            character.image ||
-            getAssetsPath() +
-            "placeholders/avatar.webp";
-
-
-        image.alt =
-            character.name;
-
-
-        image.loading =
-            "lazy";
-
-
-        image.onerror =
-            function () {
-
-                this.onerror =
-                    null;
-
-                this.src =
-                    getAssetsPath() +
-                    "placeholders/avatar.webp";
-
-            };
-
-
-        avatar.appendChild(
-            image
-        );
-
-
-        const info =
-            document.createElement(
-                "div"
-            );
-
-
-        info.className =
-            "character-info";
-
-
-        const name =
-            document.createElement(
-                "span"
-            );
-
-
-        name.className =
-            "character-name";
-
-
-        name.textContent =
-            character.name;
-
-
-        const series =
-            document.createElement(
-                "span"
-            );
-
-
-        series.className =
-            "character-series";
-
-
-        series.textContent =
-            character.series ||
-            "";
-
-
-        info.appendChild(
-            name
-        );
-
-
-        info.appendChild(
-            series
-        );
-
-
-        link.appendChild(
-            avatar
-        );
-
-
-        link.appendChild(
-            info
-        );
-
-
-        item.appendChild(
-            link
-        );
-
-
-        container.appendChild(
-            item
-        );
-
-    });
+  });
 
 }
 
-
 /**
- * Inicializa sidebar.
- */
-export async function initSidebar() {
 
-    try {
+* Renderiza personajes.
+*
+* Muestra todos los personajes.
+  */
+  function renderCharacters(
+  characters = []
+  ) {
 
-        const [
-            comics,
-            characters,
-            series,
-            genres
-        ] =
-            await Promise.all([
+  const container =
+  document.querySelector(
+  "#characters-list"
+  );
 
-                loadComics(),
+  if (!container) return;
 
-                loadCharacters(),
+  container.innerHTML = "";
 
-                loadSeries(),
+  if (!Array.isArray(characters)) {
 
-                loadGenres()
+  ```
+   return;
+  ```
 
-            ]);
+  }
 
+  characters.forEach(character => {
 
-        renderRecentUpdates(
-            comics
-        );
+  ```
+   if (
+       !character ||
+       !character.name
+   ) {
 
+       return;
 
-        renderCharacters(
-            characters
-        );
-
-
-        renderSeries(
-            series
-        );
-
-
-        renderGenres(
-            genres
-        );
+   }
 
 
-    } catch (error) {
+   const item =
+       document.createElement(
+           "div"
+       );
 
-        console.error(
-            "DarkensHorns sidebar error:",
-            error
-        );
 
-    }
+   item.className =
+       "character-item";
+
+
+   const link =
+       document.createElement(
+           "a"
+       );
+
+
+   link.href =
+       getPagesPath() +
+       "characters.html?id=" +
+       encodeURIComponent(
+           character.id ||
+           character.name
+       );
+
+
+   link.className =
+       "character-link";
+
+
+   const avatar =
+       document.createElement(
+           "div"
+       );
+
+
+   avatar.className =
+       "character-avatar";
+
+
+   const image =
+       document.createElement(
+           "img"
+       );
+
+
+   image.src =
+       character.image ||
+       getAssetsPath() +
+       "placeholders/avatar.webp";
+
+
+   image.alt =
+       character.name;
+
+
+   image.loading =
+       "lazy";
+
+
+   image.onerror =
+       function () {
+
+           this.onerror =
+               null;
+
+           this.src =
+               getAssetsPath() +
+               "placeholders/avatar.webp";
+
+       };
+
+
+   avatar.appendChild(
+       image
+   );
+
+
+   const info =
+       document.createElement(
+           "div"
+       );
+
+
+   info.className =
+       "character-info";
+
+
+   const name =
+       document.createElement(
+           "span"
+       );
+
+
+   name.className =
+       "character-name";
+
+
+   name.textContent =
+       character.name;
+
+
+   const series =
+       document.createElement(
+           "span"
+       );
+
+
+   series.className =
+       "character-series";
+
+
+   series.textContent =
+       character.series ||
+       "";
+
+
+   info.appendChild(
+       name
+   );
+
+
+   info.appendChild(
+       series
+   );
+
+
+   link.appendChild(
+       avatar
+   );
+
+
+   link.appendChild(
+       info
+   );
+
+
+   item.appendChild(
+       link
+   );
+
+
+   container.appendChild(
+       item
+   );
+  ```
+
+  });
 
 }
+
+/**
+
+* Inicializa sidebar.
+  */
+  export async function initSidebar() {
+
+  try {
+
+  ```
+   const [
+       comics,
+       characters,
+       series,
+       genres
+   ] =
+       await Promise.all([
+
+           loadComics(),
+
+           loadCharacters(),
+
+           loadSeries(),
+
+           loadGenres()
+
+       ]);
+
+
+   renderRecentUpdates(
+       comics
+   );
+
+
+   renderCharacters(
+       characters
+   );
+
+
+   renderSeries(
+       series
+   );
+
+
+   renderGenres(
+       genres
+   );
+
+
+   /* -------------------------
+      ACORDEONES
+   ------------------------- */
+
+   initSidebarAccordions();
+  ```
+
+  } catch (error) {
+
+  ```
+   console.error(
+       "DarkensHorns sidebar error:",
+       error
+   );
+  ```
+
+  }
+
+}
+
