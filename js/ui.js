@@ -19,27 +19,22 @@ renderComicCards
   export async function initHomePage() {
 
   const latestContainer =
-  document.querySelector(
-  "#latest-comics"
-  );
+  document.querySelector("#latest-comics");
 
   const popularContainer =
-  document.querySelector(
-  "#popular-comics"
-  );
+  document.querySelector("#popular-comics");
 
   /* -------------------------
   CARGAR CÓMICS
   ------------------------- */
 
-  const comics =
-  await loadComics();
+  const comics = await loadComics();
 
   if (!Array.isArray(comics)) {
 
   ```
    console.error(
-       "No se pudieron cargar los cómics."
+       "DarkensHorns: loadComics() no devolvió un array."
    );
 
    return;
@@ -54,18 +49,16 @@ renderComicCards
   if (latestContainer) {
 
   ```
-   const latest =
-       [...comics]
-           .sort(
-               (a, b) =>
-                   new Date(
-                       b.updated || 0
-                   ) -
-                   new Date(
-                       a.updated || 0
-                   )
-           )
-           .slice(0, 8);
+   const latest = [...comics]
+       .sort(function (a, b) {
+
+           return (
+               new Date(b.updated || 0) -
+               new Date(a.updated || 0)
+           );
+
+       })
+       .slice(0, 8);
 
 
    renderComicCards(
@@ -83,14 +76,16 @@ renderComicCards
   if (popularContainer) {
 
   ```
-   const popular =
-       [...comics]
-           .sort(
-               (a, b) =>
-                   (b.views || 0) -
-                   (a.views || 0)
-           )
-           .slice(0, 8);
+   const popular = [...comics]
+       .sort(function (a, b) {
+
+           return (
+               (b.views || 0) -
+               (a.views || 0)
+           );
+
+       })
+       .slice(0, 8);
 
 
    renderComicCards(
@@ -111,8 +106,7 @@ renderComicCards
   export function detectCurrentPage() {
 
   const path =
-  window.location.pathname
-  .toLowerCase();
+  window.location.pathname.toLowerCase();
 
   if (
   path.endsWith("/") ||
@@ -125,9 +119,7 @@ renderComicCards
 
   }
 
-  if (
-  path.includes("series")
-  ) {
+  if (path.includes("series")) {
 
   ```
    return "series";
@@ -135,9 +127,7 @@ renderComicCards
 
   }
 
-  if (
-  path.includes("comic")
-  ) {
+  if (path.includes("comic")) {
 
   ```
    return "comic";
@@ -145,9 +135,7 @@ renderComicCards
 
   }
 
-  if (
-  path.includes("chapter")
-  ) {
+  if (path.includes("chapter")) {
 
   ```
    return "chapter";
@@ -155,9 +143,7 @@ renderComicCards
 
   }
 
-  if (
-  path.includes("gallery")
-  ) {
+  if (path.includes("gallery")) {
 
   ```
    return "gallery";
@@ -165,9 +151,7 @@ renderComicCards
 
   }
 
-  if (
-  path.includes("search")
-  ) {
+  if (path.includes("search")) {
 
   ```
    return "search";
