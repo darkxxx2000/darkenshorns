@@ -1,0 +1,27 @@
+{
+    "id": "rapunzel",
+    "title": "Rapunzel",
+    "cover": "assets/images/galleries/rapunzel/cover.webp",
+    "description": "A collection of dark fantasy galleries featuring Rapunzel.",
+    "author": "DarkensHorns",
+    "updated": "2026-07-28",
+    "tags": [
+        "Rapunzel",
+        "Fantasy",
+        "Dark"
+    ],
+    "collections": [
+        {
+            "id": "rapunzel-vs-horse",
+            "title": "Rapunzel vs Horse",
+            "cover": "assets/images/galleries/rapunzel/horse/001.webp",
+            "file": "rapunzel-vs-horse.json"
+        },
+        {
+            "id": "rapunzel-vs-tentacles",
+            "title": "Rapunzel vs Tentacles",
+            "cover": "assets/images/galleries/rapunzel/tentacles/001.webp",
+            "file": "rapunzel-vs-tentacles.json"
+        }
+    ]
+}
