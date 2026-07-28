@@ -74,28 +74,14 @@ justify-content:
     space-between;
 
 margin:
-    0;
+    0
+    0
+    18px;
 
 padding:
     0
     0
     12px;
-
-background:
-    transparent;
-
-border:
-    none;
-
-border-bottom:
-    1px solid
-    rgba(255,255,255,.10);
-
-color:
-    inherit;
-
-font-family:
-    inherit;
 
 font-size:
     1.15rem;
@@ -106,17 +92,15 @@ font-weight:
 letter-spacing:
     .5px;
 
-text-align:
-    left;
+border-bottom:
+    1px solid
+    rgba(255,255,255,.10);
 
 cursor:
     pointer;
 
-text-shadow:
-    2px
-    2px
-    0
-    #000;
+user-select:
+    none;
 ```
 
 }
@@ -124,32 +108,11 @@ text-shadow:
 .sidebar-arrow {
 
 ```
-display:
-    flex;
-
-align-items:
-    center;
-
-justify-content:
-    center;
-
-width:
-    24px;
-
-height:
-    24px;
-
 font-size:
-    1.25rem;
-
-font-weight:
-    700;
+    1.2rem;
 
 line-height:
     1;
-
-text-shadow:
-    none;
 
 transition:
     transform
@@ -158,11 +121,6 @@ transition:
 ```
 
 }
-
-/*
-Contenido cerrado
-por defecto.
-*/
 
 .sidebar-content {
 
@@ -179,9 +137,6 @@ overflow:
 visibility:
     hidden;
 
-padding-top:
-    0;
-
 transition:
     max-height
     .35s
@@ -191,20 +146,12 @@ transition:
     .25s
     ease,
 
-    padding-top
-    .35s
-    ease,
-
     visibility
     .35s
     ease;
 ```
 
 }
-
-/*
-Contenido abierto.
-*/
 
 .sidebar-box.open
 .sidebar-content {
@@ -218,17 +165,9 @@ opacity:
 
 visibility:
     visible;
-
-padding-top:
-    18px;
 ```
 
 }
-
-/*
-Flecha del acordeón
-cuando está abierto.
-*/
 
 .sidebar-box.open
 .sidebar-arrow {
@@ -239,6 +178,7 @@ transform:
 ```
 
 }
+
 
 /* =========================
 TITLES
