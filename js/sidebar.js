@@ -1,3 +1,4 @@
+```js
 /*************************************************
  * DARKENSHORNS
  * SIDEBAR
@@ -39,8 +40,7 @@ function renderRecentUpdates(comics = []) {
             document.createElement("a");
 
         link.href =
-    link.href =
-    `pages/characters.html?id=${encodeURIComponent(character.id)}`;
+            `pages/comic.html?id=${encodeURIComponent(comic.id)}`;
 
         link.textContent =
             comic.title;
@@ -254,3 +254,4 @@ export async function initSidebar() {
     );
 
 }
+```
