@@ -1,3 +1,4 @@
+```javascript
 /*************************************************
  * DARKENSHORNS
  * APP
@@ -12,10 +13,6 @@ import {
 } from "./navigation.js";
 
 import {
-    initSidebar
-} from "./sidebar.js";
-
-import {
     initModal
 } from "./modal.js";
 
@@ -27,14 +24,11 @@ import {
     getCurrentPage
 } from "./router.js";
 
-
 /**
  * Inicialización general.
  */
 async function initializeApp() {
-
     try {
-
         /*
         =========================
         GLOBAL
@@ -42,11 +36,8 @@ async function initializeApp() {
         */
 
         initNavigation();
-
         initModal();
-
         initLazyLoad();
-
 
         /*
         =========================
@@ -54,12 +45,9 @@ async function initializeApp() {
         =========================
         */
 
-        const page =
-            getCurrentPage();
-
+        const page = getCurrentPage();
 
         switch (page) {
-
             /*
             =========================
             HOME
@@ -67,15 +55,9 @@ async function initializeApp() {
             */
 
             case "index":
-
             case "":
-
                 await initHomePage();
-
-                await initSidebar();
-
                 break;
-
 
             /*
             =========================
@@ -84,14 +66,7 @@ async function initializeApp() {
             */
 
             case "comic":
-
-                /*
-                comic.html tiene su propio
-                sistema de carga.
-                */
-
                 break;
-
 
             /*
             =========================
@@ -100,18 +75,7 @@ async function initializeApp() {
             */
 
             case "chapter":
-
-                /*
-                chapter.html carga directamente:
-
-                ../js/chapter.js
-
-                Por eso NO inicializamos
-                el lector aquí.
-                */
-
                 break;
-
 
             /*
             =========================
@@ -120,15 +84,7 @@ async function initializeApp() {
             */
 
             case "series":
-
-                /*
-                La página de series
-                puede inicializar su
-                propio sistema.
-                */
-
                 break;
-
 
             /*
             =========================
@@ -137,15 +93,7 @@ async function initializeApp() {
             */
 
             case "search":
-
-                /*
-                El buscador puede
-                inicializar su propio
-                sistema.
-                */
-
                 break;
-
 
             /*
             =========================
@@ -154,16 +102,12 @@ async function initializeApp() {
             */
 
             default:
-
                 console.log(
                     "DarkensHorns page:",
                     page
                 );
-
                 break;
-
         }
-
 
         /*
         =========================
@@ -173,20 +117,13 @@ async function initializeApp() {
 
         initLazyLoad();
 
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             "DarkensHorns initialization error:",
             error
         );
-
     }
-
 }
-
 
 /**
  * Arranque.
@@ -195,3 +132,4 @@ document.addEventListener(
     "DOMContentLoaded",
     initializeApp
 );
+```
