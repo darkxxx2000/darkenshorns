@@ -40,7 +40,6 @@ getCurrentPage
   =========================
   */
 
-  ```
    initNavigation();
    initModal();
    initLazyLoad();
@@ -61,10 +60,26 @@ getCurrentPage
        */
 
        case "index":
-       case "":
-           await initHomePage();
-           await initSidebar();
-           break;
+case "":
+    try {
+        await initHomePage();
+    } catch (error) {
+        console.error(
+            "Home initialization error:",
+            error
+        );
+    }
+
+    try {
+        await initSidebar();
+    } catch (error) {
+        console.error(
+            "Sidebar initialization error:",
+            error
+        );
+    }
+
+    break;
 
        /*
        =========================
@@ -123,7 +138,6 @@ getCurrentPage
    */
 
    initLazyLoad();
-  ```
 
   } catch (error) {
   console.error(
