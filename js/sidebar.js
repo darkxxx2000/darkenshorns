@@ -26,7 +26,6 @@ return window.location.pathname.includes("/pages/")
 function initSidebarAccordions() {
 const toggles = document.querySelectorAll(".sidebar-toggle");
 
-```
 console.log(
     "Sidebar toggles encontrados:",
     toggles.length
@@ -80,7 +79,6 @@ toggles.forEach(toggle => {
         }
     );
 });
-```
 
 }
 
@@ -88,7 +86,6 @@ function renderRecentUpdates(comics = []) {
 const container =
 document.querySelector("#recent-list");
 
-```
 if (!container) return;
 
 container.innerHTML = "";
@@ -123,7 +120,6 @@ recent.forEach(comic => {
     item.appendChild(link);
     container.appendChild(item);
 });
-```
 
 }
 
@@ -131,7 +127,6 @@ function renderGenres(genres = []) {
 const container =
 document.querySelector("#categories-list");
 
-```
 if (!container) return;
 
 container.innerHTML = "";
@@ -171,7 +166,6 @@ genres.forEach(genre => {
     item.appendChild(link);
     container.appendChild(item);
 });
-```
 
 }
 
@@ -179,7 +173,6 @@ function renderSeries(series = []) {
 const container =
 document.querySelector("#series-list");
 
-```
 if (!container) return;
 
 container.innerHTML = "";
@@ -219,7 +212,6 @@ series.forEach(serie => {
     item.appendChild(link);
     container.appendChild(item);
 });
-```
 
 }
 
@@ -227,7 +219,6 @@ function renderCharacters(characters = []) {
 const container =
 document.querySelector("#characters-list");
 
-```
 if (!container) return;
 
 container.innerHTML = "";
@@ -327,7 +318,6 @@ characters.forEach(character => {
     item.appendChild(link);
     container.appendChild(item);
 });
-```
 
 }
 
@@ -345,7 +335,6 @@ loadSeries(),
 loadGenres()
 ]);
 
-```
     renderRecentUpdates(comics);
     renderCharacters(characters);
     renderSeries(series);
@@ -359,6 +348,5 @@ loadGenres()
         error
     );
 }
-```
 
 }
