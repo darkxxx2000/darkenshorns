@@ -12,10 +12,6 @@ import {
 } from "./navigation.js";
 
 import {
-    initSidebar
-} from "./sidebar.js";
-
-import {
     initModal
 } from "./modal.js";
 
@@ -71,8 +67,6 @@ async function initializeApp() {
             case "":
 
                 await initHomePage();
-
-                await initSidebar();
 
                 break;
 
