@@ -315,7 +315,8 @@ loadGenres
        "character-series";
 
    series.textContent =
-       character.series || "";
+       character.series ||
+       "";
 
    info.appendChild(name);
    info.appendChild(series);
