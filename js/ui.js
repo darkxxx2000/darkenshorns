@@ -21,7 +21,7 @@ renderComicCards
 
   try {
 
-  ```
+
    const latestContainer =
        document.querySelector(
            "#latest-comics"
@@ -183,16 +183,16 @@ renderComicCards
        );
 
    }
-  ```
+
 
   } catch (error) {
 
-  ```
+
    console.error(
        "DarkensHorns Home error:",
        error
    );
-  ```
+
 
   }
 
@@ -214,9 +214,9 @@ renderComicCards
   path.endsWith("index.html")
   ) {
 
-  ```
+
    return "home";
-  ```
+
 
   }
 
@@ -224,9 +224,9 @@ renderComicCards
   path.includes("series")
   ) {
 
-  ```
+
    return "series";
-  ```
+
 
   }
 
@@ -234,9 +234,9 @@ renderComicCards
   path.includes("comic")
   ) {
 
-  ```
+
    return "comic";
-  ```
+
 
   }
 
@@ -244,9 +244,9 @@ renderComicCards
   path.includes("chapter")
   ) {
 
-  ```
+
    return "chapter";
-  ```
+
 
   }
 
@@ -254,9 +254,9 @@ renderComicCards
   path.includes("gallery")
   ) {
 
-  ```
+
    return "gallery";
-  ```
+
 
   }
 
@@ -264,9 +264,9 @@ renderComicCards
   path.includes("search")
   ) {
 
-  ```
+
    return "search";
-  ```
+
 
   }
 
