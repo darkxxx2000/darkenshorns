@@ -29,7 +29,14 @@
       "title": "Gigant Monster",
       "subtitle": "The Hidden Enemy",
       "file": "ai-chan-01.json",
-      "folder": "AI-Story"
-    }
-  ]
-}
+"folder": "AI-Story"
+    },
+  {
+    "id": "ai-chan-02",
+    "number": 2,
+    "title": "Título del capítulo 2",
+    "subtitle": "Subtítulo",
+    "file": "ai-chan-02.json",
+    "folder": "AI-Story"
+  }
+]
