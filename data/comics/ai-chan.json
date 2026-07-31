@@ -21,11 +21,9 @@
   "series": [
     "Ai-Chan Stories"
   ],
-  "updated": "2026-07-18",
-  "chapterFolder": "Ai-Chan",
   "chapters": [
     {
-      "id": "ai-chan-01",
+      "id": "ai-chan",
       "number": 1,
       "title": "Gigant Monster",
       "subtitle": "The Hidden Enemy",
