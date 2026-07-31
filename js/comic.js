@@ -314,167 +314,137 @@ function renderComic(
     }
 
 
-    /* =========================================
-       GENRES
-    ========================================= */
+/* =========================================
+   GENRES
+========================================= */
 
-    const genresContainer =
-        document.getElementById(
-            "comic-genres"
+const genresContainer =
+    document.getElementById(
+        "comic-genres"
+    );
+
+
+if (genresContainer) {
+
+    genresContainer.innerHTML =
+        "";
+
+
+    const genres =
+        Array.isArray(
+            comic.genres
+        )
+            ? comic.genres
+            : [];
+
+
+    genresContainer.textContent =
+        genres.join(
+            ", "
         );
 
-
-    if (genresContainer) {
-
-        genresContainer.innerHTML =
-            "";
+}
 
 
-        const genres =
-            Array.isArray(
-                comic.genres
-            )
-                ? comic.genres
-                : [];
+/* =========================================
+   TAGS
+========================================= */
+
+const tagsContainer =
+    document.getElementById(
+        "comic-tags"
+    );
 
 
-        genres.forEach(
-            genre => {
+if (tagsContainer) {
 
-                const tag =
-                    document.createElement(
-                        "span"
-                    );
+    tagsContainer.innerHTML =
+        "";
 
 
-                tag.textContent =
-                    genre;
+    const tags =
+        Array.isArray(
+            comic.tags
+        )
+            ? comic.tags
+            : [];
 
 
-                genresContainer.appendChild(
-                    tag
-                );
-
-            }
+    tagsContainer.textContent =
+        tags.join(
+            ", "
         );
 
-    }
+}
 
 
-    /* =========================================
-       TAGS
-    ========================================= */
+/* =========================================
+   CHARACTERS
+========================================= */
 
-    const tagsContainer =
-        document.getElementById(
-            "comic-tags"
-        );
-
-
-    if (tagsContainer) {
-
-        tagsContainer.innerHTML =
-            "";
+const charactersContainer =
+    document.getElementById(
+        "characters-container"
+    );
 
 
-        const tags =
-            Array.isArray(
-                comic.tags
-            )
-                ? comic.tags
-                : [];
+if (charactersContainer) {
+
+    charactersContainer.innerHTML =
+        "";
 
 
-        tags.forEach(
-            tagName => {
-
-                const tag =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                tag.textContent =
-                    tagName;
+    const characters =
+        Array.isArray(
+            comic.characters
+        )
+            ? comic.characters
+            : [];
 
 
-                tagsContainer.appendChild(
-                    tag
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =========================================
-       CHARACTERS
-    ========================================= */
-
-    const charactersContainer =
-        document.getElementById(
-            "characters-container"
-        );
-
-
-    if (charactersContainer) {
-
-        charactersContainer.innerHTML =
-            "";
-
-
-        const characters =
-            Array.isArray(
-                comic.characters
-            )
-                ? comic.characters
-                : [];
-
-
-        characters.forEach(
+    const characterNames =
+        characters.map(
             character => {
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                item.className =
-                    "character-card";
-
 
                 if (
                     typeof character ===
                     "string"
                 ) {
 
-                    item.textContent =
-                        character;
+                    return character;
 
                 }
-                else if (
+
+
+                if (
                     character &&
                     typeof character ===
                     "object"
                 ) {
 
-                    item.textContent =
+                    return (
                         character.name ||
-                        "";
+                        ""
+                    );
 
                 }
 
 
-                charactersContainer.appendChild(
-                    item
-                );
+                return "";
 
             }
+        )
+        .filter(
+            name => name
         );
 
-    }
+
+    charactersContainer.textContent =
+        characterNames.join(
+            ", "
+        );
+
+}
 
 
     /* =========================================
