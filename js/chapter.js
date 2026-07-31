@@ -10,7 +10,7 @@ const params = new URLSearchParams(window.location.search);
 const comicId = params.get("id");
 const chapterId = params.get("chapter");
 
-```
+
 if (!comicId || !chapterId) {
     console.error("Missing comic or chapter ID.");
     return;
@@ -81,7 +81,7 @@ try {
         `;
     }
 }
-```
+
 
 }
 
@@ -89,7 +89,7 @@ function renderChapter() {
 const title =
 document.querySelector("#chapter-title");
 
-```
+
 if (title) {
     title.textContent =
         currentChapter.title ||
@@ -170,7 +170,7 @@ pages.forEach(
         );
     }
 );
-```
+
 
 }
 
@@ -180,7 +180,7 @@ document.querySelector(
 "#image-viewer"
 );
 
-```
+
 const image =
     document.querySelector(
         "#viewer-image"
@@ -195,7 +195,7 @@ image.src = src;
 viewer.classList.add(
     "active"
 );
-```
+
 
 }
 
@@ -203,7 +203,7 @@ document.addEventListener(
 "click",
 event => {
 
-```
+
     if (
         event.target.matches(
             "#viewer-close"
