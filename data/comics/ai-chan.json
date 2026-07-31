@@ -22,7 +22,8 @@
     "Ai-Chan Stories"
   ],
   "updated": "2026-07-18",
-  "chapters": [
+"chapterFolder": "Ai-Chan",
+"chapters": [
     {
       "id": "ai-chan-01",
       "number": 1,
