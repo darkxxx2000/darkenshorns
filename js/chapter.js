@@ -644,77 +644,28 @@ if (
 }
 
 /* ==========================================================
-READER LINKS
+RENDER LINKS
 ========================================================== */
-
 function setupReaderLinks() {
+    const normal = document.getElementById("grid-reader");
+    const webtoon = document.getElementById("webtoon-reader");
+    const container = document.getElementById("preview-container");
 
-const normalMode =
-    document.getElementById(
-        "normal-mode"
-    );
+    if (!container) return;
 
+    normal?.addEventListener("click", () => {
+        container.classList.remove("webtoon-mode");
+        normal.classList.add("active");
+        webtoon?.classList.remove("active");
+    });
 
-const webtoonMode =
-    document.getElementById(
-        "webtoon-mode"
-    );
-
-
-const container =
-    document.getElementById(
-        "preview-container"
-    );
-
-
-if (
-    normalMode
-) {
-
-    normalMode.addEventListener(
-        "click",
-        function() {
-
-            if (
-                container
-            ) {
-
-                container.classList.remove(
-                    "webtoon-mode"
-                );
-
-            }
-
-        }
-    );
-
+    webtoon?.addEventListener("click", () => {
+        container.classList.add("webtoon-mode");
+        webtoon.classList.add("active");
+        normal?.classList.remove("active");
+    });
 }
 
-
-if (
-    webtoonMode
-) {
-
-    webtoonMode.addEventListener(
-        "click",
-        function() {
-
-            if (
-                container
-            ) {
-
-                container.classList.add(
-                    "webtoon-mode"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-}
 
 /* ==========================================================
 RENDER PREVIEW
