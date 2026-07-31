@@ -1,13 +1,12 @@
 {
-    "id": "series-02",
-    "comicId": "comic-01",
-    "title": "Series 02",
-    "subtitle": "Another Story",
-    "description": "Description of the second series.",
-    "cover": "assets/covers/comic-01.webp",
-    "chapters": [
-        "chapter-04",
-        "chapter-05",
-        "chapter-06"
-    ]
+  "id": "ai-chan",
+  "comicId": "ai-chan",
+  "title": "Ai-Chan: Gigant Monster",
+  "subtitle": "Ai-Chan Stories",
+  "description": "Ai-Chan enters a dangerous night where an unexpected enemy awaits her.",
+  "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
+  "chapters": [
+    "ai-chan-01",
+    "ai-chan-02"
+  ]
 }
