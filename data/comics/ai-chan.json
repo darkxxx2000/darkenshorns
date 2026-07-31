@@ -1,42 +1,42 @@
 {
-  "id": "ai-chan",
-  "title": "Ai-Chan: Gigant Monster",
-  "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
-  "description": "Ai-Chan enters a dangerous night where an unexpected enemy awaits her.",
-  "author": "DarkensHorns",
-  "status": "Finished",
-  "genres": [
-    "Action",
-    "Monster",
-    "Hardcore"
-  ],
-  "tags": [
-    "Ai-Chan",
-    "Hardcore",
-    "Monster"
-  ],
-  "characters": [
-    "Ai-Chan"
-  ],
-  "series": [
-    "Ai-Chan Stories"
-  ],
-  "chapters": [
-    {
-      "id": "ai-chan",
-      "number": 1,
-      "title": "Gigant Monster",
-      "subtitle": "The Hidden Enemy",
-      "file": "ai-chan-01.json",
-      "folder": "AI-Story"
-    },
-    {
-      "id": "ai-chan-02",
-      "number": 2,
-      "title": "Título del capítulo 2",
-      "subtitle": "Subtítulo",
-      "file": "ai-chan-02.json",
-      "folder": "AI-Story"
-    }
-  ]
+"id": "ai-chan",
+"title": "Ai-Chan: Gigant Monster",
+"cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
+"description": "Ai-Chan enters a dangerous night where an unexpected enemy awaits her.",
+"author": "DarkensHorns",
+"status": "Finished",
+"genres": [
+"Action",
+"Monster",
+"Hardcore"
+],
+"tags": [
+"Ai-Chan",
+"Hardcore",
+"Monster"
+],
+"characters": [
+"Ai-Chan"
+],
+"series": [
+"Ai-Chan Stories"
+],
+"chapters": [
+{
+"id": "ai-chan-01",
+"number": 1,
+"title": "Gigant Monster",
+"subtitle": "The Hidden Enemy",
+"file": "ai-chan-01.json",
+"folder": "AI-Story"
+},
+{
+"id": "ai-chan-02",
+"number": 2,
+"title": "Título del capítulo 2",
+"subtitle": "Subtítulo",
+"file": "ai-chan-02.json",
+"folder": "AI-Story"
+}
+]
 }
