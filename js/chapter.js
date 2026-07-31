@@ -2,9 +2,6 @@
 
 let currentComic = null;
 let currentChapter = null;
-let allChapters = [];
-let viewerPages = [];
-let viewerIndex = 0;
 
 document.addEventListener("DOMContentLoaded", initChapter);
 
@@ -14,25 +11,29 @@ const comicId = params.get("id");
 const chapterId = params.get("chapter");
 
 if (!comicId || !chapterId) {
-    showError("Missing comic or chapter information.");
+    console.error("Missing comic or chapter ID.");
     return;
 }
 
 try {
-    currentComic = await loadComic(comicId);
+    const comicResponse = await fetch(
+        `../data/comics/${encodeURIComponent(comicId)}.json`
+    );
 
-    if (!currentComic) {
-        throw new Error(`Comic not found: ${comicId}`);
+    if (!comicResponse.ok) {
+        throw new Error(`Comic JSON not found: ${comicId}`);
     }
 
-    allChapters = Array.isArray(currentComic.chapters)
-        ? currentComic.chapters
-        : [];
+    currentComic = await comicResponse.json();
 
-    const chapterInfo = findChapter(
-        allChapters,
-        chapterId
-    );
+    const chapterInfo = Array.isArray(currentComic.chapters)
+        ? currentComic.chapters.find(
+            chapter =>
+                chapter &&
+                typeof chapter === "object" &&
+                String(chapter.id) === String(chapterId)
+        )
+        : null;
 
     if (!chapterInfo) {
         throw new Error(
@@ -40,11 +41,42 @@ try {
         );
     }
 
-    const chapterData =
-        await loadChapterData(
-            comicId,
-            chapterInfo
+    const folder = String(
+        chapterInfo.folder || ""
+    ).trim();
+
+    const file = String(
+        chapterInfo.file || ""
+    ).trim();
+
+    if (!folder || !file) {
+        throw new Error(
+            "Chapter folder or file is missing."
         );
+    }
+
+    const chapterURL =
+        `../data/chapters/` +
+        `${encodeURIComponent(comicId)}/` +
+        `${encodeURIComponent(folder)}/` +
+        `${encodeURIComponent(file)}`;
+
+    console.log(
+        "Loading chapter:",
+        chapterURL
+    );
+
+    const chapterResponse =
+        await fetch(chapterURL);
+
+    if (!chapterResponse.ok) {
+        throw new Error(
+            `Chapter JSON not found: ${chapterURL}`
+        );
+    }
+
+    const chapterData =
+        await chapterResponse.json();
 
     currentChapter = {
         ...chapterInfo,
@@ -52,9 +84,6 @@ try {
     };
 
     renderChapter();
-    renderPages();
-    setupNavigation();
-    setupViewer();
 
 } catch (error) {
     console.error(
@@ -62,330 +91,93 @@ try {
         error
     );
 
-    showError(
-        "Unable to load this chapter."
-    );
-}
-
-}
-
-/* =========================================
-LOAD COMIC
-========================================= */
-
-async function loadComic(comicId) {
-const response = await fetch(
-../data/comics/${encodeURIComponent(comicId)}.json
-);
-
-if (!response.ok) {
-    throw new Error(
-        `Comic JSON not found: ${comicId}`
-    );
-}
-
-return await response.json();
-
-}
-
-/* =========================================
-FIND CHAPTER
-========================================= */
-
-function findChapter(
-chapters,
-chapterId
-) {
-const target =
-String(chapterId).toLowerCase();
-
-return chapters.find(
-    chapter => {
-
-        if (
-            typeof chapter ===
-            "string"
-        ) {
-            return (
-                chapter.toLowerCase() ===
-                target
-            );
-        }
-
-        if (
-            !chapter ||
-            typeof chapter !==
-            "object"
-        ) {
-            return false;
-        }
-
-        return (
-            String(
-                chapter.id || ""
-            ).toLowerCase() ===
-            target
+    const container =
+        document.querySelector(
+            "#preview-container"
         );
+
+    if (container) {
+        container.innerHTML =
+            "<p>Error loading chapter.</p>";
     }
-);
-
 }
 
-/* =========================================
-LOAD CHAPTER JSON
-========================================= */
-
-async function loadChapterData(
-comicId,
-chapter
-) {
-const file =
-String(
-chapter.file || ""
-).trim();
-
-const folder =
-    String(
-        chapter.folder || ""
-    ).trim();
-
-if (!file) {
-    throw new Error(
-        "Chapter file is missing."
-    );
 }
-
-/*
-=========================================
-ESTRUCTURA ACTUAL DEL PROYECTO
-
-Ai-Chan:
-
-data/chapters/
-Ai-Chan/
-AI-Story/
-ai-chan-01.json
-
-Ryuko:
-
-data/chapters/
-ryuko-matoi/
-Ryuko-vs-Huge-Dildo/
-ryuko-matoi-dildo-01.json
-=========================================
-*/
-
-const chapterURL =
-    `../data/chapters/` +
-    `${encodeURIComponent(comicId)}/` +
-    `${encodeURIComponent(folder)}/` +
-    `${encodeURIComponent(file)}`;
-
-console.log(
-    "Loading chapter:",
-    chapterURL
-);
-
-const response =
-    await fetch(
-        chapterURL
-    );
-
-if (!response.ok) {
-    throw new Error(
-        `Chapter JSON not found: ${chapterURL}`
-    );
-}
-
-return await response.json();
-
-}
-
-/* =========================================
-RENDER CHAPTER HEADER
-========================================= */
 
 function renderChapter() {
-const comicName =
-document.getElementById(
-"comic-name"
+const title =
+document.querySelector(
+"#chapter-title"
 );
 
-if (comicName) {
-    comicName.textContent =
-        currentComic.title ||
-        "Comic";
-}
-
-const chapterName =
-    document.getElementById(
-        "chapter-name"
-    );
-
-if (chapterName) {
-    const number =
-        currentChapter.number;
-
-    const title =
-        currentChapter.title ||
-        "Chapter";
-
-    chapterName.textContent =
-        number
-            ? `Chapter ${number}: ${title}`
-            : title;
-}
-
-const breadcrumb =
-    document.getElementById(
-        "chapter-title"
-    );
-
-if (breadcrumb) {
-    breadcrumb.textContent =
+if (title) {
+    title.textContent =
         currentChapter.title ||
         "Chapter";
 }
 
-const pages =
-    getPages();
-
-const pagesInfo =
-    document.getElementById(
-        "chapter-pages"
+const subtitle =
+    document.querySelector(
+        "#chapter-subtitle"
     );
 
-if (pagesInfo) {
-    pagesInfo.textContent =
-        `Pages: ${pages.length}`;
+if (subtitle) {
+    subtitle.textContent =
+        currentChapter.subtitle ||
+        "";
 }
 
-const dateInfo =
-    document.getElementById(
-        "chapter-date"
-    );
-
-if (dateInfo) {
-    dateInfo.textContent =
-        `Date: ${
-            currentChapter.date ||
-            "-"
-        }`;
-}
-
-const comicLink =
-    document.getElementById(
-        "comic-link"
-    );
-
-if (comicLink) {
-    comicLink.href =
-        `comic.html?id=${
-            encodeURIComponent(
-                currentComic.id
-            )
-        }`;
-}
-
-const backComic =
-    document.getElementById(
-        "back-comic"
-    );
-
-if (backComic) {
-    backComic.href =
-        `comic.html?id=${
-            encodeURIComponent(
-                currentComic.id
-            )
-        }`;
-}
-
-}
-
-/* =========================================
-GET PAGES
-========================================= */
-
-function getPages() {
-if (
-!currentChapter
-) {
-return [];
-}
-
-if (
-    Array.isArray(
-        currentChapter.pages
-    )
-) {
-    return currentChapter.pages;
-}
-
-if (
-    Array.isArray(
-        currentChapter.images
-    )
-) {
-    return currentChapter.images;
-}
-
-return [];
-
-}
-
-/* =========================================
-RENDER PAGES
-========================================= */
-
-function renderPages() {
 const container =
-document.getElementById(
-"preview-container"
-);
+    document.querySelector(
+        "#preview-container"
+    );
 
 if (!container) {
     console.error(
         "preview-container not found."
     );
-
     return;
 }
 
 const pages =
-    getPages();
+    currentChapter.pages ||
+    currentChapter.images ||
+    [];
 
-if (
-    pages.length ===
-    0
-) {
+if (!Array.isArray(pages) || !pages.length) {
     container.innerHTML =
-        "<p>No pages available.</p>";
+        "<p>No images found in this chapter.</p>";
+
+    console.error(
+        "No pages found:",
+        currentChapter
+    );
 
     return;
 }
 
-viewerPages =
-    pages;
-
-container.innerHTML =
-    "";
+container.innerHTML = "";
 
 pages.forEach(
-    (
-        page,
-        index
-    ) => {
+    (page, index) => {
 
         const image =
             document.createElement(
                 "img"
             );
 
-        image.src =
-            getPageURL(
-                page
-            );
+        const imageURL =
+            typeof page === "string"
+                ? page
+                : page &&
+                  (
+                      page.url ||
+                      page.src ||
+                      page.image ||
+                      ""
+                  );
+
+        image.src = imageURL;
 
         image.alt =
             `Page ${index + 1}`;
@@ -395,14 +187,11 @@ pages.forEach(
                 ? "eager"
                 : "lazy";
 
-        image.dataset.index =
-            index;
-
         image.addEventListener(
             "click",
             () => {
-                openViewer(
-                    index
+                openImage(
+                    imageURL
                 );
             }
         );
@@ -411,8 +200,8 @@ pages.forEach(
             "error",
             () => {
                 console.error(
-                    "Failed to load image:",
-                    image.src
+                    "Image failed to load:",
+                    imageURL
                 );
             }
         );
@@ -425,288 +214,22 @@ pages.forEach(
 
 }
 
-/* =========================================
-PAGE URL
-========================================= */
-
-function getPageURL(
-page
-) {
-if (
-typeof page ===
-"string"
-) {
-return page;
-}
-
-if (
-    page &&
-    typeof page ===
-    "object"
-) {
-    return (
-        page.url ||
-        page.src ||
-        page.image ||
-        ""
-    );
-}
-
-return "";
-
-}
-
-/* =========================================
-CHAPTER NAVIGATION
-========================================= */
-
-function setupNavigation() {
-const currentId =
-String(
-currentChapter.id ||
-""
-);
-
-const index =
-    allChapters.findIndex(
-        chapter => {
-
-            const id =
-                typeof chapter ===
-                "string"
-                    ? chapter
-                    : chapter.id;
-
-            return (
-                String(id) ===
-                currentId
-            );
-        }
-    );
-
-const previous =
-    index > 0
-        ? allChapters[
-            index - 1
-        ]
-        : null;
-
-const next =
-    index >= 0 &&
-    index <
-        allChapters.length - 1
-        ? allChapters[
-            index + 1
-        ]
-        : null;
-
-const previousButton =
-    document.getElementById(
-        "previous-chapter"
-    );
-
-const nextButton =
-    document.getElementById(
-        "next-chapter"
-    );
-
-if (
-    previousButton
-) {
-    if (previous) {
-        previousButton.href =
-            buildChapterURL(
-                previous
-            );
-    } else {
-        previousButton.style.display =
-            "none";
-    }
-}
-
-if (
-    nextButton
-) {
-    if (next) {
-        nextButton.href =
-            buildChapterURL(
-                next
-            );
-    } else {
-        nextButton.style.display =
-            "none";
-    }
-}
-
-}
-
-/* =========================================
-BUILD CHAPTER URL
-========================================= */
-
-function buildChapterURL(
-chapter
-) {
-const chapterId =
-typeof chapter ===
-"string"
-? chapter
-: chapter.id;
-
-return (
-    `chapter.html?id=${
-        encodeURIComponent(
-            currentComic.id
-        )
-    }&chapter=${
-        encodeURIComponent(
-            chapterId
-        )
-    }`
-);
-
-}
-
-/* =========================================
-VIEWER
-========================================= */
-
-function setupViewer() {
+function openImage(src) {
 const viewer =
-document.getElementById(
-"image-viewer"
-);
-
-const close =
-    document.getElementById(
-        "viewer-close"
-    );
-
-const previous =
-    document.getElementById(
-        "viewer-prev"
-    );
-
-const next =
-    document.getElementById(
-        "viewer-next"
-    );
-
-if (
-    close
-) {
-    close.addEventListener(
-        "click",
-        closeViewer
-    );
-}
-
-if (
-    previous
-) {
-    previous.addEventListener(
-        "click",
-        previousImage
-    );
-}
-
-if (
-    next
-) {
-    next.addEventListener(
-        "click",
-        nextImage
-    );
-}
-
-if (
-    viewer
-) {
-    viewer.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target ===
-                viewer
-            ) {
-                closeViewer();
-            }
-        }
-    );
-}
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            !viewer ||
-            !viewer.classList.contains(
-                "active"
-            )
-        ) {
-            return;
-        }
-
-        if (
-            event.key ===
-            "Escape"
-        ) {
-            closeViewer();
-        }
-
-        if (
-            event.key ===
-            "ArrowRight"
-        ) {
-            nextImage();
-        }
-
-        if (
-            event.key ===
-            "ArrowLeft"
-        ) {
-            previousImage();
-        }
-    }
-);
-
-}
-
-/* =========================================
-OPEN VIEWER
-========================================= */
-
-function openViewer(
-index
-) {
-const viewer =
-document.getElementById(
-"image-viewer"
+document.querySelector(
+"#image-viewer"
 );
 
 const image =
-    document.getElementById(
-        "viewer-image"
+    document.querySelector(
+        "#viewer-image"
     );
 
-if (
-    !viewer ||
-    !image
-) {
+if (!viewer || !image) {
     return;
 }
 
-viewerIndex =
-    index;
-
-image.src =
-    getPageURL(
-        viewerPages[
-            viewerIndex
-        ]
-    );
+image.src = src;
 
 viewer.classList.add(
     "active"
@@ -717,86 +240,13 @@ document.body.style.overflow =
 
 }
 
-/* =========================================
-NEXT IMAGE
-========================================= */
-
-function nextImage() {
-if (
-!viewerPages.length
-) {
-return;
-}
-
-viewerIndex =
-    (
-        viewerIndex + 1
-    ) %
-    viewerPages.length;
-
-updateViewerImage();
-
-}
-
-/* =========================================
-PREVIOUS IMAGE
-========================================= */
-
-function previousImage() {
-if (
-!viewerPages.length
-) {
-return;
-}
-
-viewerIndex =
-    (
-        viewerIndex -
-        1 +
-        viewerPages.length
-    ) %
-    viewerPages.length;
-
-updateViewerImage();
-
-}
-
-/* =========================================
-UPDATE VIEWER
-========================================= */
-
-function updateViewerImage() {
-const image =
-document.getElementById(
-"viewer-image"
-);
-
-if (!image) {
-    return;
-}
-
-image.src =
-    getPageURL(
-        viewerPages[
-            viewerIndex
-        ]
-    );
-
-}
-
-/* =========================================
-CLOSE VIEWER
-========================================= */
-
 function closeViewer() {
 const viewer =
-document.getElementById(
-"image-viewer"
+document.querySelector(
+"#image-viewer"
 );
 
-if (
-    viewer
-) {
+if (viewer) {
     viewer.classList.remove(
         "active"
     );
@@ -807,27 +257,17 @@ document.body.style.overflow =
 
 }
 
-/* =========================================
-ERROR
-========================================= */
+document.addEventListener(
+"click",
+event => {
 
-function showError(
-message
-) {
-const container =
-document.getElementById(
-"preview-container"
-);
-
-if (
-    container
-) {
-    container.innerHTML =
-        `<p>${message}</p>`;
+    if (
+        event.target.matches(
+            "#viewer-close"
+        )
+    ) {
+        closeViewer();
+    }
 }
 
-console.error(
-    message
 );
-
-}
