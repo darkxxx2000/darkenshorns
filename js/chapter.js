@@ -76,14 +76,15 @@ try {
     }
 
     const chapterData =
-        await chapterResponse.json();
+    await chapterResponse.json();
 
-    currentChapter = {
-        ...chapterInfo,
-        ...chapterData
-    };
+currentChapter = Object.assign(
+    {},
+    chapterInfo,
+    chapterData
+);
 
-    renderChapter();
+renderChapter();
 
 } catch (error) {
     console.error(
