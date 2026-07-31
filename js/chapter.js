@@ -1,274 +1,1705 @@
 "use strict";
 
+/* ==========================================================
+DARKENSHORNS
+CHAPTER SYSTEM
+========================================================== */
+
 let currentComic = null;
 let currentChapter = null;
+let allChapters = [];
 
-document.addEventListener("DOMContentLoaded", initChapter);
+let viewerPages = [];
+let viewerIndex = 0;
+let viewerScale = 1;
+
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
+let imagePositionX = 0;
+let imagePositionY = 0;
+
+/* ==========================================================
+INIT
+========================================================== */
+
+document.addEventListener(
+"DOMContentLoaded",
+initChapter
+);
 
 async function initChapter() {
-const params = new URLSearchParams(window.location.search);
-const comicId = params.get("id");
-const chapterId = params.get("chapter");
 
-if (!comicId || !chapterId) {
-    console.error("Missing comic or chapter ID.");
-    return;
-}
-
-try {
-    const comicResponse = await fetch(
-        `../data/comics/${encodeURIComponent(comicId)}.json`
+const params =
+    new URLSearchParams(
+        window.location.search
     );
 
-    if (!comicResponse.ok) {
-        throw new Error(`Comic JSON not found: ${comicId}`);
+const comicId =
+    params.get("id") ||
+    params.get("comic");
+
+const chapterId =
+    params.get("chapter");
+
+
+if (
+    !comicId ||
+    !chapterId
+) {
+
+    showError(
+        "Chapter information missing."
+    );
+
+    return;
+
+}
+
+
+try {
+
+    /* ==================================================
+       LOAD COMIC
+    ================================================== */
+
+    const comicPath =
+        `../data/comics/` +
+        `${encodeURIComponent(comicId)}.json`;
+
+
+    const comicResponse =
+        await fetch(
+            comicPath
+        );
+
+
+    if (
+        !comicResponse.ok
+    ) {
+
+        throw new Error(
+            `Comic JSON not found: ${comicPath}`
+        );
+
     }
 
-    currentComic = await comicResponse.json();
 
-    const chapterInfo = Array.isArray(currentComic.chapters)
-        ? currentComic.chapters.find(
-            chapter =>
-                chapter &&
-                typeof chapter === "object" &&
-                String(chapter.id) === String(chapterId)
+    currentComic =
+        await comicResponse.json();
+
+
+    /* ==================================================
+       FIND CHAPTER
+    ================================================== */
+
+    allChapters =
+        Array.isArray(
+            currentComic.chapters
         )
-        : null;
+            ? currentComic.chapters
+            : [];
 
-    if (!chapterInfo) {
+
+    const chapterInfo =
+        findChapter(
+            allChapters,
+            chapterId
+        );
+
+
+    if (
+        !chapterInfo
+    ) {
+
         throw new Error(
             `Chapter not found: ${chapterId}`
         );
+
     }
 
-    const folder = String(
-        chapterInfo.folder || ""
-    ).trim();
 
-    const file = String(
-        chapterInfo.file || ""
-    ).trim();
+    /* ==================================================
+       LOAD CHAPTER JSON
+    ================================================== */
 
-    if (!folder || !file) {
-        throw new Error(
-            "Chapter folder or file is missing."
+    let chapterData = {};
+
+
+    if (
+        typeof chapterInfo === "object" &&
+        chapterInfo.file
+    ) {
+
+        const chapterPath =
+            buildChapterJSONPath(
+                comicId,
+                chapterInfo
+            );
+
+
+        if (!chapterPath) {
+
+            throw new Error(
+                "Chapter path could not be created."
+            );
+
+        }
+
+
+        console.log(
+            "Loading chapter:",
+            chapterPath
         );
+
+
+        const chapterResponse =
+            await fetch(
+                chapterPath
+            );
+
+
+        if (
+            !chapterResponse.ok
+        ) {
+
+            throw new Error(
+                `Chapter JSON not found: ${chapterPath}`
+            );
+
+        }
+
+
+        chapterData =
+            await chapterResponse.json();
+
     }
 
-    const chapterURL =
-        `../data/chapters/` +
-        `${encodeURIComponent(comicId)}/` +
-        `${encodeURIComponent(folder)}/` +
-        `${encodeURIComponent(file)}`;
 
-    console.log(
-        "Loading chapter:",
-        chapterURL
-    );
+    /* ==================================================
+       MERGE CHAPTER INFO + CHAPTER DATA
+    ================================================== */
 
-    const chapterResponse =
-        await fetch(chapterURL);
-
-    if (!chapterResponse.ok) {
-        throw new Error(
-            `Chapter JSON not found: ${chapterURL}`
+    currentChapter =
+        Object.assign(
+            {},
+            typeof chapterInfo === "object"
+                ? chapterInfo
+                : {
+                    id: chapterInfo
+                },
+            chapterData
         );
-    }
 
-    const chapterData =
-    await chapterResponse.json();
 
-currentChapter = Object.assign(
-    {},
-    chapterInfo,
-    chapterData
-);
+    /* ==================================================
+       RENDER
+    ================================================== */
 
-renderChapter();
+    renderChapter();
 
-} catch (error) {
+    setupReaderLinks();
+
+    setupNavigation();
+
+    renderPreview();
+
+    setupViewer();
+
+}
+catch (error) {
+
     console.error(
         "Chapter loading error:",
         error
     );
 
-    const container =
-        document.querySelector(
-            "#preview-container"
+
+    showError(
+        "Unable to load chapter."
+    );
+
+}
+
+}
+
+/* ==========================================================
+FIND CHAPTER
+========================================================== */
+
+function findChapter(
+chapters,
+chapterId
+) {
+
+const search =
+    String(
+        chapterId
+    ).toLowerCase();
+
+
+return chapters.find(
+    chapter => {
+
+        if (
+            typeof chapter === "string"
+        ) {
+
+            return (
+                chapter.toLowerCase() ===
+                search
+            );
+
+        }
+
+
+        if (
+            !chapter ||
+            typeof chapter !== "object"
+        ) {
+
+            return false;
+
+        }
+
+
+        const id =
+            chapter.id ||
+            chapter.slug ||
+            chapter.chapter ||
+            chapter.number ||
+            "";
+
+
+        return (
+            String(
+                id
+            ).toLowerCase() ===
+            search
         );
 
-    if (container) {
-        container.innerHTML =
-            "<p>Error loading chapter.</p>";
     }
-}
-
-}
-
-function renderChapter() {
-const title =
-document.querySelector(
-"#chapter-title"
 );
 
-if (title) {
-    title.textContent =
-        currentChapter.title ||
-        "Chapter";
 }
+
+/* ==========================================================
+BUILD CHAPTER JSON PATH
+========================================================== */
+
+function buildChapterJSONPath(
+comicId,
+chapter
+) {
+
+if (
+    !chapter
+) {
+
+    return "";
+
+}
+
+
+const file =
+    typeof chapter.file === "string"
+        ? chapter.file.trim()
+        : "";
+
+
+const folder =
+    typeof chapter.folder === "string"
+        ? chapter.folder.trim()
+        : "";
+
+
+if (!file) {
+
+    return "";
+
+}
+
+
+/* ======================================================
+   EXPLICIT PATH
+====================================================== */
+
+if (
+    typeof chapter.path === "string" &&
+    chapter.path.trim()
+) {
+
+    return normalizeDataPath(
+        chapter.path.trim()
+    );
+
+}
+
+
+/* ======================================================
+   FULL EXTERNAL URL
+====================================================== */
+
+if (
+    file.startsWith("http://") ||
+    file.startsWith("https://")
+) {
+
+    return file;
+
+}
+
+
+/* ======================================================
+   PATH ALREADY INSIDE DATA
+====================================================== */
+
+if (
+    file.startsWith("data/")
+) {
+
+    return `../${file}`;
+
+}
+
+
+if (
+    file.startsWith("chapters/")
+) {
+
+    return `../data/${file}`;
+
+}
+
+
+/* ======================================================
+   FOLDER + FILE
+
+   Supports:
+   data/chapters/Ai-Chan/AI-Story/file.json
+   data/chapters/ryuko-matoi/Ryuko-vs-Huge-Dildo/file.json
+====================================================== */
+
+if (
+    folder
+) {
+
+    const possiblePaths = [
+
+        `../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(folder)}/${encodeURIComponent(file)}`,
+
+        `../data/chapters/${encodeURIComponent(
+            currentComic.chapterFolder || ""
+        )}/${encodeURIComponent(folder)}/${encodeURIComponent(file)}`
+
+    ];
+
+
+    return possiblePaths[0];
+
+}
+
+
+/* ======================================================
+   FILE ONLY
+====================================================== */
+
+return (
+    `../data/chapters/` +
+    `${encodeURIComponent(file)}`
+);
+
+}
+
+/* ==========================================================
+NORMALIZE DATA PATH
+========================================================== */
+
+function normalizeDataPath(
+path
+) {
+
+if (
+    !path
+) {
+
+    return "";
+
+}
+
+
+if (
+    path.startsWith("http://") ||
+    path.startsWith("https://")
+) {
+
+    return path;
+
+}
+
+
+if (
+    path.startsWith("./")
+) {
+
+    return path;
+
+}
+
+
+if (
+    path.startsWith("../")
+) {
+
+    return path;
+
+}
+
+
+if (
+    path.startsWith("data/")
+) {
+
+    return `../${path}`;
+
+}
+
+
+return (
+    `../data/${path}`
+);
+
+}
+
+/* ==========================================================
+RENDER CHAPTER
+========================================================== */
+
+function renderChapter() {
+
+if (
+    !currentComic ||
+    !currentChapter
+) {
+
+    return;
+
+}
+
+
+const comicTitle =
+    currentComic.title ||
+    "Comic";
+
+
+const chapterNumber =
+    currentChapter.number ||
+    "";
+
+
+const chapterTitle =
+    currentChapter.title ||
+    "Chapter";
+
 
 const subtitle =
-    document.querySelector(
-        "#chapter-subtitle"
+    currentChapter.subtitle ||
+    "";
+
+
+document.title =
+    `${comicTitle} - ${chapterTitle}`;
+
+
+const comicName =
+    document.getElementById(
+        "comic-name"
     );
 
-if (subtitle) {
-    subtitle.textContent =
-        currentChapter.subtitle ||
-        "";
+
+if (
+    comicName
+) {
+
+    comicName.textContent =
+        comicTitle;
+
 }
 
-const container =
-    document.querySelector(
-        "#preview-container"
+
+const chapterName =
+    document.getElementById(
+        "chapter-name"
     );
 
-if (!container) {
+
+if (
+    chapterName
+) {
+
+    chapterName.textContent =
+        chapterNumber
+            ? `Chapter ${chapterNumber}: ${chapterTitle}`
+            : chapterTitle;
+
+}
+
+
+const title =
+    document.getElementById(
+        "chapter-title"
+    );
+
+
+if (
+    title
+) {
+
+    title.textContent =
+        chapterTitle;
+
+}
+
+
+const subtitleElement =
+    document.getElementById(
+        "chapter-subtitle"
+    );
+
+
+if (
+    subtitleElement
+) {
+
+    subtitleElement.textContent =
+        subtitle;
+
+}
+
+
+const pages =
+    getChapterPages();
+
+
+const pagesElement =
+    document.getElementById(
+        "chapter-pages"
+    );
+
+
+if (
+    pagesElement
+) {
+
+    pagesElement.textContent =
+        `Pages: ${pages.length}`;
+
+}
+
+
+const dateElement =
+    document.getElementById(
+        "chapter-date"
+    );
+
+
+if (
+    dateElement
+) {
+
+    dateElement.textContent =
+        `Date: ${
+            currentChapter.date ||
+            currentChapter.releaseDate ||
+            "-"
+        }`;
+
+}
+
+
+const comicId =
+    currentComic.id ||
+    "";
+
+
+const comicLink =
+    document.getElementById(
+        "comic-link"
+    );
+
+
+if (
+    comicLink &&
+    comicId
+) {
+
+    comicLink.href =
+        `comic.html?id=${encodeURIComponent(
+            comicId
+        )}`;
+
+}
+
+}
+
+/* ==========================================================
+READER LINKS
+========================================================== */
+
+function setupReaderLinks() {
+
+const normalMode =
+    document.getElementById(
+        "normal-mode"
+    );
+
+
+const webtoonMode =
+    document.getElementById(
+        "webtoon-mode"
+    );
+
+
+const container =
+    document.getElementById(
+        "preview-container"
+    );
+
+
+if (
+    normalMode
+) {
+
+    normalMode.addEventListener(
+        "click",
+        function() {
+
+            if (
+                container
+            ) {
+
+                container.classList.remove(
+                    "webtoon-mode"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+if (
+    webtoonMode
+) {
+
+    webtoonMode.addEventListener(
+        "click",
+        function() {
+
+            if (
+                container
+            ) {
+
+                container.classList.add(
+                    "webtoon-mode"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+}
+
+/* ==========================================================
+RENDER PREVIEW
+========================================================== */
+
+function renderPreview() {
+
+const container =
+    document.getElementById(
+        "preview-container"
+    );
+
+
+if (
+    !container
+) {
+
     console.error(
         "preview-container not found."
     );
+
     return;
+
 }
+
 
 const pages =
-    currentChapter.pages ||
-    currentChapter.images ||
-    [];
+    getChapterPages();
 
-if (!Array.isArray(pages) || !pages.length) {
+
+container.innerHTML =
+    "";
+
+
+if (
+    !pages.length
+) {
+
     container.innerHTML =
-        "<p>No images found in this chapter.</p>";
-
-    console.error(
-        "No pages found:",
-        currentChapter
-    );
+        `
+        <div class="reader-empty">
+            No pages available.
+        </div>
+        `;
 
     return;
+
 }
 
-container.innerHTML = "";
 
 pages.forEach(
-    (page, index) => {
+    (
+        page,
+        index
+    ) => {
 
         const image =
             document.createElement(
                 "img"
             );
 
-        const imageURL =
-            typeof page === "string"
-                ? page
-                : page &&
-                  (
-                      page.url ||
-                      page.src ||
-                      page.image ||
-                      ""
-                  );
 
-        image.src = imageURL;
+        const imageURL =
+            getPageURL(
+                page
+            );
+
+
+        if (
+            !imageURL
+        ) {
+
+            return;
+
+        }
+
+
+        image.src =
+            imageURL;
+
 
         image.alt =
             `Page ${index + 1}`;
+
 
         image.loading =
             index < 3
                 ? "eager"
                 : "lazy";
 
+
+        image.dataset.index =
+            index;
+
+
         image.addEventListener(
             "click",
-            () => {
-                openImage(
-                    imageURL
+            function() {
+
+                openViewer(
+                    index
                 );
+
             }
         );
 
+
         image.addEventListener(
             "error",
-            () => {
+            function() {
+
                 console.error(
-                    "Image failed to load:",
-                    imageURL
+                    "Image failed:",
+                    image.src
                 );
+
             }
         );
+
 
         container.appendChild(
             image
         );
+
     }
 );
 
 }
 
-function openImage(src) {
-const viewer =
-document.querySelector(
-"#image-viewer"
-);
+/* ==========================================================
+GET CHAPTER PAGES
+========================================================== */
 
-const image =
-    document.querySelector(
-        "#viewer-image"
-    );
+function getChapterPages() {
 
-if (!viewer || !image) {
-    return;
+if (
+    !currentChapter
+) {
+
+    return [];
+
 }
 
-image.src = src;
+
+if (
+    Array.isArray(
+        currentChapter.pages
+    )
+) {
+
+    return currentChapter.pages;
+
+}
+
+
+if (
+    Array.isArray(
+        currentChapter.images
+    )
+) {
+
+    return currentChapter.images;
+
+}
+
+
+return [];
+
+}
+
+/* ==========================================================
+IMAGE URL
+========================================================== */
+
+function getPageURL(
+page
+) {
+
+let url =
+    "";
+
+
+if (
+    typeof page === "string"
+) {
+
+    url =
+        page.trim();
+
+}
+else if (
+    page &&
+    typeof page === "object"
+) {
+
+    url =
+        page.url ||
+        page.image ||
+        page.src ||
+        page.path ||
+        "";
+
+}
+
+
+if (
+    !url
+) {
+
+    return "";
+
+}
+
+
+if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("//") ||
+    url.startsWith("data:")
+) {
+
+    return url;
+
+}
+
+
+if (
+    url.startsWith("./") ||
+    url.startsWith("../")
+) {
+
+    return url;
+
+}
+
+
+if (
+    url.startsWith("assets/")
+) {
+
+    return `../${url}`;
+
+}
+
+
+if (
+    url.startsWith("data/")
+) {
+
+    return `../${url}`;
+
+}
+
+
+return (
+    `../${url}`
+);
+
+}
+
+/* ==========================================================
+VIEWER SETUP
+========================================================== */
+
+function setupViewer() {
+
+const viewer =
+    document.getElementById(
+        "image-viewer"
+    );
+
+
+if (
+    !viewer
+) {
+
+    return;
+
+}
+
+
+const closeButton =
+    document.getElementById(
+        "viewer-close"
+    );
+
+
+const previousButton =
+    document.getElementById(
+        "viewer-prev"
+    );
+
+
+const nextButton =
+    document.getElementById(
+        "viewer-next"
+    );
+
+
+if (
+    closeButton
+) {
+
+    closeButton.addEventListener(
+        "click",
+        closeViewer
+    );
+
+}
+
+
+if (
+    previousButton
+) {
+
+    previousButton.addEventListener(
+        "click",
+        previousImage
+    );
+
+}
+
+
+if (
+    nextButton
+) {
+
+    nextButton.addEventListener(
+        "click",
+        nextImage
+    );
+
+}
+
+
+viewer.addEventListener(
+    "wheel",
+    function(event) {
+
+        event.preventDefault();
+
+
+        if (
+            event.deltaY < 0
+        ) {
+
+            viewerScale +=
+                0.15;
+
+        }
+        else {
+
+            viewerScale -=
+                0.15;
+
+        }
+
+
+        viewerScale =
+            Math.max(
+                0.5,
+                Math.min(
+                    viewerScale,
+                    5
+                )
+            );
+
+
+        updateViewerTransform();
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+viewer.addEventListener(
+    "mousedown",
+    startDrag
+);
+
+
+document.addEventListener(
+    "mousemove",
+    dragImage
+);
+
+
+document.addEventListener(
+    "mouseup",
+    stopDrag
+);
+
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            !viewer.classList.contains(
+                "active"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
+
+            nextImage();
+
+        }
+
+
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
+
+            previousImage();
+
+        }
+
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            closeViewer();
+
+        }
+
+    }
+);
+
+}
+
+/* ==========================================================
+OPEN VIEWER
+========================================================== */
+
+function openViewer(
+index
+) {
+
+viewerPages =
+    getChapterPages();
+
+
+viewerIndex =
+    index;
+
+
+resetImagePosition();
+
+
+const viewer =
+    document.getElementById(
+        "image-viewer"
+    );
+
+
+if (
+    !viewer
+) {
+
+    return;
+
+}
+
 
 viewer.classList.add(
     "active"
 );
 
+
 document.body.style.overflow =
     "hidden";
 
+
+showViewerImage();
+
 }
+
+/* ==========================================================
+SHOW VIEWER IMAGE
+========================================================== */
+
+function showViewerImage() {
+
+const image =
+    document.getElementById(
+        "viewer-image"
+    );
+
+
+if (
+    !image ||
+    !viewerPages.length
+) {
+
+    return;
+
+}
+
+
+image.src =
+    getPageURL(
+        viewerPages[
+            viewerIndex
+        ]
+    );
+
+
+image.alt =
+    `Page ${viewerIndex + 1}`;
+
+
+updateViewerTransform();
+
+}
+
+/* ==========================================================
+NEXT IMAGE
+========================================================== */
+
+function nextImage() {
+
+if (
+    !viewerPages.length
+) {
+
+    return;
+
+}
+
+
+viewerIndex++;
+
+
+if (
+    viewerIndex >=
+    viewerPages.length
+) {
+
+    viewerIndex =
+        0;
+
+}
+
+
+resetImagePosition();
+
+showViewerImage();
+
+}
+
+/* ==========================================================
+PREVIOUS IMAGE
+========================================================== */
+
+function previousImage() {
+
+if (
+    !viewerPages.length
+) {
+
+    return;
+
+}
+
+
+viewerIndex--;
+
+
+if (
+    viewerIndex < 0
+) {
+
+    viewerIndex =
+        viewerPages.length - 1;
+
+}
+
+
+resetImagePosition();
+
+showViewerImage();
+
+}
+
+/* ==========================================================
+CLOSE VIEWER
+========================================================== */
 
 function closeViewer() {
+
 const viewer =
-document.querySelector(
-"#image-viewer"
+    document.getElementById(
+        "image-viewer"
+    );
+
+
+if (
+    !viewer
+) {
+
+    return;
+
+}
+
+
+viewer.classList.remove(
+    "active"
 );
 
-if (viewer) {
-    viewer.classList.remove(
-        "active"
-    );
-}
 
 document.body.style.overflow =
     "";
 
+
+resetImagePosition();
+
 }
 
-document.addEventListener(
-"click",
-event => {
+/* ==========================================================
+RESET IMAGE POSITION
+========================================================== */
+
+function resetImagePosition() {
+
+viewerScale =
+    1;
+
+
+imagePositionX =
+    0;
+
+
+imagePositionY =
+    0;
+
+
+updateViewerTransform();
+
+}
+
+/* ==========================================================
+TRANSFORM
+========================================================== */
+
+function updateViewerTransform() {
+
+const image =
+    document.getElementById(
+        "viewer-image"
+    );
+
+
+if (
+    !image
+) {
+
+    return;
+
+}
+
+
+image.style.transform =
+    `translate(${imagePositionX}px, ${imagePositionY}px) scale(${viewerScale})`;
+
+}
+
+/* ==========================================================
+DRAG
+========================================================== */
+
+function startDrag(
+event
+) {
+
+if (
+    event.target.id !==
+    "viewer-image"
+) {
+
+    return;
+
+}
+
+
+if (
+    event.button !== 0
+) {
+
+    return;
+
+}
+
+
+isDragging =
+    true;
+
+
+dragStartX =
+    event.clientX -
+    imagePositionX;
+
+
+dragStartY =
+    event.clientY -
+    imagePositionY;
+
+}
+
+function dragImage(
+event
+) {
+
+if (
+    !isDragging
+) {
+
+    return;
+
+}
+
+
+imagePositionX =
+    event.clientX -
+    dragStartX;
+
+
+imagePositionY =
+    event.clientY -
+    dragStartY;
+
+
+updateViewerTransform();
+
+}
+
+function stopDrag() {
+
+isDragging =
+    false;
+
+}
+
+/* ==========================================================
+CHAPTER NAVIGATION
+========================================================== */
+
+function setupNavigation() {
+
+const currentIndex =
+    allChapters.findIndex(
+        chapter => {
+
+            return (
+                String(
+                    getChapterIdentifier(
+                        chapter
+                    )
+                ).toLowerCase() ===
+                String(
+                    getChapterIdentifier(
+                        currentChapter
+                    )
+                ).toLowerCase()
+            );
+
+        }
+    );
+
+
+const previous =
+    currentIndex > 0
+        ? allChapters[
+            currentIndex - 1
+        ]
+        : null;
+
+
+const next =
+    currentIndex >= 0 &&
+    currentIndex <
+        allChapters.length - 1
+        ? allChapters[
+            currentIndex + 1
+        ]
+        : null;
+
+
+const previousButton =
+    document.getElementById(
+        "previous-chapter"
+    );
+
+
+const nextButton =
+    document.getElementById(
+        "next-chapter"
+    );
+
+
+if (
+    previousButton
+) {
 
     if (
-        event.target.matches(
-            "#viewer-close"
-        )
+        previous
     ) {
-        closeViewer();
+
+        previousButton.href =
+            buildChapterURL(
+                previous
+            );
+
+        previousButton.style.display =
+            "";
+
     }
+    else {
+
+        previousButton.style.display =
+            "none";
+
+    }
+
 }
 
+
+if (
+    nextButton
+) {
+
+    if (
+        next
+    ) {
+
+        nextButton.href =
+            buildChapterURL(
+                next
+            );
+
+        nextButton.style.display =
+            "";
+
+    }
+    else {
+
+        nextButton.style.display =
+            "none";
+
+    }
+
+}
+
+}
+
+/* ==========================================================
+CHAPTER IDENTIFIER
+========================================================== */
+
+function getChapterIdentifier(
+chapter
+) {
+
+if (
+    !chapter
+) {
+
+    return "";
+
+}
+
+
+if (
+    typeof chapter ===
+    "string"
+) {
+
+    return chapter;
+
+}
+
+
+return (
+    chapter.id ||
+    chapter.slug ||
+    chapter.chapter ||
+    chapter.number ||
+    ""
 );
+
+}
+
+/* ==========================================================
+BUILD CHAPTER URL
+========================================================== */
+
+function buildChapterURL(
+chapter
+) {
+
+const comicId =
+    currentComic &&
+    currentComic.id
+        ? currentComic.id
+        : "";
+
+
+const chapterId =
+    getChapterIdentifier(
+        chapter
+    );
+
+
+return (
+    `chapter.html` +
+    `?id=${encodeURIComponent(
+        comicId
+    )}` +
+    `&chapter=${encodeURIComponent(
+        chapterId
+    )}`
+);
+
+}
+
+/* ==========================================================
+ERROR
+========================================================== */
+
+function showError(
+message
+) {
+
+console.error(
+    "Chapter error:",
+    message
+);
+
+
+const container =
+    document.getElementById(
+        "preview-container"
+    );
+
+
+if (
+    container
+) {
+
+    container.innerHTML =
+        `
+        <div class="reader-error">
+            ${message}
+        </div>
+        `;
+
+}
+
+
+const title =
+    document.getElementById(
+        "chapter-title"
+    );
+
+
+if (
+    title
+) {
+
+    title.textContent =
+        "Error";
+
+}
+
+}
