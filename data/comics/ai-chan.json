@@ -37,6 +37,72 @@
 "subtitle": "Subtítulo",
 "file": "ai-chan-02.json",
 "folder": "AI-Story"
-}
-]
-}
+},
+
+{
+  "id": "ai-chan",
+  "title": "AI-Chan",
+  "cover": "https://placehold.co/600x900/webp?text=AI-Chan",
+  "description": "A collection of dark fantasy and cyberpunk comic series featuring AI-Chan.",
+  "author": "DarkensHorns",
+  "status": "Finished",
+  "updated": "2026-08-03",
+  "tags": ["AI-Chan", "Anime", "Dark", "Fantasy", "Cyberpunk"],
+  "genres": ["Action", "Dark Fantasy", "Fantasy", "Sci-Fi"],
+  "series": [
+    {
+      "id": "dark-awakening",
+      "title": "AI-Chan: Dark Awakening",
+      "cover": "https://placehold.co/600x900/webp?text=Dark+Awakening",
+      "description": "AI-Chan awakens in a dark world filled with mysterious creatures.",
+      "chapters": [
+        "chapter-01.json",
+        "chapter-02.json",
+        "chapter-03.json"
+      ]
+    },
+    {
+      "id": "cyber-night",
+      "title": "AI-Chan: Cyber Night",
+      "cover": "https://placehold.co/600x900/webp?text=Cyber+Night",
+      "description": "A cyberpunk city becomes the battlefield of a dangerous new conflict.",
+      "chapters": [
+        "chapter-01.json",
+        "chapter-02.json",
+        "chapter-03.json"
+      ]
+    },
+    {
+      "id": "demon-city",
+      "title": "AI-Chan: Demon City",
+      "cover": "https://placehold.co/600x900/webp?text=Demon+City",
+      "description": "AI-Chan enters a city ruled by demons and discovers a forgotten secret.",
+      "chapters": [
+        "chapter-01.json",
+        "chapter-02.json",
+        "chapter-03.json"
+      ]
+    },
+    {
+      "id": "blood-moon",
+      "title": "AI-Chan: Blood Moon",
+      "cover": "https://placehold.co/600x900/webp?text=Blood+Moon",
+      "description": "Under a red moon, AI-Chan faces a mysterious supernatural threat.",
+      "chapters": [
+        "chapter-01.json",
+        "chapter-02.json",
+        "chapter-03.json"
+      ]
+    },
+    {
+      "id": "fallen-angel",
+      "title": "AI-Chan: Fallen Angel",
+      "cover": "https://placehold.co/600x900/webp?text=Fallen+Angel",
+      "description": "A fallen angel changes AI-Chan's destiny forever.",
+      "chapters": [
+        "chapter-01.json",
+        "chapter-02.json",
+        "chapter-03.json"
+      ]
+    }
+  ]
