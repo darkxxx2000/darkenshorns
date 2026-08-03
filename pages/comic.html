@@ -101,391 +101,159 @@
 
 
 
-
-
-<!-- =========================
-     HERO
-========================= -->
-
-<section class="comic-hero">
-
-
-    <div class="comic-banner">
-
-        <img 
-        id="comic-banner-image"
-        src="../assets/placeholders/banner-placeholder.webp"
-        alt="Comic Banner">
-
-
-    </div>
-
-
-
-</section>
-
-
-
-
-
-
 <!-- =========================
      INFORMATION
 ========================= -->
 
-
 <section class="comic-information">
 
+    <div class="comic-cover">
+        <img id="comic-cover-image"
+             src="../assets/placeholders/cover-placeholder.webp"
+             alt="Comic Cover">
+    </div>
 
-<div class="comic-cover">
+    <div class="comic-details">
 
+        <h1 id="comic-title">Loading...</h1>
 
-<img 
-id="comic-cover-image"
-src="../assets/placeholders/cover-placeholder.webp"
-alt="Comic Cover">
+        <div class="comic-rating">
+            <span id="comic-rating">★★★★★</span>
+        </div>
 
+        <div class="comic-actions">
 
-</div>
+            <a id="first-chapter-button"
+               class="button primary"
+               href="#">
+                Read First Chapter
+            </a>
 
+            <button id="favorite-button" class="button">
+                ♡ Favorite
+            </button>
 
+            <button id="share-button" class="button">
+                Share
+            </button>
 
+        </div>
 
-<div class="comic-details">
-
-
-<h1 id="comic-title">
-
-Loading...
-
-</h1>
-
-
-
-<div class="comic-rating">
-
-
-<span id="comic-rating">
-
-★★★★★
-
-</span>
-
-
-</div>
-
-
-
-
-<div class="comic-meta">
-
-
-<div>
-
-<strong>
-Author:
-</strong>
-
-<span id="comic-author">
--
-</span>
-
-</div>
-
-
-
-<div>
-
-<strong>
-Status:
-</strong>
-
-<span id="comic-status">
--
-</span>
-
-</div>
-
-
-
-
-<div>
-
-<strong>
-Updated:
-</strong>
-
-<span id="comic-updated">
--
-</span>
-
-</div>
-
-
-
-
-<div>
-
-<strong>
-Chapters:
-</strong>
-
-<span id="comic-chapters">
--
-</span>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<div class="comic-actions">
-
-
-<a 
-id="first-chapter-button"
-class="button primary"
-href="#">
-
-Read First Chapter
-
-</a>
-
-
-
-<button 
-id="favorite-button"
-class="button">
-
-♡ Favorite
-
-</button>
-
-
-
-<button 
-id="share-button"
-class="button">
-
-Share
-
-</button>
-
-
-
-</div>
-
-
-
-</div>
-
-
+    </div>
 
 </section>
-
-
-
-
-
 
 
 <!-- =========================
      GENRES
 ========================= -->
 
-
 <section class="comic-tags">
 
+    <h2>Genres</h2>
+    <div id="comic-genres"></div>
 
-<h2>
-Genres
-</h2>
-
-
-<div id="comic-genres">
-
-</div>
-
-
-<h2>
-Tags
-</h2>
-
-
-<div id="comic-tags">
-
-</div>
-
-
+    <h2>Tags</h2>
+    <div id="comic-tags"></div>
 
 </section>
-
-
-
-
-
-
 
 
 <!-- =========================
      DESCRIPTION
 ========================= -->
 
-
 <section class="comic-description">
 
+    <h2>Description</h2>
 
-<h2>
-Description
-</h2>
+    <p id="comic-description"></p>
 
+    <div class="comic-meta">
 
-<p id="comic-description">
+        <div>
+            <strong>Author:</strong>
+            <span id="comic-author">-</span>
+        </div>
 
-</p>
+        <div>
+            <strong>Status:</strong>
+            <span id="comic-status">-</span>
+        </div>
 
+        <div>
+            <strong>Updated:</strong>
+            <span id="comic-updated">-</span>
+        </div>
 
+        <div>
+            <strong>Chapters:</strong>
+            <span id="comic-chapters">-</span>
+        </div>
+
+    </div>
 
 </section>
-
-
-
-
-
-
 
 
 <!-- =========================
      CHARACTERS
 ========================= -->
 
-
 <section class="comic-characters">
 
+    <h2>Characters</h2>
 
-<h2>
-Characters
-</h2>
-
-
-<div 
-id="characters-container"
-class="character-grid">
-
-
-</div>
-
-
+    <div id="characters-container"
+         class="character-grid"></div>
 
 </section>
-
-
-
-
-
-
 
 
 <!-- =========================
      CHAPTERS
 ========================= -->
 
-
 <section class="comic-chapters">
 
+    <h2>Chapters</h2>
 
-<h2>
-Chapters
-</h2>
-
-
-<div 
-id="chapters-container"
-class="chapter-list">
-
-
-</div>
-
-
+    <div id="chapters-container"
+         class="chapter-list"></div>
 
 </section>
-
-
-
-
-
 
 
 <!-- =========================
      RELATED COMICS
 ========================= -->
 
-
 <section class="related-comics">
 
+    <h2>Related Comics</h2>
 
-<h2>
-Related Comics
-</h2>
-
-
-
-<div 
-id="related-container"
-class="comic-grid">
-
-
-</div>
-
+    <div id="related-container"
+         class="comic-grid"></div>
 
 </section>
-
-
-
-
-
 
 
 <!-- =========================
      COMMENTS PLACEHOLDER
 ========================= -->
 
-
 <section class="comments-section">
 
+    <h2>Comments</h2>
 
-<h2>
-Comments
-</h2>
-
-
-
-<div class="comments-placeholder">
-
-
-Login system will be integrated later.
-
-
-</div>
-
-
+    <div class="comments-placeholder">
+        Login system will be integrated later.
+    </div>
 
 </section>
 
 
-
-
 </main>
-
-
-
-
-
 
 
 
