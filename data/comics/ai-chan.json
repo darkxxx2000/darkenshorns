@@ -2,7 +2,7 @@
   "id": "ai-chan",
   "title": "Ai-Chan",
   "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
-  "description": "A collection of dark fantasy, monster and hardcore comic stories featuring Ai-Chan.",
+  "description": "A collection of dark comic stories featuring Ai-Chan across multiple series.",
   "author": "DarkensHorns",
   "status": "Finished",
   "updated": "2026-08-03",
@@ -12,90 +12,258 @@
   "series": [
     {
       "id": "huge-dildo",
-      "title": "Huge Dildo",
+      "title": "Ai-Chan: Huge Dildo",
       "cover": "https://placehold.co/600x900/webp?text=Huge+Dildo",
-      "description": "Ai-Chan faces a new and unexpected challenge in this dark comic series.",
+      "description": "Ai-Chan faces a dangerous and unexpected encounter.",
       "chapters": [
-        {"id": "ai-chan-huge-dildo-01", "number": 1, "title": "Chapter 01", "subtitle": "The Unexpected Encounter", "file": "chapter-01.json", "folder": "huge-dildo"},
-        {"id": "ai-chan-huge-dildo-02", "number": 2, "title": "Chapter 02", "subtitle": "The Dangerous Night", "file": "chapter-02.json", "folder": "huge-dildo"},
-        {"id": "ai-chan-huge-dildo-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Encounter", "file": "chapter-03.json", "folder": "huge-dildo"}
+        {
+          "id": "ai-chan-huge-dildo-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Awakening",
+          "file": "chapter-01.json",
+          "folder": "huge-dildo"
+        },
+        {
+          "id": "ai-chan-huge-dildo-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Encounter",
+          "file": "chapter-02.json",
+          "folder": "huge-dildo"
+        },
+        {
+          "id": "ai-chan-huge-dildo-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The Final Scene",
+          "file": "chapter-03.json",
+          "folder": "huge-dildo"
+        }
       ]
     },
     {
       "id": "vibrator",
-      "title": "Vibrator",
+      "title": "Ai-Chan: Vibrator",
       "cover": "https://placehold.co/600x900/webp?text=Vibrator",
-      "description": "A strange discovery leads Ai-Chan into a mysterious new adventure.",
+      "description": "Ai-Chan enters another dark and intense adventure.",
       "chapters": [
-        {"id": "ai-chan-vibrator-01", "number": 1, "title": "Chapter 01", "subtitle": "A Strange Discovery", "file": "chapter-01.json", "folder": "vibrator"},
-        {"id": "ai-chan-vibrator-02", "number": 2, "title": "Chapter 02", "subtitle": "The Secret Room", "file": "chapter-02.json", "folder": "vibrator"},
-        {"id": "ai-chan-vibrator-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Secret", "file": "chapter-03.json", "folder": "vibrator"}
+        {
+          "id": "ai-chan-vibrator-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Beginning",
+          "file": "chapter-01.json",
+          "folder": "vibrator"
+        },
+        {
+          "id": "ai-chan-vibrator-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Encounter",
+          "file": "chapter-02.json",
+          "folder": "vibrator"
+        },
+        {
+          "id": "ai-chan-vibrator-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The End",
+          "file": "chapter-03.json",
+          "folder": "vibrator"
+        }
       ]
     },
     {
       "id": "bound",
-      "title": "Bound",
+      "title": "Ai-Chan: Bound",
       "cover": "https://placehold.co/600x900/webp?text=Bound",
-      "description": "Ai-Chan finds herself trapped in a dangerous situation with no easy way out.",
+      "description": "Ai-Chan finds herself trapped in a mysterious situation.",
       "chapters": [
-        {"id": "ai-chan-bound-01", "number": 1, "title": "Chapter 01", "subtitle": "The Capture", "file": "chapter-01.json", "folder": "bound"},
-        {"id": "ai-chan-bound-02", "number": 2, "title": "Chapter 02", "subtitle": "No Escape", "file": "chapter-02.json", "folder": "bound"},
-        {"id": "ai-chan-bound-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Trial", "file": "chapter-03.json", "folder": "bound"}
+        {
+          "id": "ai-chan-bound-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "Captured",
+          "file": "chapter-01.json",
+          "folder": "bound"
+        },
+        {
+          "id": "ai-chan-bound-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "No Escape",
+          "file": "chapter-02.json",
+          "folder": "bound"
+        },
+        {
+          "id": "ai-chan-bound-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "Freedom",
+          "file": "chapter-03.json",
+          "folder": "bound"
+        }
       ]
     },
     {
       "id": "gangbang",
-      "title": "GangBang",
+      "title": "Ai-Chan: GangBang",
       "cover": "https://placehold.co/600x900/webp?text=GangBang",
-      "description": "An unexpected gathering turns into a dangerous night for Ai-Chan.",
+      "description": "Ai-Chan enters a dangerous encounter surrounded by strangers.",
       "chapters": [
-        {"id": "ai-chan-gangbang-01", "number": 1, "title": "Chapter 01", "subtitle": "The Unexpected Party", "file": "chapter-01.json", "folder": "gangbang"},
-        {"id": "ai-chan-gangbang-02", "number": 2, "title": "Chapter 02", "subtitle": "The Gathering", "file": "chapter-02.json", "folder": "gangbang"},
-        {"id": "ai-chan-gangbang-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Night", "file": "chapter-03.json", "folder": "gangbang"}
+        {
+          "id": "ai-chan-gangbang-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Encounter",
+          "file": "chapter-01.json",
+          "folder": "gangbang"
+        },
+        {
+          "id": "ai-chan-gangbang-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "Surrounded",
+          "file": "chapter-02.json",
+          "folder": "gangbang"
+        },
+        {
+          "id": "ai-chan-gangbang-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "Aftermath",
+          "file": "chapter-03.json",
+          "folder": "gangbang"
+        }
       ]
     },
     {
       "id": "tentacles",
-      "title": "Tentacles",
+      "title": "Ai-Chan: Tentacles",
       "cover": "https://placehold.co/600x900/webp?text=Tentacles",
-      "description": "Ai-Chan enters an unknown world where a mysterious creature awaits.",
+      "description": "Ai-Chan discovers a mysterious creature hidden in the darkness.",
       "chapters": [
-        {"id": "ai-chan-tentacles-01", "number": 1, "title": "Chapter 01", "subtitle": "Into the Unknown", "file": "chapter-01.json", "folder": "tentacles"},
-        {"id": "ai-chan-tentacles-02", "number": 2, "title": "Chapter 02", "subtitle": "The Deep", "file": "chapter-02.json", "folder": "tentacles"},
-        {"id": "ai-chan-tentacles-03", "number": 3, "title": "Chapter 03", "subtitle": "The Escape", "file": "chapter-03.json", "folder": "tentacles"}
+        {
+          "id": "ai-chan-tentacles-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Creature",
+          "file": "chapter-01.json",
+          "folder": "tentacles"
+        },
+        {
+          "id": "ai-chan-tentacles-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Attack",
+          "file": "chapter-02.json",
+          "folder": "tentacles"
+        },
+        {
+          "id": "ai-chan-tentacles-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The Escape",
+          "file": "chapter-03.json",
+          "folder": "tentacles"
+        }
       ]
     },
     {
       "id": "horse",
-      "title": "Horse",
+      "title": "Ai-Chan: Horse",
       "cover": "https://placehold.co/600x900/webp?text=Horse",
-      "description": "A strange journey takes Ai-Chan into an unexpected new adventure.",
+      "description": "Ai-Chan finds herself in a strange and unexpected encounter.",
       "chapters": [
-        {"id": "ai-chan-horse-01", "number": 1, "title": "Chapter 01", "subtitle": "The New Arrival", "file": "chapter-01.json", "folder": "horse"},
-        {"id": "ai-chan-horse-02", "number": 2, "title": "Chapter 02", "subtitle": "A Strange Journey", "file": "chapter-02.json", "folder": "horse"},
-        {"id": "ai-chan-horse-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Ride", "file": "chapter-03.json", "folder": "horse"}
+        {
+          "id": "ai-chan-horse-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Arrival",
+          "file": "chapter-01.json",
+          "folder": "horse"
+        },
+        {
+          "id": "ai-chan-horse-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Encounter",
+          "file": "chapter-02.json",
+          "folder": "horse"
+        },
+        {
+          "id": "ai-chan-horse-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The End",
+          "file": "chapter-03.json",
+          "folder": "horse"
+        }
       ]
     },
     {
       "id": "monster",
-      "title": "Monster",
+      "title": "Ai-Chan: Monster",
       "cover": "https://placehold.co/600x900/webp?text=Monster",
-      "description": "Ai-Chan encounters a giant monster and must face a dangerous battle.",
+      "description": "Ai-Chan faces a terrifying creature in the darkness.",
       "chapters": [
-        {"id": "ai-chan-monster-01", "number": 1, "title": "Chapter 01", "subtitle": "The Giant Enemy", "file": "chapter-01.json", "folder": "monster"},
-        {"id": "ai-chan-monster-02", "number": 2, "title": "Chapter 02", "subtitle": "The Battle Begins", "file": "chapter-02.json", "folder": "monster"},
-        {"id": "ai-chan-monster-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Battle", "file": "chapter-03.json", "folder": "monster"}
+        {
+          "id": "ai-chan-monster-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Monster",
+          "file": "chapter-01.json",
+          "folder": "monster"
+        },
+        {
+          "id": "ai-chan-monster-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Hunt",
+          "file": "chapter-02.json",
+          "folder": "monster"
+        },
+        {
+          "id": "ai-chan-monster-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The Final Battle",
+          "file": "chapter-03.json",
+          "folder": "monster"
+        }
       ]
     },
     {
       "id": "shibari",
-      "title": "Shibari",
+      "title": "Ai-Chan: Shibari",
       "cover": "https://placehold.co/600x900/webp?text=Shibari",
-      "description": "Ai-Chan enters a mysterious world where every knot hides a secret.",
+      "description": "Ai-Chan becomes involved in a mysterious and dangerous encounter.",
       "chapters": [
-        {"id": "ai-chan-shibari-01", "number": 1, "title": "Chapter 01", "subtitle": "The First Knot", "file": "chapter-01.json", "folder": "shibari"},
-        {"id": "ai-chan-shibari-02", "number": 2, "title": "Chapter 02", "subtitle": "The Second Knot", "file": "chapter-02.json", "folder": "shibari"},
-        {"id": "ai-chan-shibari-03", "number": 3, "title": "Chapter 03", "subtitle": "The Final Knot", "file": "chapter-03.json", "folder": "shibari"}
+        {
+          "id": "ai-chan-shibari-01",
+          "number": 1,
+          "title": "Chapter 01",
+          "subtitle": "The Beginning",
+          "file": "chapter-01.json",
+          "folder": "shibari"
+        },
+        {
+          "id": "ai-chan-shibari-02",
+          "number": 2,
+          "title": "Chapter 02",
+          "subtitle": "The Ties",
+          "file": "chapter-02.json",
+          "folder": "shibari"
+        },
+        {
+          "id": "ai-chan-shibari-03",
+          "number": 3,
+          "title": "Chapter 03",
+          "subtitle": "The End",
+          "file": "chapter-03.json",
+          "folder": "shibari"
+        }
       ]
     }
   ]
