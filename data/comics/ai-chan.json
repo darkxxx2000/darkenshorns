@@ -1,108 +1,135 @@
 {
-"id": "ai-chan",
-"title": "Ai-Chan: Gigant Monster",
-"cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
-"description": "Ai-Chan enters a dangerous night where an unexpected enemy awaits her.",
-"author": "DarkensHorns",
-"status": "Finished",
-"genres": [
-"Action",
-"Monster",
-"Hardcore"
-],
-"tags": [
-"Ai-Chan",
-"Hardcore",
-"Monster"
-],
-"characters": [
-"Ai-Chan"
-],
-"series": [
-"Ai-Chan Stories"
-],
-"chapters": [
-{
-"id": "ai-chan-01",
-"number": 1,
-"title": "Gigant Monster",
-"subtitle": "The Hidden Enemy",
-"file": "ai-chan-01.json",
-"folder": "AI-Story"
-},
-{
-"id": "ai-chan-02",
-"number": 2,
-"title": "Título del capítulo 2",
-"subtitle": "Subtítulo",
-"file": "ai-chan-02.json",
-"folder": "AI-Story"
-},
-
-{
   "id": "ai-chan",
-  "title": "AI-Chan",
-  "cover": "https://placehold.co/600x900/webp?text=AI-Chan",
-  "description": "A collection of dark fantasy and cyberpunk comic series featuring AI-Chan.",
+  "title": "Ai-Chan",
+  "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
+  "description": "A collection of dark fantasy, monster and hardcore comic stories featuring Ai-Chan.",
   "author": "DarkensHorns",
   "status": "Finished",
   "updated": "2026-08-03",
-  "tags": ["AI-Chan", "Anime", "Dark", "Fantasy", "Cyberpunk"],
-  "genres": ["Action", "Dark Fantasy", "Fantasy", "Sci-Fi"],
-  "series": [
+  "genres": ["Action", "Monster", "Hardcore"],
+  "tags": ["Ai-Chan", "Hardcore", "Monster"],
+  "characters": ["Ai-Chan"],
+  "series": ["Ai-Chan Stories"],
+  "chapters": [
     {
-      "id": "dark-awakening",
-      "title": "AI-Chan: Dark Awakening",
-      "cover": "https://placehold.co/600x900/webp?text=Dark+Awakening",
-      "description": "AI-Chan awakens in a dark world filled with mysterious creatures.",
-      "chapters": [
-        "chapter-01.json",
-        "chapter-02.json",
-        "chapter-03.json"
-      ]
+      "id": "ai-chan-dark-awakening-01",
+      "number": 1,
+      "title": "The Awakening",
+      "subtitle": "The Hidden Enemy",
+      "file": "ai-chan-dark-awakening-01.json",
+      "folder": "Dark-Awakening"
     },
     {
-      "id": "cyber-night",
-      "title": "AI-Chan: Cyber Night",
-      "cover": "https://placehold.co/600x900/webp?text=Cyber+Night",
-      "description": "A cyberpunk city becomes the battlefield of a dangerous new conflict.",
-      "chapters": [
-        "chapter-01.json",
-        "chapter-02.json",
-        "chapter-03.json"
-      ]
+      "id": "ai-chan-dark-awakening-02",
+      "number": 2,
+      "title": "The First Encounter",
+      "subtitle": "Into the Darkness",
+      "file": "ai-chan-dark-awakening-02.json",
+      "folder": "Dark-Awakening"
     },
     {
-      "id": "demon-city",
-      "title": "AI-Chan: Demon City",
-      "cover": "https://placehold.co/600x900/webp?text=Demon+City",
-      "description": "AI-Chan enters a city ruled by demons and discovers a forgotten secret.",
-      "chapters": [
-        "chapter-01.json",
-        "chapter-02.json",
-        "chapter-03.json"
-      ]
+      "id": "ai-chan-dark-awakening-03",
+      "number": 3,
+      "title": "The Battle",
+      "subtitle": "No Escape",
+      "file": "ai-chan-dark-awakening-03.json",
+      "folder": "Dark-Awakening"
     },
     {
-      "id": "blood-moon",
-      "title": "AI-Chan: Blood Moon",
-      "cover": "https://placehold.co/600x900/webp?text=Blood+Moon",
-      "description": "Under a red moon, AI-Chan faces a mysterious supernatural threat.",
-      "chapters": [
-        "chapter-01.json",
-        "chapter-02.json",
-        "chapter-03.json"
-      ]
+      "id": "ai-chan-cyber-night-01",
+      "number": 1,
+      "title": "Cyber Night",
+      "subtitle": "City of Neon",
+      "file": "ai-chan-cyber-night-01.json",
+      "folder": "Cyber-Night"
     },
     {
-      "id": "fallen-angel",
-      "title": "AI-Chan: Fallen Angel",
-      "cover": "https://placehold.co/600x900/webp?text=Fallen+Angel",
-      "description": "A fallen angel changes AI-Chan's destiny forever.",
-      "chapters": [
-        "chapter-01.json",
-        "chapter-02.json",
-        "chapter-03.json"
-      ]
+      "id": "ai-chan-cyber-night-02",
+      "number": 2,
+      "title": "The Hunt",
+      "subtitle": "Digital Shadows",
+      "file": "ai-chan-cyber-night-02.json",
+      "folder": "Cyber-Night"
+    },
+    {
+      "id": "ai-chan-cyber-night-03",
+      "number": 3,
+      "title": "Final Protocol",
+      "subtitle": "System Overload",
+      "file": "ai-chan-cyber-night-03.json",
+      "folder": "Cyber-Night"
+    },
+    {
+      "id": "ai-chan-demon-city-01",
+      "number": 1,
+      "title": "Demon City",
+      "subtitle": "The Forbidden Gate",
+      "file": "ai-chan-demon-city-01.json",
+      "folder": "Demon-City"
+    },
+    {
+      "id": "ai-chan-demon-city-02",
+      "number": 2,
+      "title": "The Demon Queen",
+      "subtitle": "A Dangerous Deal",
+      "file": "ai-chan-demon-city-02.json",
+      "folder": "Demon-City"
+    },
+    {
+      "id": "ai-chan-demon-city-03",
+      "number": 3,
+      "title": "Escape",
+      "subtitle": "The City Burns",
+      "file": "ai-chan-demon-city-03.json",
+      "folder": "Demon-City"
+    },
+    {
+      "id": "ai-chan-blood-moon-01",
+      "number": 1,
+      "title": "Blood Moon",
+      "subtitle": "The Red Night",
+      "file": "ai-chan-blood-moon-01.json",
+      "folder": "Blood-Moon"
+    },
+    {
+      "id": "ai-chan-blood-moon-02",
+      "number": 2,
+      "title": "The Transformation",
+      "subtitle": "Under the Red Moon",
+      "file": "ai-chan-blood-moon-02.json",
+      "folder": "Blood-Moon"
+    },
+    {
+      "id": "ai-chan-blood-moon-03",
+      "number": 3,
+      "title": "The Last Night",
+      "subtitle": "End of the Curse",
+      "file": "ai-chan-blood-moon-03.json",
+      "folder": "Blood-Moon"
+    },
+    {
+      "id": "ai-chan-fallen-angel-01",
+      "number": 1,
+      "title": "Fallen Angel",
+      "subtitle": "The Arrival",
+      "file": "ai-chan-fallen-angel-01.json",
+      "folder": "Fallen-Angel"
+    },
+    {
+      "id": "ai-chan-fallen-angel-02",
+      "number": 2,
+      "title": "Broken Wings",
+      "subtitle": "The Secret",
+      "file": "ai-chan-fallen-angel-02.json",
+      "folder": "Fallen-Angel"
+    },
+    {
+      "id": "ai-chan-fallen-angel-03",
+      "number": 3,
+      "title": "The Fall",
+      "subtitle": "A New Destiny",
+      "file": "ai-chan-fallen-angel-03.json",
+      "folder": "Fallen-Angel"
     }
   ]
+}
