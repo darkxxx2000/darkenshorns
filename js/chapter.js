@@ -1,7 +1,3 @@
-/* =========================================
-DARKENSHORNS - CHAPTER READER
-========================================= */
-
 document.addEventListener("DOMContentLoaded",loadChapterPage);
 
 async function loadChapterPage(){
@@ -16,58 +12,42 @@ return;
 }
 
 try{
-const comicResponse=await fetch(../data/comics/${encodeURIComponent(comicId)}.json);
+const comicResponse=await fetch(`../data/comics/${encodeURIComponent(comicId)}.json`);
 
 if(!comicResponse.ok){
-throw new Error(Comic not found: ${comicId});
+throw new Error(`Comic not found: ${comicId}`);
 }
 
 const comic=await comicResponse.json();
 
 const series=Array.isArray(comic.series)
 ?comic.series.find(item=>String(item.id)===String(seriesId))
-;
+:null;
 
 if(!series){
-throw new Error(Series not found: ${seriesId});
+throw new Error(`Series not found: ${seriesId}`);
 }
 
 const chapter=Array.isArray(series.chapters)
 ?series.chapters.find(item=>String(item.id)===String(chapterId))
-;
+:null;
 
 if(!chapter){
-throw new Error(Chapter not found: ${chapterId});
+throw new Error(`Chapter not found: ${chapterId}`);
 }
 
-const file=chapter.file||${chapterId}.json;
-
-/*
-La estructura real de tu capítulo es:
-
-data/chapters/
-└── ai-chan/
-└── AI-Story/
-└── monster-01.json
-
-Por eso usamos AI-Story como carpeta
-principal de los capítulos.
-*/
-
-const chapterFolder=chapter.path||"AI-Story";
+const file=chapter.file||`${chapterId}.json`;
+const chapterFolder=chapter.folder||chapter.path||"AI-Story";
 
 const chapterPath=
-../data/chapters/+
-${encodeURIComponent(comicId)}/+
-${encodeURIComponent(chapterFolder)}/+
-${encodeURIComponent(file)};
+`../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(chapterFolder)}/${encodeURIComponent(file)}`;
 
 console.log("Loading chapter JSON:",chapterPath);
 
 const chapterResponse=await fetch(chapterPath);
 
 if(!chapterResponse.ok){
-throw new Error(Chapter file not found: ${chapterPath});
+throw new Error(`Chapter file not found: ${chapterPath}`);
 }
 
 const chapterData=await chapterResponse.json();
@@ -78,11 +58,9 @@ renderChapterPage(comic,series,chapter,chapterData);
 console.error("Error loading chapter:",error);
 showChapterError("The requested chapter could not be loaded.");
 }
-
 }
 
 function renderChapterPage(comic,series,chapter,chapterData){
-
 const comicName=document.getElementById("comic-name");
 const chapterName=document.getElementById("chapter-name");
 const chapterTitle=document.getElementById("chapter-title");
@@ -90,30 +68,16 @@ const comicLink=document.getElementById("comic-link");
 const chapterPages=document.getElementById("chapter-pages");
 const chapterDate=document.getElementById("chapter-date");
 
-const title=
-chapterData.title||
-chapter.title||
-"Untitled Chapter";
-
-const subtitle=
-chapterData.subtitle||
-chapter.subtitle||
-"";
-
-const pages=
-Array.isArray(chapterData.pages)
-?chapterData.pages
-:[];
+const title=chapterData.title||chapter.title||"Untitled Chapter";
+const subtitle=chapterData.subtitle||chapter.subtitle||"";
+const pages=Array.isArray(chapterData.pages)?chapterData.pages:[];
 
 if(comicName){
 comicName.textContent=comic.title||"Comic";
 }
 
 if(chapterName){
-chapterName.textContent=
-subtitle
-?${title} - ${subtitle}
-;
+chapterName.textContent=subtitle?`${title} - ${subtitle}`:title;
 }
 
 if(chapterTitle){
@@ -122,16 +86,15 @@ chapterTitle.textContent=title;
 
 if(comicLink){
 comicLink.textContent=comic.title||"Comic";
-comicLink.href=comic.html?id=${encodeURIComponent(comic.id)};
+comicLink.href=`comic.html?id=${encodeURIComponent(comic.id)}`;
 }
 
 if(chapterPages){
-chapterPages.textContent=Pages: ${pages.length};
+chapterPages.textContent=`Pages: ${pages.length}`;
 }
 
 if(chapterDate){
-chapterDate.textContent=
-Date: ${chapterData.date||chapter.date||"-"};
+chapterDate.textContent=`Date: ${chapterData.date||chapter.date||"-"}`;
 }
 
 if(pages.length===0){
@@ -142,11 +105,9 @@ return;
 renderChapterPages(pages);
 setupReaderControls();
 setupImageViewer(pages);
-
 }
 
 function renderChapterPages(pages){
-
 const container=document.getElementById("preview-container");
 
 if(!container){
@@ -157,15 +118,12 @@ return;
 container.innerHTML="";
 
 pages.forEach((pageUrl,index)=>{
-
-if(!pageUrl){
-return;
-}
+if(!pageUrl)return;
 
 const image=document.createElement("img");
 
 image.src=normalizeAssetPath(pageUrl);
-image.alt=Page ${index+1};
+image.alt=`Page ${index+1}`;
 image.loading=index===0?"eager":"lazy";
 image.decoding="async";
 image.dataset.pageIndex=index;
@@ -179,51 +137,39 @@ console.error("Failed to load page:",pageUrl);
 });
 
 container.appendChild(image);
-
 });
-
 }
 
 function setupReaderControls(){
-
 const normalButton=document.getElementById("grid-reader");
 const webtoonButton=document.getElementById("webtoon-reader");
 const container=document.getElementById("preview-container");
 
-if(!container){
-return;
-}
+if(!container)return;
 
 if(normalButton){
 normalButton.addEventListener("click",()=>{
-
 container.classList.remove("webtoon-mode");
 container.classList.add("preview-grid");
-
 normalButton.classList.add("active");
 
 if(webtoonButton){
 webtoonButton.classList.remove("active");
 }
-
 });
 }
 
 if(webtoonButton){
 webtoonButton.addEventListener("click",()=>{
-
 container.classList.remove("preview-grid");
 container.classList.add("webtoon-mode");
-
 webtoonButton.classList.add("active");
 
 if(normalButton){
 normalButton.classList.remove("active");
 }
-
 });
 }
-
 }
 
 let viewerPages=[];
@@ -232,7 +178,6 @@ let viewerScale=1;
 let viewerInitialized=false;
 
 function setupImageViewer(pages){
-
 viewerPages=pages;
 
 const viewer=document.getElementById("image-viewer");
@@ -241,13 +186,9 @@ const closeButton=document.getElementById("viewer-close");
 const previousButton=document.getElementById("viewer-prev");
 const nextButton=document.getElementById("viewer-next");
 
-if(!viewer||!image){
-return;
-}
+if(!viewer||!image)return;
 
-if(viewerInitialized){
-return;
-}
+if(viewerInitialized)return;
 
 viewerInitialized=true;
 
@@ -270,25 +211,20 @@ nextViewerImage();
 }
 
 viewer.addEventListener("click",event=>{
-
 if(event.target===viewer){
 closeImageViewer();
 }
-
 });
 
 image.addEventListener("click",event=>{
-
 event.stopPropagation();
 
 if(viewerScale<=1){
 nextViewerImage();
 }
-
 });
 
 image.addEventListener("wheel",event=>{
-
 event.preventDefault();
 
 if(event.deltaY<0){
@@ -298,16 +234,11 @@ viewerScale-=0.15;
 }
 
 viewerScale=Math.max(1,Math.min(viewerScale,5));
-
-image.style.transform=scale(${viewerScale});
-
-},{passive});
+image.style.transform=`scale(${viewerScale})`;
+},{passive:false});
 
 document.addEventListener("keydown",event=>{
-
-if(!viewer.classList.contains("active")){
-return;
-}
+if(!viewer.classList.contains("active"))return;
 
 if(event.key==="Escape"){
 closeImageViewer();
@@ -320,19 +251,14 @@ nextViewerImage();
 if(event.key==="ArrowLeft"){
 previousViewerImage();
 }
-
 });
-
 }
 
 function openImageViewer(pages,index){
-
 const viewer=document.getElementById("image-viewer");
 const image=document.getElementById("viewer-image");
 
-if(!viewer||!image){
-return;
-}
+if(!viewer||!image)return;
 
 viewerPages=pages;
 viewerIndex=index;
@@ -340,82 +266,58 @@ viewerScale=1;
 
 image.style.transform="scale(1)";
 image.src=normalizeAssetPath(viewerPages[viewerIndex]);
-image.alt=Page ${viewerIndex+1};
+image.alt=`Page ${viewerIndex+1}`;
 
 viewer.classList.add("active");
-
 document.body.style.overflow="hidden";
-
 }
 
 function closeImageViewer(){
-
 const viewer=document.getElementById("image-viewer");
 const image=document.getElementById("viewer-image");
 
-if(!viewer){
-return;
-}
+if(!viewer)return;
 
 viewer.classList.remove("active");
-
 document.body.style.overflow="";
-
 viewerScale=1;
 
 if(image){
 image.style.transform="scale(1)";
 }
-
 }
 
 function nextViewerImage(){
-
-if(viewerPages.length===0){
-return;
-}
+if(viewerPages.length===0)return;
 
 if(viewerIndex<viewerPages.length-1){
 viewerIndex++;
 updateViewerImage();
 }
-
 }
 
 function previousViewerImage(){
-
-if(viewerPages.length===0){
-return;
-}
+if(viewerPages.length===0)return;
 
 if(viewerIndex>0){
 viewerIndex--;
 updateViewerImage();
 }
-
 }
 
 function updateViewerImage(){
-
 const image=document.getElementById("viewer-image");
 
-if(!image){
-return;
-}
+if(!image)return;
 
 viewerScale=1;
-
 image.style.transform="scale(1)";
 image.src=normalizeAssetPath(viewerPages[viewerIndex]);
-image.alt=Page ${viewerIndex+1};
-
+image.alt=`Page ${viewerIndex+1}`;
 }
 
 function normalizeAssetPath(path){
-
-if(!path){
-return "";
-}
+if(!path)return "";
 
 if(
 path.startsWith("http://")||
@@ -431,15 +333,13 @@ return path;
 }
 
 if(path.startsWith("assets/")){
-return ../${path};
+return `../${path}`;
 }
 
-return ../${path};
-
+return `../${path}`;
 }
 
 function showChapterError(message){
-
 const chapterTitle=document.getElementById("chapter-title");
 const chapterName=document.getElementById("chapter-name");
 const comicName=document.getElementById("comic-name");
@@ -458,7 +358,6 @@ chapterName.textContent=message;
 }
 
 if(container){
-container.innerHTML=<p>${message}</p>;
+container.innerHTML=`<p>${message}</p>`;
 }
-
 }
