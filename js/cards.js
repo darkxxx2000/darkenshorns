@@ -10,12 +10,6 @@ import {
 
 /**
  * Detecta automáticamente la ruta hacia comic.html.
- *
- * Desde Home:
- * pages/comic.html
- *
- * Desde una página dentro de /pages/:
- * comic.html
  */
 function getComicPageUrl() {
 
@@ -32,24 +26,10 @@ function getComicPageUrl() {
 /**
  * Detecta automáticamente la ruta
  * de los assets.
- *
- * Desde Home:
- * assets/...
- *
- * Desde /pages/:
- * ../assets/...
- *
- * También acepta URLs externas.
  */
 function getAssetUrl(
     path
 ) {
-
-    /*
-    =========================================
-    SIN PORTADA
-    =========================================
-    */
 
     if (
         !path ||
@@ -61,18 +41,9 @@ function getAssetUrl(
     }
 
 
-    /*
-    Limpiar espacios
-    */
-
     path =
         path.trim();
 
-
-    /*
-    Si después de limpiar
-    quedó vacío.
-    */
 
     if (
         !path
@@ -83,50 +54,17 @@ function getAssetUrl(
     }
 
 
-    /*
-    =========================================
-    URL EXTERNA
-    =========================================
-
-    Ejemplo:
-
-    https://ejemplo.com/imagen.jpg
-
-    */
-
     if (
-        path.startsWith(
-            "http://"
-        ) ||
-
-        path.startsWith(
-            "https://"
-        ) ||
-
-        path.startsWith(
-            "//"
-        ) ||
-
-        path.startsWith(
-            "data:"
-        )
+        path.startsWith("http://") ||
+        path.startsWith("https://") ||
+        path.startsWith("//") ||
+        path.startsWith("data:")
     ) {
 
         return path;
 
     }
 
-
-    /*
-    =========================================
-    RUTA ABSOLUTA
-    =========================================
-
-    Ejemplo:
-
-    /assets/comics/cover.jpg
-
-    */
 
     if (
         path.startsWith("/")
@@ -137,21 +75,8 @@ function getAssetUrl(
     }
 
 
-    /*
-    =========================================
-    RUTA YA PREPARADA
-    =========================================
-
-    Ejemplo:
-
-    ../assets/comics/cover.jpg
-
-    */
-
     if (
-        path.startsWith(
-            "../"
-        )
+        path.startsWith("../")
     ) {
 
         return path;
@@ -159,32 +84,9 @@ function getAssetUrl(
     }
 
 
-    /*
-    =========================================
-    DETECTAR SI ESTAMOS EN /pages/
-    =========================================
-    */
-
     const isInsidePages =
-        window.location.pathname.includes(
-            "/pages/"
-        );
+        window.location.pathname.includes("/pages/");
 
-
-    /*
-    =========================================
-    DESDE /pages/
-    =========================================
-
-    JSON:
-
-    assets/comics/cover.jpg
-
-    Resultado:
-
-    ../assets/comics/cover.jpg
-
-    */
 
     if (
         isInsidePages
@@ -194,21 +96,6 @@ function getAssetUrl(
 
     }
 
-
-    /*
-    =========================================
-    DESDE HOME
-    =========================================
-
-    JSON:
-
-    assets/comics/cover.jpg
-
-    Resultado:
-
-    assets/comics/cover.jpg
-
-    */
 
     return path;
 
@@ -221,44 +108,47 @@ function getAssetUrl(
 function getFallbackCover() {
 
     const isInsidePages =
-        window.location.pathname.includes(
-            "/pages/"
-        );
+        window.location.pathname.includes("/pages/");
 
 
     return isInsidePages
-
         ? "../assets/placeholders/cover.webp"
-
         : "assets/placeholders/cover.webp";
 
 }
 
 
 /**
- * Obtiene la cantidad de capítulos.
- *
- * Evita mostrar:
- *
- * [object Object]
- *
- * cuando chapters es un array
- * de objetos.
+ * Obtiene texto desde JSON.
+ */
+function getText(
+    value
+) {
+
+    if (
+        typeof value === "string" &&
+        value.trim()
+    ) {
+
+        return value.trim();
+
+    }
+
+
+    return "";
+
+}
+
+
+/**
+ * Obtiene capítulos.
  */
 function getChapterCount(
     chapters
 ) {
 
-    /*
-    =========================================
-    ARRAY DE CAPÍTULOS
-    =========================================
-    */
-
     if (
-        Array.isArray(
-            chapters
-        )
+        Array.isArray(chapters)
     ) {
 
         return chapters.length;
@@ -266,15 +156,8 @@ function getChapterCount(
     }
 
 
-    /*
-    =========================================
-    NÚMERO
-    =========================================
-    */
-
     if (
-        typeof chapters ===
-        "number"
+        typeof chapters === "number"
     ) {
 
         return chapters;
@@ -282,27 +165,16 @@ function getChapterCount(
     }
 
 
-    /*
-    =========================================
-    STRING NUMÉRICO
-    =========================================
-    */
-
     if (
-        typeof chapters ===
-        "string"
+        typeof chapters === "string"
     ) {
 
         const number =
-            Number(
-                chapters
-            );
+            Number(chapters);
 
 
         if (
-            !Number.isNaN(
-                number
-            )
+            !Number.isNaN(number)
         ) {
 
             return number;
@@ -318,17 +190,12 @@ function getChapterCount(
 
 
 /**
- * Crea una tarjeta de cómic.
+ * Crea tarjeta de cómic.
  */
 export function createComicCard(
     comic
 ) {
 
-    /*
-    =========================================
-    VALIDACIÓN
-    =========================================
-    */
 
     if (
         !comic ||
@@ -343,12 +210,6 @@ export function createComicCard(
     }
 
 
-    /*
-    =========================================
-    CREAR TARJETA
-    =========================================
-    */
-
     const card =
         createElement(
             "article",
@@ -356,25 +217,15 @@ export function createComicCard(
         );
 
 
-    /*
-    =========================================
-    ID DEL CÓMIC
-    =========================================
-    */
-
     const comicId =
-        comic.id || "";
+        getText(
+            comic.id
+        );
 
 
     card.dataset.id =
         comicId;
 
-
-    /*
-    =========================================
-    URL DEL CÓMIC
-    =========================================
-    */
 
     const comicUrl =
         `${getComicPageUrl()}?id=${encodeURIComponent(
@@ -382,23 +233,11 @@ export function createComicCard(
         )}`;
 
 
-    /*
-    =========================================
-    PORTADA
-    =========================================
-    */
-
     const coverUrl =
         getAssetUrl(
             comic.cover
         );
 
-
-    /*
-    =========================================
-    CAPÍTULOS
-    =========================================
-    */
 
     const chapterCount =
         getChapterCount(
@@ -406,35 +245,51 @@ export function createComicCard(
         );
 
 
-    /*
-    =========================================
-    TÍTULO
-    =========================================
-    */
-
     const comicTitle =
-        comic.title ||
-        "Untitled";
+        getText(
+            comic.title
+        );
 
-
-    /*
-    =========================================
-    AUTOR
-    =========================================
-    */
 
     const comicAuthor =
-        comic.author ||
-        "Unknown Author";
+        getText(
+            comic.author
+        );
 
 
-    /*
-    =========================================
-    TARJETA
-    =========================================
-    */
+    const comicSeries =
+        getText(
+            comic.series
+        );
+
+
+    const comicSubtitle =
+        getText(
+            comic.subtitle
+        );
+
+
+    const comicDescription =
+        getText(
+            comic.description
+        );
+
+
+    const comicStatus =
+        getText(
+            comic.status
+        );
+
+
+    const comicUpdated =
+        getText(
+            comic.updated
+        );
+
+
 
     card.innerHTML = `
+
 
         <a
             href="${comicUrl}"
@@ -442,7 +297,9 @@ export function createComicCard(
             aria-label="Read ${comicTitle}"
         >
 
+
             <div class="comic-cover">
+
 
                 <img
                     src="${coverUrl}"
@@ -451,48 +308,108 @@ export function createComicCard(
                     onerror="this.onerror=null; this.src='${getFallbackCover()}';"
                 >
 
+
                 ${
-                    comic.status
-                    ? `
-                        <span class="card-badge">
-                            ${comic.status}
-                        </span>
+                    comicStatus
+                    ?
                     `
-                    : ""
+                    <span class="card-badge">
+                        ${comicStatus}
+                    </span>
+                    `
+                    :
+                    ""
                 }
+
 
             </div>
 
 
+
             <div class="card-info">
 
-                <h3 class="card-title">
-                    ${comicTitle}
-                </h3>
 
 
                 ${
-                    comic.subtitle
-                    ? `
-                        <div class="card-subtitle">
-                            ${comic.subtitle}
-                        </div>
+                    comicTitle
+                    ?
                     `
-                    : ""
+                    <h3 class="card-title">
+                        ${comicTitle}
+                    </h3>
+                    `
+                    :
+                    ""
                 }
 
 
-                <div class="card-author">
-                    ${comicAuthor}
-                </div>
 
 
-                <p class="card-description">
-                    ${comic.description || ""}
-                </p>
+                ${
+                    comicSubtitle
+                    ?
+                    `
+                    <div class="card-subtitle">
+                        ${comicSubtitle}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+
+
+
+                ${
+                    comicSeries
+                    ?
+                    `
+                    <div class="card-series">
+                        ${comicSeries}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+
+
+
+                ${
+                    comicAuthor
+                    ?
+                    `
+                    <div class="card-author">
+                        ${comicAuthor}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+
+
+                ${
+                    comicDescription
+                    ?
+                    `
+                    <p class="card-description">
+                        ${comicDescription}
+                    </p>
+                    `
+                    :
+                    ""
+                }
+
+
 
 
                 <div class="card-footer">
+
+
 
                     <span class="chapter-number">
 
@@ -501,17 +418,34 @@ export function createComicCard(
                     </span>
 
 
-                    <span class="card-date">
 
-                        ${comic.updated || ""}
 
-                    </span>
+                    ${
+                        comicUpdated
+                        ?
+                        `
+                        <span class="card-date">
+                            ${comicUpdated}
+                        </span>
+                        `
+                        :
+                        ""
+                    }
+
+
+
 
                 </div>
 
+
+
             </div>
 
+
+
         </a>
+
+
 
     `;
 
@@ -521,19 +455,15 @@ export function createComicCard(
 }
 
 
+
 /**
- * Renderiza un listado de cómics.
+ * Renderiza lista de cómics.
  */
 export function renderComicCards(
     container,
     comics = []
 ) {
 
-    /*
-    =========================================
-    VALIDAR CONTENEDOR
-    =========================================
-    */
 
     if (
         !container
@@ -544,30 +474,16 @@ export function renderComicCards(
     }
 
 
-    /*
-    =========================================
-    LIMPIAR CONTENEDOR
-    =========================================
-    */
-
     container.innerHTML =
         "";
 
 
-    /*
-    =========================================
-    SIN RESULTADOS
-    =========================================
-    */
 
     if (
-        !Array.isArray(
-            comics
-        ) ||
-
-        comics.length ===
-        0
+        !Array.isArray(comics) ||
+        comics.length === 0
     ) {
+
 
         container.innerHTML = `
 
@@ -577,29 +493,21 @@ export function renderComicCards(
 
         `;
 
+
         return;
 
     }
 
 
-    /*
-    =========================================
-    FRAGMENTO
-    =========================================
-    */
 
     const fragment =
         document.createDocumentFragment();
 
 
-    /*
-    =========================================
-    CREAR TARJETAS
-    =========================================
-    */
 
     comics.forEach(
         comic => {
+
 
             const card =
                 createComicCard(
@@ -611,18 +519,15 @@ export function renderComicCards(
                 card
             );
 
+
         }
     );
 
 
-    /*
-    =========================================
-    INSERTAR TARJETAS
-    =========================================
-    */
 
     container.appendChild(
         fragment
     );
+
 
 }
