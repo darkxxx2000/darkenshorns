@@ -67,7 +67,7 @@ try {
 
     /*
     =========================================
-    FIND SERIES INSIDE COMIC JSON
+    FIND SERIES
     =========================================
     */
 
@@ -79,7 +79,8 @@ try {
                 currentSeries =>
                     String(
                         currentSeries.id
-                    ) === String(
+                    ) ===
+                    String(
                         seriesId
                     )
             )
@@ -210,16 +211,27 @@ if (cover) {
         "Series Cover";
 
 
+    /*
+    =========================================
+    COVER FALLBACK
+    =========================================
+    */
+
     cover.addEventListener(
         "error",
         function() {
 
-            cover.src =
-                "../assets/placeholders/cover-placeholder.webp";
+            if (
+                !cover.src.includes(
+                    "cover-placeholder.webp"
+                )
+            ) {
 
-        },
-        {
-            once: true
+                cover.src =
+                    "../assets/placeholders/cover-placeholder.webp";
+
+            }
+
         }
     );
 
@@ -292,40 +304,6 @@ if (backButton) {
         `comic.html?id=${encodeURIComponent(
             comic.id
         )}`;
-
-}
-
-
-/*
-=========================================
-SERIES RATING
-=========================================
-*/
-
-const rating =
-    document.getElementById(
-        "series-rating"
-    );
-
-
-if (rating) {
-
-    if (
-        series.rating !== undefined &&
-        series.rating !== null &&
-        series.rating !== ""
-    ) {
-
-        rating.textContent =
-            `★ ${series.rating}`;
-
-    }
-    else {
-
-        rating.textContent =
-            "★★★★★";
-
-    }
 
 }
 
@@ -476,8 +454,10 @@ if (
 
     }
     else if (
-        chapter.number !== undefined &&
-        chapter.number !== null
+        chapter.number !==
+        undefined &&
+        chapter.number !==
+        null
     ) {
 
         chapterTitle =
@@ -490,7 +470,7 @@ if (
 
 /*
 =========================================
-TITLE
+TITLE ELEMENT
 =========================================
 */
 
@@ -508,35 +488,62 @@ title.textContent =
     chapterTitle;
 
 
+/*
+=========================================
+SUBTITLE / DATE
+=========================================
+*/
+
+const subtitle =
+    document.createElement(
+        "span"
+    );
+
+
+subtitle.className =
+    "chapter-date";
+
+
+if (
+    chapter &&
+    typeof chapter ===
+    "object"
+) {
+
+    if (
+        chapter.subtitle
+    ) {
+
+        subtitle.textContent =
+            chapter.subtitle;
+
+    }
+    else if (
+        chapter.date
+    ) {
+
+        subtitle.textContent =
+            chapter.date;
+
+    }
+
+}
+
+
+/*
+=========================================
+BUILD CHAPTER ITEM
+=========================================
+*/
+
 item.appendChild(
     title
 );
 
 
-/*
-=========================================
-SUBTITLE
-=========================================
-*/
-
 if (
-    chapter &&
-    chapter.subtitle
+    subtitle.textContent
 ) {
-
-    const subtitle =
-        document.createElement(
-            "span"
-        );
-
-
-    subtitle.className =
-        "chapter-date";
-
-
-    subtitle.textContent =
-        chapter.subtitle;
-
 
     item.appendChild(
         subtitle
@@ -547,7 +554,7 @@ if (
 
 /*
 =========================================
-CHAPTER IDENTIFIER
+GET CHAPTER ID
 =========================================
 */
 
@@ -559,7 +566,7 @@ const chapterId =
 
 /*
 =========================================
-LINK TO CHAPTER
+CHAPTER LINK
 =========================================
 */
 
@@ -624,13 +631,21 @@ if (
     "object"
 ) {
 
+    /*
+    =========================================
+    PRIORITY:
+    1. ID
+    2. SLUG
+    3. NUMBER
+    4. FILE
+    =========================================
+    */
+
     return (
 
         chapter.id ||
 
         chapter.slug ||
-
-        chapter.chapter ||
 
         chapter.number ||
 
@@ -724,6 +739,12 @@ if (
 
 }
 
+
+/*
+=========================================
+GENERIC PATH
+=========================================
+*/
 
 return `../${path}`;
 
