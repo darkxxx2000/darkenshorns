@@ -212,9 +212,9 @@
         {
           "id": "ai-chan-monster-01",
           "number": 1,
-          "title": "Chapter 01",
+          "title": "Gigant Moster 01",
           "subtitle": "The Monster",
-          "file": "chapter-01.json",
+          "file": "monster-01.json",
           "folder": "monster"
         },
         {
