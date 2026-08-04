@@ -204,19 +204,19 @@
       ]
     },
     {
-      "id": "monster",
-      "title": "Ai-Chan: Monster",
-      "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
-      "description": "Ai-Chan faces a terrifying creature in the darkness.",
-      "chapters": [
-        {
-          "id": "ai-chan-monster-01",
-          "number": 1,
-          "title": "Gigant Moster 01",
-          "subtitle": "The Monster",
-          "file": "monster-01.json",
-          "folder": "monster"
-        },
+  "id": "monster",
+  "title": "Ai-Chan: Monster",
+  "cover": "https://ah-img.luscious.net/DarkensHorns/577455/5a_01K0P1K44W2WB225KEV20SRNS2.640x0.jpg",
+  "description": "Ai-Chan faces a terrifying creature in the darkness.",
+  "chapters": [
+    {
+      "id": "ai-chan-monster-01",
+      "number": 1,
+      "title": "Gigant Moster 01",
+      "subtitle": "The Monster",
+      "file": "monster-01.json",
+      "folder": "AI-Story"
+    },
         {
           "id": "ai-chan-monster-02",
           "number": 2,
