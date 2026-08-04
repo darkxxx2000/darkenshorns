@@ -2,292 +2,751 @@
 DARKENSHORNS - CHAPTER READER
 ========================================= */
 
-document.addEventListener("DOMContentLoaded",loadChapterPage);
+document.addEventListener("DOMContentLoaded", loadChapterPage);
 
-async function loadChapterPage(){
-const params=new URLSearchParams(window.location.search);
-const comicId=params.get("id");
-const seriesId=params.get("series");
-const chapterId=params.get("chapter");
-const folder=params.get("folder");
-const file=params.get("file");
+/* =========================================
+LOAD CHAPTER PAGE
+========================================= */
 
-if(!comicId||!seriesId||!chapterId){
-showChapterError("Comic, series or chapter ID not specified.");
-return;
+async function loadChapterPage() {
+const params = new URLSearchParams(window.location.search);
+const comicId = params.get("id");
+const seriesId = params.get("series");
+const chapterId = params.get("chapter");
+
+if (!comicId || !seriesId || !chapterId) {
+    showChapterError("Comic, series or chapter ID not specified.");
+    return;
 }
 
-try{
-const comicResponse=await fetch(../data/comics/${encodeURIComponent(comicId)}.json);
+try {
+    /* =========================================
+       LOAD COMIC JSON
+    ========================================= */
 
-if(!comicResponse.ok){
-    throw new Error(`Comic not found: ${comicId}`);
+    const comicResponse = await fetch(
+        `../data/comics/${encodeURIComponent(comicId)}.json`
+    );
+
+    if (!comicResponse.ok) {
+        throw new Error(`Comic not found: ${comicId}`);
+    }
+
+    const comic = await comicResponse.json();
+
+    /* =========================================
+       FIND SERIES
+    ========================================= */
+
+    const series = Array.isArray(comic.series)
+        ? comic.series.find(
+            currentSeries =>
+                String(currentSeries.id) === String(seriesId)
+        )
+        : null;
+
+    if (!series) {
+        throw new Error(`Series not found: ${seriesId}`);
+    }
+
+    /* =========================================
+       FIND CHAPTER
+    ========================================= */
+
+    const chapter = Array.isArray(series.chapters)
+        ? series.chapters.find(
+            currentChapter =>
+                typeof currentChapter === "object" &&
+                String(currentChapter.id) === String(chapterId)
+        )
+        : null;
+
+    if (!chapter) {
+        throw new Error(`Chapter not found: ${chapterId}`);
+    }
+
+    /* =========================================
+       BUILD CHAPTER JSON PATH
+    ========================================= */
+
+    const folder = chapter.folder || series.id;
+    const file = chapter.file || `${chapterId}.json`;
+
+    const chapterPath =
+        `../data/chapters/` +
+        `${encodeURIComponent(comicId)}/` +
+        `${encodeURIComponent(folder)}/` +
+        `${encodeURIComponent(file)}`;
+
+    console.log("Loading chapter JSON:", chapterPath);
+
+    /* =========================================
+       LOAD CHAPTER JSON
+    ========================================= */
+
+    const chapterResponse = await fetch(chapterPath);
+
+    if (!chapterResponse.ok) {
+        throw new Error(
+            `Chapter file not found: ${chapterPath}`
+        );
+    }
+
+    const chapterData = await chapterResponse.json();
+
+    /* =========================================
+       RENDER CHAPTER
+    ========================================= */
+
+    renderChapterPage(
+        comic,
+        series,
+        chapter,
+        chapterData
+    );
+
+} catch (error) {
+    console.error(
+        "Error loading chapter:",
+        error
+    );
+
+    showChapterError(
+        "The requested chapter could not be loaded."
+    );
 }
 
-const comic=await comicResponse.json();
-
-const series=Array.isArray(comic.series)
-    ?comic.series.find(item=>item.id===seriesId)
-    :null;
-
-if(!series){
-    throw new Error(`Series not found: ${seriesId}`);
 }
 
-const chapter=Array.isArray(series.chapters)
-    ?series.chapters.find(item=>item.id===chapterId)
-    :null;
+/* =========================================
+RENDER CHAPTER PAGE
+========================================= */
 
-if(!chapter){
-    throw new Error(`Chapter not found: ${chapterId}`);
+function renderChapterPage(
+comic,
+series,
+chapter,
+chapterData
+) {
+/* =========================================
+CHAPTER TITLE
+========================================= */
+
+const title =
+    document.getElementById("chapter-title");
+
+if (title) {
+    title.textContent =
+        chapterData.title ||
+        chapter.title ||
+        "Untitled Chapter";
 }
 
-const chapterFolder=folder||chapter.folder||seriesId;
-const chapterFile=file||chapter.file;
+/* =========================================
+   CHAPTER SUBTITLE
+========================================= */
 
-if(!chapterFile){
-    throw new Error("Chapter JSON file not specified.");
+const subtitle =
+    document.getElementById("chapter-subtitle");
+
+if (subtitle) {
+    subtitle.textContent =
+        chapterData.subtitle ||
+        chapter.subtitle ||
+        "";
 }
 
-const chapterPath=
-    `../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(chapterFolder)}/${encodeURIComponent(chapterFile)}`;
+/* =========================================
+   COMIC TITLE
+========================================= */
 
-const chapterResponse=await fetch(chapterPath);
+const comicTitle =
+    document.getElementById("comic-title");
 
-if(!chapterResponse.ok){
-    throw new Error(`Chapter file not found: ${chapterPath}`);
+if (comicTitle) {
+    comicTitle.textContent =
+        comic.title ||
+        "Comic";
 }
 
-const chapterData=await chapterResponse.json();
+/* =========================================
+   SERIES TITLE
+========================================= */
 
-renderChapterPage(
-    comic,
-    series,
-    chapter,
-    chapterData
+const seriesTitle =
+    document.getElementById("series-title");
+
+if (seriesTitle) {
+    seriesTitle.textContent =
+        series.title ||
+        "Series";
+}
+
+/* =========================================
+   BREADCRUMB
+========================================= */
+
+const breadcrumb =
+    document.getElementById("breadcrumb-title");
+
+if (breadcrumb) {
+    breadcrumb.textContent =
+        chapterData.title ||
+        chapter.title ||
+        "Chapter";
+}
+
+/* =========================================
+   PAGES
+========================================= */
+
+const pages =
+    Array.isArray(chapterData.pages)
+        ? chapterData.pages
+        : [];
+
+if (pages.length === 0) {
+    showChapterError(
+        "This chapter has no pages."
+    );
+    return;
+}
+
+renderChapterPages(pages);
+
+/* =========================================
+   READER CONTROLS
+========================================= */
+
+setupReaderControls();
+
+/* =========================================
+   IMAGE VIEWER
+========================================= */
+
+setupImageViewer(pages);
+
+}
+
+/* =========================================
+RENDER CHAPTER PAGES
+========================================= */
+
+function renderChapterPages(pages) {
+const container =
+document.getElementById("preview-container");
+
+if (!container) {
+    console.error(
+        "preview-container not found."
+    );
+    return;
+}
+
+container.innerHTML = "";
+
+pages.forEach(
+    (pageUrl, index) => {
+
+        if (!pageUrl) {
+            return;
+        }
+
+        const image =
+            document.createElement("img");
+
+        image.src =
+            normalizeAssetPath(pageUrl);
+
+        image.alt =
+            `Page ${index + 1}`;
+
+        image.loading =
+            index === 0
+                ? "eager"
+                : "lazy";
+
+        image.decoding =
+            "async";
+
+        image.dataset.pageIndex =
+            index;
+
+        image.addEventListener(
+            "click",
+            () => {
+
+                openImageViewer(
+                    pages,
+                    index
+                );
+
+            }
+        );
+
+        image.addEventListener(
+            "error",
+            () => {
+
+                console.error(
+                    "Failed to load page:",
+                    pageUrl
+                );
+
+            }
+        );
+
+        container.appendChild(
+            image
+        );
+    }
 );
 
-}catch(error){
-console.error("Error loading chapter:",error);
-showChapterError("The requested chapter could not be loaded.");
-}
 }
 
-function renderChapterPage(comic,series,chapter,chapterData){
-const title=document.getElementById("chapter-title");
-const subtitle=document.getElementById("chapter-subtitle");
-const date=document.getElementById("chapter-date");
-const breadcrumb=document.getElementById("breadcrumb-title");
-const container=document.getElementById("preview-container");
+/* =========================================
+READER CONTROLS
+========================================= */
 
-if(title){
-title.textContent=
-chapterData.title||
-chapter.title||
-"Untitled Chapter";
+function setupReaderControls() {
+const normalButton =
+document.getElementById(
+"normal-mode-button"
+);
+
+const webtoonButton =
+    document.getElementById(
+        "webtoon-mode-button"
+    );
+
+const container =
+    document.getElementById(
+        "preview-container"
+    );
+
+if (!container) {
+    return;
 }
 
-if(subtitle){
-subtitle.textContent=
-chapterData.subtitle||
-chapter.subtitle||
-"";
+if (normalButton) {
+    normalButton.addEventListener(
+        "click",
+        () => {
+
+            container.classList.remove(
+                "webtoon-mode"
+            );
+
+            normalButton.classList.add(
+                "active"
+            );
+
+            if (webtoonButton) {
+                webtoonButton.classList.remove(
+                    "active"
+                );
+            }
+
+        }
+    );
 }
 
-if(date){
-date.textContent=
-chapterData.date||
-"";
+if (webtoonButton) {
+    webtoonButton.addEventListener(
+        "click",
+        () => {
+
+            container.classList.add(
+                "webtoon-mode"
+            );
+
+            webtoonButton.classList.add(
+                "active"
+            );
+
+            if (normalButton) {
+                normalButton.classList.remove(
+                    "active"
+                );
+            }
+
+        }
+    );
 }
-
-if(breadcrumb){
-breadcrumb.textContent=
-${series.title||"Series"} / ${chapterData.title||chapter.title||"Chapter"};
-}
-
-if(!container){
-console.error("preview-container not found.");
-return;
-}
-
-const pages=
-Array.isArray(chapterData.pages)
-?chapterData.pages
-:[];
-
-renderPages(pages);
-initReaderControls();
-initImageViewer(pages);
-}
-
-function renderPages(pages){
-const container=document.getElementById("preview-container");
-
-if(!container)return;
-
-container.innerHTML="";
-
-if(pages.length===0){
-container.innerHTML="<p>No pages available for this chapter.</p>";
-return;
-}
-
-pages.forEach((page,index)=>{
-if(!page)return;
-
-const image=document.createElement("img");
-
-image.src=page;
-image.alt=`Page ${index+1}`;
-image.loading=index===0?"eager":"lazy";
-image.decoding="async";
-image.dataset.index=index;
-
-image.addEventListener("error",()=>{
-    image.style.display="none";
-});
-
-container.appendChild(image);
-
-});
-}
-
-function initReaderControls(){
-const container=document.getElementById("preview-container");
-const normalButton=document.getElementById("normal-mode-button");
-const webtoonButton=document.getElementById("webtoon-mode-button");
-
-if(!container)return;
-
-if(normalButton){
-normalButton.addEventListener("click",()=>{
-container.classList.remove("webtoon-mode");
-normalButton.classList.add("active");
-if(webtoonButton)webtoonButton.classList.remove("active");
-});
-}
-
-if(webtoonButton){
-webtoonButton.addEventListener("click",()=>{
-container.classList.add("webtoon-mode");
-webtoonButton.classList.add("active");
-if(normalButton)normalButton.classList.remove("active");
-});
-}
-}
-
-function initImageViewer(pages){
-const container=document.getElementById("preview-container");
-const viewer=document.getElementById("image-viewer");
-const viewerImage=document.getElementById("viewer-image");
-const closeButton=document.getElementById("viewer-close");
-
-if(!container||!viewer||!viewerImage)return;
-
-let currentIndex=0;
-let zoom=1;
-
-function openViewer(index){
-if(!pages[index])return;
-
-currentIndex=index;
-zoom=1;
-
-viewerImage.src=pages[currentIndex];
-viewerImage.style.transform=`scale(${zoom})`;
-
-viewer.classList.add("active");
-document.body.style.overflow="hidden";
 
 }
 
-function closeViewer(){
-viewer.classList.remove("active");
-document.body.style.overflow="";
-viewerImage.src="";
-zoom=1;
+/* =========================================
+IMAGE VIEWER SETUP
+========================================= */
+
+let viewerPages = [];
+let viewerIndex = 0;
+let viewerScale = 1;
+
+function setupImageViewer(pages) {
+viewerPages = pages;
+
+const viewer =
+    document.getElementById(
+        "image-viewer"
+    );
+
+const image =
+    document.getElementById(
+        "viewer-image"
+    );
+
+const closeButton =
+    document.getElementById(
+        "viewer-close"
+    );
+
+if (!viewer || !image) {
+    return;
 }
 
-function showNext(){
-if(currentIndex<pages.length-1){
-openViewer(currentIndex+1);
-}
-}
-
-function showPrevious(){
-if(currentIndex>0){
-openViewer(currentIndex-1);
-}
+if (closeButton) {
+    closeButton.addEventListener(
+        "click",
+        closeImageViewer
+    );
 }
 
-container.querySelectorAll("img").forEach(image=>{
-image.addEventListener("click",()=>{
-const index=parseInt(image.dataset.index,10);
+viewer.addEventListener(
+    "click",
+    event => {
 
-    if(!Number.isNaN(index)){
-        openViewer(index);
+        if (
+            event.target === viewer
+        ) {
+            closeImageViewer();
+        }
+
     }
-});
+);
 
-});
+image.addEventListener(
+    "click",
+    event => {
 
-if(closeButton){
-closeButton.addEventListener("click",closeViewer);
+        event.stopPropagation();
+
+        if (viewerScale > 1) {
+            return;
+        }
+
+        nextViewerImage();
+
+    }
+);
+
+image.addEventListener(
+    "wheel",
+    event => {
+
+        event.preventDefault();
+
+        if (event.deltaY < 0) {
+            viewerScale += 0.15;
+        } else {
+            viewerScale -= 0.15;
+        }
+
+        viewerScale =
+            Math.max(
+                1,
+                Math.min(
+                    viewerScale,
+                    5
+                )
+            );
+
+        image.style.transform =
+            `scale(${viewerScale})`;
+
+    },
+    { passive: false }
+);
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            !viewer.classList.contains(
+                "active"
+            )
+        ) {
+            return;
+        }
+
+        if (
+            event.key === "Escape"
+        ) {
+            closeImageViewer();
+        }
+
+        if (
+            event.key === "ArrowRight"
+        ) {
+            nextViewerImage();
+        }
+
+        if (
+            event.key === "ArrowLeft"
+        ) {
+            previousViewerImage();
+        }
+
+    }
+);
+
 }
 
-viewer.addEventListener("click",event=>{
-if(event.target===viewer){
-closeViewer();
-}
-});
+/* =========================================
+OPEN IMAGE VIEWER
+========================================= */
 
-viewerImage.addEventListener("click",event=>{
-event.stopPropagation();
-showNext();
-});
+function openImageViewer(
+pages,
+index
+) {
+const viewer =
+document.getElementById(
+"image-viewer"
+);
 
-viewer.addEventListener("wheel",event=>{
-event.preventDefault();
+const image =
+    document.getElementById(
+        "viewer-image"
+    );
 
-zoom+=event.deltaY<0?0.1:-0.1;
-zoom=Math.min(Math.max(zoom,0.5),4);
-
-viewerImage.style.transform=`scale(${zoom})`;
-
-},{passive});
-
-document.addEventListener("keydown",event=>{
-if(!viewer.classList.contains("active"))return;
-
-if(event.key==="Escape"){
-    closeViewer();
+if (!viewer || !image) {
+    return;
 }
 
-if(event.key==="ArrowRight"){
-    showNext();
+viewerPages =
+    pages;
+
+viewerIndex =
+    index;
+
+viewerScale =
+    1;
+
+image.style.transform =
+    "scale(1)";
+
+image.src =
+    normalizeAssetPath(
+        viewerPages[viewerIndex]
+    );
+
+image.alt =
+    `Page ${viewerIndex + 1}`;
+
+viewer.classList.add(
+    "active"
+);
+
+document.body.style.overflow =
+    "hidden";
+
 }
 
-if(event.key==="ArrowLeft"){
-    showPrevious();
+/* =========================================
+CLOSE IMAGE VIEWER
+========================================= */
+
+function closeImageViewer() {
+const viewer =
+document.getElementById(
+"image-viewer"
+);
+
+const image =
+    document.getElementById(
+        "viewer-image"
+    );
+
+if (!viewer) {
+    return;
 }
 
-});
+viewer.classList.remove(
+    "active"
+);
+
+document.body.style.overflow =
+    "";
+
+viewerScale =
+    1;
+
+if (image) {
+    image.style.transform =
+        "scale(1)";
 }
 
-function showChapterError(message){
-const title=document.getElementById("chapter-title");
-const subtitle=document.getElementById("chapter-subtitle");
-const container=document.getElementById("preview-container");
-
-if(title){
-title.textContent="Chapter Not Found";
 }
 
-if(subtitle){
-subtitle.textContent=message;
+/* =========================================
+NEXT IMAGE
+========================================= */
+
+function nextViewerImage() {
+if (
+viewerPages.length === 0
+) {
+return;
 }
 
-if(container){
-container.innerHTML=<p>${message}</p>;
+if (
+    viewerIndex <
+    viewerPages.length - 1
+) {
+    viewerIndex++;
+
+    updateViewerImage();
 }
+
+}
+
+/* =========================================
+PREVIOUS IMAGE
+========================================= */
+
+function previousViewerImage() {
+if (
+viewerPages.length === 0
+) {
+return;
+}
+
+if (
+    viewerIndex > 0
+) {
+    viewerIndex--;
+
+    updateViewerImage();
+}
+
+}
+
+/* =========================================
+UPDATE VIEWER IMAGE
+========================================= */
+
+function updateViewerImage() {
+const image =
+document.getElementById(
+"viewer-image"
+);
+
+if (!image) {
+    return;
+}
+
+viewerScale =
+    1;
+
+image.style.transform =
+    "scale(1)";
+
+image.src =
+    normalizeAssetPath(
+        viewerPages[viewerIndex]
+    );
+
+image.alt =
+    `Page ${viewerIndex + 1}`;
+
+}
+
+/* =========================================
+NORMALIZE ASSET PATH
+========================================= */
+
+function normalizeAssetPath(
+path
+) {
+if (!path) {
+return "";
+}
+
+/* =========================================
+   EXTERNAL URL
+========================================= */
+
+if (
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("//") ||
+    path.startsWith("data:")
+) {
+    return path;
+}
+
+/* =========================================
+   ALREADY RELATIVE
+========================================= */
+
+if (
+    path.startsWith("../")
+) {
+    return path;
+}
+
+/* =========================================
+   ROOT ASSET
+========================================= */
+
+if (
+    path.startsWith("assets/")
+) {
+    return `../${path}`;
+}
+
+return `../${path}`;
+
+}
+
+/* =========================================
+ERROR
+========================================= */
+
+function showChapterError(
+message
+) {
+const title =
+document.getElementById(
+"chapter-title"
+);
+
+const subtitle =
+    document.getElementById(
+        "chapter-subtitle"
+    );
+
+const container =
+    document.getElementById(
+        "preview-container"
+    );
+
+if (title) {
+    title.textContent =
+        "Chapter Not Found";
+}
+
+if (subtitle) {
+    subtitle.textContent =
+        message;
+}
+
+if (container) {
+    container.innerHTML =
+        `<p>${message}</p>`;
+}
+
 }
