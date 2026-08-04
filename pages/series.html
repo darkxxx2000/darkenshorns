@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
 
 <meta charset="UTF-8">
 
@@ -18,48 +16,20 @@
 <meta name="theme-color"
       content="#080808">
 
-
-<!-- Favicon -->
-
 <link rel="icon"
       href="../favicon.ico">
 
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/header.css">
+<link rel="stylesheet" href="../css/navigation.css">
+<link rel="stylesheet" href="../css/cards.css">
+<link rel="stylesheet" href="../css/sidebar.css">
+<link rel="stylesheet" href="../css/footer.css">
+<link rel="stylesheet" href="../css/responsive.css">
 
-<!-- Main CSS -->
-
-<link rel="stylesheet"
-      href="../css/theme.css">
-
-<link rel="stylesheet"
-      href="../css/layout.css">
-
-<link rel="stylesheet"
-      href="../css/header.css">
-
-<link rel="stylesheet"
-      href="../css/navigation.css">
-
-<link rel="stylesheet"
-      href="../css/cards.css">
-
-<link rel="stylesheet"
-      href="../css/sidebar.css">
-
-<link rel="stylesheet"
-      href="../css/footer.css">
-
-<link rel="stylesheet"
-      href="../css/responsive.css">
-
-
-<!-- Series CSS -->
-
-<link rel="stylesheet"
-      href="../css/pages.css">
-
-<link rel="stylesheet"
-      href="../css/comic.css">
-
+<link rel="stylesheet" href="../css/pages.css">
+<link rel="stylesheet" href="../css/comic.css">
 
 </head>
 
@@ -67,185 +37,153 @@
 
 <header id="site-header">
 
-
 <div class="header-container">
 
+<a href="../index.html" class="logo">
+DarkensHorns
+</a>
 
-    <a href="../index.html"
-       class="logo">
+<nav class="main-navigation">
 
-        DarkensHorns
+<a href="../index.html">
+Home
+</a>
 
-    </a>
+<a href="series.html">
+Series
+</a>
 
+<a href="search.html">
+Search
+</a>
 
-    <nav class="main-navigation">
-
-
-        <a href="../index.html">
-
-            Home
-
-        </a>
-
-
-        <a href="series.html">
-
-            Series
-
-        </a>
-
-
-        <a href="search.html">
-
-            Search
-
-        </a>
-
-
-    </nav>
-
+</nav>
 
 </div>
-
 
 </header>
 
 <main class="comic-page">
 
-<!-- =========================
-     BREADCRUMB
-========================= -->
-
 <section class="breadcrumb">
 
-
 <a href="../index.html">
-
-    Home
-
+Home
 </a>
-
 
 <span>/</span>
 
-
-<a id="comic-breadcrumb"
-   href="#">
-
-    Comic
-
+<a id="comic-breadcrumb" href="#">
+Comic
 </a>
 
-
 <span>/</span>
-
 
 <span id="series-breadcrumb">
-
-    Series
-
+Series
 </span>
 
-
 </section>
-
-<!-- =========================
-     SERIES INFORMATION
-========================= -->
 
 <section class="comic-information">
 
-
 <div class="comic-cover">
 
-
-    <img id="series-cover-image"
-
-         src="../assets/placeholders/cover-placeholder.webp"
-
-         alt="Series Cover">
-
+<img
+id="series-cover-image"
+src="../assets/placeholders/cover-placeholder.webp"
+alt="Series Cover">
 
 </div>
-
-
 
 <div class="comic-details">
 
+<h1 id="series-title">
+Loading...
+</h1>
 
-    <h1 id="series-title">
+<div class="series-meta">
 
-        Loading...
+<div class="meta-row">
+<strong>Author:</strong>
+<a id="series-author" href="#">
+Loading...
+</a>
+</div>
 
-    </h1>
+<div class="meta-row">
+<strong>Series:</strong>
+<a id="series-name" href="#">
+Loading...
+</a>
+</div>
 
+<div class="meta-row">
+<strong>Characters:</strong>
+<span id="series-characters">
+Loading...
+</span>
+</div>
 
-    <div class="comic-rating">
+<div class="meta-row">
+<strong>Genres:</strong>
+<span id="series-genres">
+Loading...
+</span>
+</div>
 
-        <span id="series-rating">
+<div class="meta-row">
+<strong>Status:</strong>
+<span id="series-status">
+Loading...
+</span>
+</div>
 
-            ★★★★★
-
-        </span>
-
-    </div>
-
-
-    <div class="comic-actions">
-
-
-        <a id="comic-back-button"
-
-           class="button"
-
-           href="#">
-
-            Back to Comic
-
-        </a>
-
-
-    </div>
-
+<div class="meta-row">
+<strong>Updated:</strong>
+<span id="series-updated">
+-
+</span>
+</div>
 
 </div>
 
+<div class="comic-actions">
+
+<a
+id="comic-back-button"
+class="button"
+href="#">
+Back to Comic
+</a>
+
+</div>
+
+</div>
 
 </section>
-
-<!-- =========================
-     SERIES DESCRIPTION
-========================= -->
 
 <section class="comic-description">
 
-
 <h2>Description</h2>
 
+<p id="series-description">
 
-<p id="series-description"></p>
+Loading...
 
+</p>
 
 </section>
 
-<!-- =========================
-     CHAPTERS
-========================= -->
-
 <section class="comic-chapters">
-
 
 <h2>Chapters</h2>
 
-
-<div id="series-chapters-container"
-
-     class="chapter-list">
-
+<div
+id="series-chapters-container"
+class="chapter-list">
 
 </div>
-
 
 </section>
 
@@ -253,35 +191,22 @@
 
 <footer id="site-footer">
 
-
 <div class="footer-container">
 
-
-    <p>
-
-        © DarkensHorns
-
-    </p>
-
+<p>
+© DarkensHorns
+</p>
 
 </div>
 
-
 </footer>
 
-<!-- Core JS -->
-
 <script src="../js/data-loader.js"></script>
-
 <script src="../js/storage.js"></script>
-
 <script src="../js/utils.js"></script>
-
-<!-- Series JS -->
 
 <script src="../js/series.js"></script>
 
 </body>
 
 </html>
-
