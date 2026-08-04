@@ -2,16 +2,43 @@
 DARKENSHORNS - COMIC PAGE
 ========================================= */
 
+
 document.addEventListener(
 "DOMContentLoaded",
 loadComicPage
 );
+
+
+/* =========================================
+SAFE TEXT
+========================================= */
+
+function getText(
+value
+) {
+
+    if (
+        typeof value === "string" &&
+        value.trim()
+    ) {
+
+        return value.trim();
+
+    }
+
+
+    return "";
+
+}
+
+
 
 /* =========================================
 LOAD COMIC
 ========================================= */
 
 async function loadComicPage() {
+
 
 const params =
     new URLSearchParams(
@@ -23,24 +50,24 @@ const comicId =
     params.get("id");
 
 
+
 if (!comicId) {
+
 
     showComicError(
         "No comic ID specified."
     );
 
+
     return;
+
 
 }
 
 
+
 try {
 
-    /*
-    =========================================
-    LOAD COMIC JSON
-    =========================================
-    */
 
     const response =
         await fetch(
@@ -48,46 +75,35 @@ try {
         );
 
 
+
     if (!response.ok) {
+
 
         throw new Error(
             `Comic not found: ${comicId}`
         );
 
+
     }
+
 
 
     const comic =
         await response.json();
 
 
-    /*
-    =========================================
-    RENDER BANNER
-    =========================================
-    */
 
     renderComicBanner(
         comic
     );
 
 
-    /*
-    =========================================
-    RENDER BREADCRUMB
-    =========================================
-    */
 
     renderBreadcrumb(
         comic
     );
 
 
-    /*
-    =========================================
-    RENDER SERIES
-    =========================================
-    */
 
     renderSeries(
         comicId,
@@ -95,8 +111,10 @@ try {
     );
 
 
+
 }
-catch (error) {
+catch(error) {
+
 
     console.error(
         "Error loading comic:",
@@ -104,13 +122,18 @@ catch (error) {
     );
 
 
+
     showComicError(
         `Comic "${comicId}" could not be found.`
     );
 
-}
 
 }
+
+
+}
+
+
 
 /* =========================================
 RENDER COMIC BANNER
@@ -120,38 +143,23 @@ function renderComicBanner(
 comic
 ) {
 
+
 const banner =
     document.getElementById(
         "comic-banner-image"
     );
 
 
+
 if (!banner) {
 
-    console.error(
-        "comic-banner-image not found."
-    );
 
     return;
+
 
 }
 
 
-/*
-=========================================
-BANNER SOURCE
-=========================================
-
-Supports:
-
-comic.banner
-
-or
-
-comic.cover
-
-as fallback.
-*/
 
 const bannerSource =
     comic.banner ||
@@ -159,18 +167,25 @@ const bannerSource =
     "";
 
 
+
 if (!bannerSource) {
+
 
     banner.src =
         "../assets/placeholders/banner-placeholder.webp";
 
+
     banner.alt =
-        comic.title ||
-        "Comic Banner";
+        getText(
+            comic.title
+        ) || "Comic Banner";
+
 
     return;
 
+
 }
+
 
 
 banner.src =
@@ -179,37 +194,42 @@ banner.src =
     );
 
 
+
 banner.alt =
-    comic.title ||
-    "Comic Banner";
+    getText(
+        comic.title
+    ) || "Comic Banner";
 
 
-/*
-=========================================
-IMAGE ERROR FALLBACK
-=========================================
-*/
 
 banner.onerror =
-    function() {
+function() {
 
-        banner.onerror =
-            null;
 
-        banner.src =
-            "../assets/placeholders/banner-placeholder.webp";
+    banner.onerror =
+        null;
 
-    };
+
+
+    banner.src =
+        "../assets/placeholders/banner-placeholder.webp";
+
+
+};
+
 
 }
 
+
+
 /* =========================================
-RENDER BREADCRUMB
+BREADCRUMB
 ========================================= */
 
 function renderBreadcrumb(
 comic
 ) {
+
 
 const breadcrumb =
     document.getElementById(
@@ -217,18 +237,26 @@ const breadcrumb =
     );
 
 
+
 if (!breadcrumb) {
+
 
     return;
 
+
 }
+
 
 
 breadcrumb.textContent =
-    comic.title ||
-    "Comic";
+    getText(
+        comic.title
+    ) || "Comic";
+
 
 }
+
+
 
 /* =========================================
 RENDER SERIES
@@ -239,78 +267,83 @@ comicId,
 comic
 ) {
 
+
 const container =
     document.getElementById(
         "series-container"
     );
 
 
+
 if (!container) {
 
-    console.error(
-        "series-container not found."
-    );
 
     return;
 
+
 }
+
 
 
 container.innerHTML =
     "";
 
 
+
 const series =
     Array.isArray(
         comic.series
     )
-        ? comic.series
-        : [];
+    ? comic.series
+    : [];
 
 
-/*
-=========================================
-NO SERIES
-=========================================
-*/
+
+
 
 if (
-    series.length ===
-    0
+    series.length === 0
 ) {
+
 
     container.innerHTML =
         "<p>No series available yet.</p>";
 
+
     return;
 
+
 }
 
 
-/*
-=========================================
-CREATE SERIES CARDS
-=========================================
-*/
+
+
 
 series.forEach(
-    currentSeries => {
-
-        const card =
-            createSeriesCard(
-                comicId,
-                currentSeries
-            );
+currentSeries => {
 
 
-        container.appendChild(
-            card
+    const card =
+        createSeriesCard(
+            comicId,
+            currentSeries
         );
 
-    }
-);
+
+
+    container.appendChild(
+        card
+    );
+
+
+});
+
 
 }
+
+
+
+
 
 /* =========================================
 CREATE SERIES CARD
@@ -321,11 +354,7 @@ comicId,
 series
 ) {
 
-/*
-=========================================
-MAIN LINK
-=========================================
-*/
+
 
 const link =
     document.createElement(
@@ -333,8 +362,10 @@ const link =
     );
 
 
+
 link.className =
     "comic-card series-card";
+
 
 
 link.href =
@@ -345,11 +376,8 @@ link.href =
     )}`;
 
 
-/*
-=========================================
-COVER
-=========================================
-*/
+
+
 
 const cover =
     document.createElement(
@@ -357,8 +385,10 @@ const cover =
     );
 
 
+
 cover.className =
     "comic-card-cover";
+
 
 
 cover.src =
@@ -367,37 +397,33 @@ cover.src =
     );
 
 
+
 cover.alt =
-    series.title ||
-    "Series Cover";
+    getText(
+        series.title
+    ) || "Series Cover";
+
 
 
 cover.loading =
     "lazy";
 
 
-/*
-=========================================
-COVER ERROR FALLBACK
-=========================================
-*/
 
 cover.addEventListener(
-    "error",
-    function() {
-
-        cover.src =
-            "../assets/placeholders/cover-placeholder.webp";
-
-    }
-);
+"error",
+function() {
 
 
-/*
-=========================================
-CONTENT
-=========================================
-*/
+    cover.src =
+        "../assets/placeholders/cover-placeholder.webp";
+
+
+});
+
+
+
+
 
 const content =
     document.createElement(
@@ -405,15 +431,13 @@ const content =
     );
 
 
+
 content.className =
     "comic-card-content";
 
 
-/*
-=========================================
-TITLE
-=========================================
-*/
+
+
 
 const title =
     document.createElement(
@@ -421,41 +445,86 @@ const title =
     );
 
 
+
 title.className =
     "comic-card-title";
 
 
-title.textContent =
-    series.title ||
-    "Untitled Series";
 
-
-/*
-=========================================
-DESCRIPTION
-=========================================
-*/
-
-const description =
-    document.createElement(
-        "p"
+const seriesTitle =
+    getText(
+        series.title
     );
 
 
-description.className =
-    "comic-card-description";
+
+if (
+    seriesTitle
+) {
 
 
-description.textContent =
-    series.description ||
-    "";
+    title.textContent =
+        seriesTitle;
 
 
-/*
-=========================================
-CHAPTER COUNT
-=========================================
-*/
+    content.appendChild(
+        title
+    );
+
+
+}
+
+
+
+
+
+const descriptionText =
+    getText(
+        series.description
+    );
+
+
+
+if (
+    descriptionText
+) {
+
+
+    const description =
+        document.createElement(
+            "p"
+        );
+
+
+    description.className =
+        "comic-card-description";
+
+
+    description.textContent =
+        descriptionText;
+
+
+
+    content.appendChild(
+        description
+    );
+
+
+}
+
+
+
+
+
+const chapters =
+    Array.isArray(
+        series.chapters
+    )
+    ? series.chapters
+    : [];
+
+
+
 
 const chapterCount =
     document.createElement(
@@ -463,46 +532,19 @@ const chapterCount =
     );
 
 
+
 chapterCount.className =
     "comic-card-meta";
 
-
-const chapters =
-    Array.isArray(
-        series.chapters
-    )
-        ? series.chapters
-        : [];
 
 
 chapterCount.textContent =
     `${chapters.length} ${
         chapters.length === 1
-            ? "Chapter"
-            : "Chapters"
+        ? "Chapter"
+        : "Chapters"
     }`;
 
-
-/*
-=========================================
-BUILD CONTENT
-=========================================
-*/
-
-content.appendChild(
-    title
-);
-
-
-if (
-    series.description
-) {
-
-    content.appendChild(
-        description
-    );
-
-}
 
 
 content.appendChild(
@@ -510,15 +552,13 @@ content.appendChild(
 );
 
 
-/*
-=========================================
-BUILD CARD
-=========================================
-*/
+
+
 
 link.appendChild(
     cover
 );
+
 
 
 link.appendChild(
@@ -526,9 +566,16 @@ link.appendChild(
 );
 
 
+
 return link;
 
+
+
 }
+
+
+
+
 
 /* =========================================
 ERROR
@@ -538,18 +585,25 @@ function showComicError(
 message
 ) {
 
+
+
 const breadcrumb =
     document.getElementById(
         "breadcrumb-title"
     );
 
 
+
 if (breadcrumb) {
+
 
     breadcrumb.textContent =
         "Error";
 
+
 }
+
+
 
 
 const banner =
@@ -558,12 +612,17 @@ const banner =
     );
 
 
+
 if (banner) {
+
 
     banner.src =
         "../assets/placeholders/banner-placeholder.webp";
 
+
 }
+
+
 
 
 const seriesContainer =
@@ -572,14 +631,23 @@ const seriesContainer =
     );
 
 
+
 if (seriesContainer) {
+
 
     seriesContainer.innerHTML =
         `<p>${message}</p>`;
 
-}
 
 }
+
+
+
+}
+
+
+
+
 
 /* =========================================
 NORMALIZE ASSET PATH
@@ -589,82 +657,47 @@ function normalizeAssetPath(
 path
 ) {
 
+
+
 if (!path) {
+
 
     return "";
 
+
 }
 
 
-/*
-=========================================
-EXTERNAL URL
-=========================================
-*/
 
 if (
-    path.startsWith(
-        "http://"
-    ) ||
-
-    path.startsWith(
-        "https://"
-    ) ||
-
-    path.startsWith(
-        "//"
-    ) ||
-
-    path.startsWith(
-        "data:"
-    )
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("//") ||
+    path.startsWith("data:")
 ) {
+
 
     return path;
 
+
 }
 
 
-/*
-=========================================
-ALREADY CORRECT FROM /pages/
-=========================================
-*/
 
 if (
-    path.startsWith(
-        "../"
-    )
+    path.startsWith("../")
 ) {
+
 
     return path;
 
-}
-
-
-/*
-=========================================
-ROOT ASSET PATH
-=========================================
-*/
-
-if (
-    path.startsWith(
-        "assets/"
-    )
-) {
-
-    return `../${path}`;
 
 }
 
 
-/*
-=========================================
-GENERIC PATH
-=========================================
-*/
 
 return `../${path}`;
+
+
 
 }
