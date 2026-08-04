@@ -1,174 +1,293 @@
 /* =========================================
-DARKENSHORNS - SERIES PAGE
+DARKENSHORNS - CHAPTER READER
 ========================================= */
 
-document.addEventListener("DOMContentLoaded",loadSeriesPage);
+document.addEventListener("DOMContentLoaded",loadChapterPage);
 
-async function loadSeriesPage(){
+async function loadChapterPage(){
 const params=new URLSearchParams(window.location.search);
 const comicId=params.get("id");
 const seriesId=params.get("series");
+const chapterId=params.get("chapter");
+const folder=params.get("folder");
+const file=params.get("file");
 
-if(!comicId||!seriesId){
-    showSeriesError("Comic or series ID not specified.");
-    return;
+if(!comicId||!seriesId||!chapterId){
+showChapterError("Comic, series or chapter ID not specified.");
+return;
 }
 
 try{
-    const response=await fetch(`../data/comics/${encodeURIComponent(comicId)}.json`);
+const comicResponse=await fetch(../data/comics/${encodeURIComponent(comicId)}.json);
 
-    if(!response.ok){
-        throw new Error(`Comic not found: ${comicId}`);
-    }
+if(!comicResponse.ok){
+    throw new Error(`Comic not found: ${comicId}`);
+}
 
-    const comic=await response.json();
+const comic=await comicResponse.json();
 
-    const series=Array.isArray(comic.series)
-        ? comic.series.find(currentSeries=>currentSeries.id===seriesId)
-        : null;
+const series=Array.isArray(comic.series)
+    ?comic.series.find(item=>item.id===seriesId)
+    :null;
 
-    if(!series){
-        throw new Error(`Series not found: ${seriesId}`);
-    }
+if(!series){
+    throw new Error(`Series not found: ${seriesId}`);
+}
 
-    renderSeriesPage(comic,series);
+const chapter=Array.isArray(series.chapters)
+    ?series.chapters.find(item=>item.id===chapterId)
+    :null;
+
+if(!chapter){
+    throw new Error(`Chapter not found: ${chapterId}`);
+}
+
+const chapterFolder=folder||chapter.folder||seriesId;
+const chapterFile=file||chapter.file;
+
+if(!chapterFile){
+    throw new Error("Chapter JSON file not specified.");
+}
+
+const chapterPath=
+    `../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(chapterFolder)}/${encodeURIComponent(chapterFile)}`;
+
+const chapterResponse=await fetch(chapterPath);
+
+if(!chapterResponse.ok){
+    throw new Error(`Chapter file not found: ${chapterPath}`);
+}
+
+const chapterData=await chapterResponse.json();
+
+renderChapterPage(
+    comic,
+    series,
+    chapter,
+    chapterData
+);
 
 }catch(error){
-    console.error("Error loading series:",error);
-    showSeriesError("The requested series could not be found.");
+console.error("Error loading chapter:",error);
+showChapterError("The requested chapter could not be loaded.");
+}
 }
 
-}
-
-function renderSeriesPage(comic,series){
-const title=document.getElementById("series-title");
-const description=document.getElementById("series-description");
-const cover=document.getElementById("series-cover-image");
-const breadcrumb=document.getElementById("series-breadcrumb");
-const comicBreadcrumb=document.getElementById("comic-breadcrumb");
-const backButton=document.getElementById("comic-back-button");
+function renderChapterPage(comic,series,chapter,chapterData){
+const title=document.getElementById("chapter-title");
+const subtitle=document.getElementById("chapter-subtitle");
+const date=document.getElementById("chapter-date");
+const breadcrumb=document.getElementById("breadcrumb-title");
+const container=document.getElementById("preview-container");
 
 if(title){
-    title.textContent=series.title||"Untitled Series";
+title.textContent=
+chapterData.title||
+chapter.title||
+"Untitled Chapter";
 }
 
-if(description){
-    description.textContent=series.description||"";
+if(subtitle){
+subtitle.textContent=
+chapterData.subtitle||
+chapter.subtitle||
+"";
 }
 
-if(cover&&series.cover){
-    cover.src=normalizeAssetPath(series.cover);
-    cover.alt=series.title||"Series Cover";
-    cover.onerror=()=>{
-        cover.src="../assets/placeholders/cover-placeholder.webp";
-    };
+if(date){
+date.textContent=
+chapterData.date||
+"";
 }
 
 if(breadcrumb){
-    breadcrumb.textContent=series.title||"Series";
+breadcrumb.textContent=
+${series.title||"Series"} / ${chapterData.title||chapter.title||"Chapter"};
 }
-
-if(comicBreadcrumb){
-    comicBreadcrumb.textContent=comic.title||"Comic";
-    comicBreadcrumb.href=`comic.html?id=${encodeURIComponent(comic.id)}`;
-}
-
-if(backButton){
-    backButton.href=`comic.html?id=${encodeURIComponent(comic.id)}`;
-}
-
-renderChapters(comic.id,series);
-
-}
-
-function renderChapters(comicId,series){
-const container=document.getElementById("series-chapters-container");
 
 if(!container){
-    console.error("series-chapters-container not found.");
-    return;
+console.error("preview-container not found.");
+return;
 }
+
+const pages=
+Array.isArray(chapterData.pages)
+?chapterData.pages
+:[];
+
+renderPages(pages);
+initReaderControls();
+initImageViewer(pages);
+}
+
+function renderPages(pages){
+const container=document.getElementById("preview-container");
+
+if(!container)return;
 
 container.innerHTML="";
 
-const chapters=Array.isArray(series.chapters)?series.chapters:[];
-
-if(chapters.length===0){
-    container.innerHTML="<p>No chapters available yet.</p>";
-    return;
+if(pages.length===0){
+container.innerHTML="<p>No pages available for this chapter.</p>";
+return;
 }
 
-chapters.forEach((chapter,index)=>{
-    const item=createChapterLink(comicId,series.id,chapter,index);
-    container.appendChild(item);
+pages.forEach((page,index)=>{
+if(!page)return;
+
+const image=document.createElement("img");
+
+image.src=page;
+image.alt=`Page ${index+1}`;
+image.loading=index===0?"eager":"lazy";
+image.decoding="async";
+image.dataset.index=index;
+
+image.addEventListener("error",()=>{
+    image.style.display="none";
 });
 
+container.appendChild(image);
+
+});
 }
 
-function createChapterLink(comicId,seriesId,chapter,index){
-const item=document.createElement("a");
-item.className="chapter-item";
+function initReaderControls(){
+const container=document.getElementById("preview-container");
+const normalButton=document.getElementById("normal-mode-button");
+const webtoonButton=document.getElementById("webtoon-mode-button");
 
-const title=document.createElement("span");
-title.className="chapter-number";
+if(!container)return;
 
-const subtitle=document.createElement("span");
-subtitle.className="chapter-date";
-
-const chapterNumber=chapter?.number??index+1;
-const chapterTitle=chapter?.title||`Chapter ${chapterNumber}`;
-
-title.textContent=chapterTitle;
-
-if(chapter?.subtitle){
-    subtitle.textContent=chapter.subtitle;
-    item.appendChild(subtitle);
+if(normalButton){
+normalButton.addEventListener("click",()=>{
+container.classList.remove("webtoon-mode");
+normalButton.classList.add("active");
+if(webtoonButton)webtoonButton.classList.remove("active");
+});
 }
 
-item.appendChild(title);
-
-const chapterId=chapter?.id||"";
-const chapterFile=chapter?.file||"";
-const chapterFolder=chapter?.folder||seriesId;
-
-if(chapterId){
-    item.href=`chapter.html?id=${encodeURIComponent(comicId)}&series=${encodeURIComponent(seriesId)}&chapter=${encodeURIComponent(chapterId)}&folder=${encodeURIComponent(chapterFolder)}&file=${encodeURIComponent(chapterFile)}`;
-}else{
-    item.href="#";
-    item.addEventListener("click",event=>event.preventDefault());
+if(webtoonButton){
+webtoonButton.addEventListener("click",()=>{
+container.classList.add("webtoon-mode");
+webtoonButton.classList.add("active");
+if(normalButton)normalButton.classList.remove("active");
+});
+}
 }
 
-return item;
+function initImageViewer(pages){
+const container=document.getElementById("preview-container");
+const viewer=document.getElementById("image-viewer");
+const viewerImage=document.getElementById("viewer-image");
+const closeButton=document.getElementById("viewer-close");
 
-}
+if(!container||!viewer||!viewerImage)return;
 
-function normalizeAssetPath(path){
-if(!path)return "";
+let currentIndex=0;
+let zoom=1;
 
-if(
-    path.startsWith("http://")||
-    path.startsWith("https://")||
-    path.startsWith("//")||
-    path.startsWith("data:")
-){
-    return path;
-}
+function openViewer(index){
+if(!pages[index])return;
 
-if(path.startsWith("../"))return path;
+currentIndex=index;
+zoom=1;
 
-return path.startsWith("assets/")
-    ?`../${path}`
-    :`../${path}`;
+viewerImage.src=pages[currentIndex];
+viewerImage.style.transform=`scale(${zoom})`;
+
+viewer.classList.add("active");
+document.body.style.overflow="hidden";
 
 }
 
-function showSeriesError(message){
-const title=document.getElementById("series-title");
-const description=document.getElementById("series-description");
-const chapters=document.getElementById("series-chapters-container");
+function closeViewer(){
+viewer.classList.remove("active");
+document.body.style.overflow="";
+viewerImage.src="";
+zoom=1;
+}
 
-if(title)title.textContent="Series Not Found";
-if(description)description.textContent=message;
-if(chapters)chapters.innerHTML=`<p>${message}</p>`;
+function showNext(){
+if(currentIndex<pages.length-1){
+openViewer(currentIndex+1);
+}
+}
 
+function showPrevious(){
+if(currentIndex>0){
+openViewer(currentIndex-1);
+}
+}
+
+container.querySelectorAll("img").forEach(image=>{
+image.addEventListener("click",()=>{
+const index=parseInt(image.dataset.index,10);
+
+    if(!Number.isNaN(index)){
+        openViewer(index);
+    }
+});
+
+});
+
+if(closeButton){
+closeButton.addEventListener("click",closeViewer);
+}
+
+viewer.addEventListener("click",event=>{
+if(event.target===viewer){
+closeViewer();
+}
+});
+
+viewerImage.addEventListener("click",event=>{
+event.stopPropagation();
+showNext();
+});
+
+viewer.addEventListener("wheel",event=>{
+event.preventDefault();
+
+zoom+=event.deltaY<0?0.1:-0.1;
+zoom=Math.min(Math.max(zoom,0.5),4);
+
+viewerImage.style.transform=`scale(${zoom})`;
+
+},{passive});
+
+document.addEventListener("keydown",event=>{
+if(!viewer.classList.contains("active"))return;
+
+if(event.key==="Escape"){
+    closeViewer();
+}
+
+if(event.key==="ArrowRight"){
+    showNext();
+}
+
+if(event.key==="ArrowLeft"){
+    showPrevious();
+}
+
+});
+}
+
+function showChapterError(message){
+const title=document.getElementById("chapter-title");
+const subtitle=document.getElementById("chapter-subtitle");
+const container=document.getElementById("preview-container");
+
+if(title){
+title.textContent="Chapter Not Found";
+}
+
+if(subtitle){
+subtitle.textContent=message;
+}
+
+if(container){
+container.innerHTML=<p>${message}</p>;
+}
 }
