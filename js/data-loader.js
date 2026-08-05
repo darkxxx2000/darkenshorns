@@ -3,9 +3,10 @@
  * DATA LOADER
  *************************************************/
 
+
 /**
  * Detecta automáticamente la ruta base.
- * Funciona tanto desde index.html como desde /pages/.
+ * Funciona desde index.html y desde /pages/
  */
 const BASE_PATH = window.location.pathname.includes("/pages/")
     ? "../data/"
@@ -13,13 +14,14 @@ const BASE_PATH = window.location.pathname.includes("/pages/")
 
 
 /**
- * Caché de archivos ya cargados.
+ * Caché de archivos cargados.
  */
 const cache = new Map();
 
 
+
 /**
- * Carga cualquier archivo JSON.
+ * Carga cualquier JSON.
  */
 export async function loadJSON(filename) {
 
@@ -27,10 +29,12 @@ export async function loadJSON(filename) {
         return cache.get(filename);
     }
 
+
     try {
 
         const response =
             await fetch(BASE_PATH + filename);
+
 
         if (!response.ok) {
 
@@ -40,30 +44,38 @@ export async function loadJSON(filename) {
 
         }
 
+
         const data =
             await response.json();
 
+
         cache.set(filename, data);
+
 
         return data;
 
-    } catch (error) {
+
+    } catch(error) {
 
         console.error(
-            `Error loading ${filename}:`,
+            "Error loading JSON:",
+            filename,
             error
         );
 
-        return [];
+
+        return null;
 
     }
 
 }
 
 
+
 /* ===========================
    DATASETS GENERALES
 =========================== */
+
 
 export const loadHome =
     () => loadJSON("home.json");
@@ -93,25 +105,38 @@ export const loadShortComics =
     () => loadJSON("short-comics.json");
 
 
+
+
+
 /* ===========================
    COMICS
 =========================== */
 
+
 /**
- * Carga todos los cómics.
+ * Carga todos los comics.
  *
- * Ahora utiliza:
+ * Acepta:
  *
- * data/comics-index.json
+ * 1) archivo individual
  *
- * que contiene:
+ * {
+ *   id:"ryuko"
+ * }
+ *
+ *
+ * 2) archivo con varios comics
  *
  * [
- *   "ryuko-matoi.json",
- *   "otro-comic.json"
+ *   {
+ *    id:"huge-dildo"
+ *   }
  * ]
+ *
  */
+
 export async function loadComics() {
+
 
     const files =
         await loadJSON(
@@ -122,7 +147,7 @@ export async function loadComics() {
     if (!Array.isArray(files)) {
 
         console.error(
-            "comics-index.json debe contener un array."
+            "comics-index.json debe contener un array"
         );
 
         return [];
@@ -130,7 +155,8 @@ export async function loadComics() {
     }
 
 
-    const comics =
+
+    const loaded =
         await Promise.all(
 
             files.map(
@@ -143,39 +169,81 @@ export async function loadComics() {
         );
 
 
+
+    const comics = [];
+
+
+
+    loaded.forEach(item => {
+
+
+        if (!item) {
+            return;
+        }
+
+
+
+        /*
+        Si el archivo contiene varios comics
+        */
+
+        if (Array.isArray(item)) {
+
+            comics.push(
+                ...item
+            );
+
+        }
+
+
+        /*
+        Si contiene un solo comic
+        */
+
+        else if (
+            typeof item === "object"
+        ) {
+
+            comics.push(item);
+
+        }
+
+
+    });
+
+
+
     return comics.filter(
         comic =>
             comic &&
-            typeof comic === "object" &&
-            !Array.isArray(comic)
+            typeof comic === "object"
     );
 
 }
+
+
 
 
 /* ===========================
    COMIC INDIVIDUAL
 =========================== */
 
-/**
- * Obtiene un cómic por su ID.
- *
- * Ejemplo:
- *
- * getComicById("ryuko-matoi")
- */
+
 export async function getComicById(id) {
+
 
     const comics =
         await loadComics();
 
 
+
     return comics.find(
         comic =>
             String(comic.id)
-                .toLowerCase() ===
+            .toLowerCase() ===
             String(id)
-                .toLowerCase()
+            .toLowerCase()
     );
+
 
 }
