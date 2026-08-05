@@ -3,9 +3,33 @@ DARKENSHORNS - SERIES PAGE
 ========================================= */
 
 document.addEventListener(
-"DOMContentLoaded",
-loadSeriesPage
+    "DOMContentLoaded",
+    loadSeriesPage
 );
+
+
+/* =========================================
+HELPERS
+========================================= */
+
+function getText(value) {
+
+    return typeof value === "string"
+        ? value.trim()
+        : "";
+
+}
+
+function getList(value) {
+
+    if (Array.isArray(value)) {
+        return value.join(", ");
+    }
+
+    return getText(value);
+
+}
+
 
 /* =========================================
 LOAD SERIES PAGE
@@ -13,362 +37,290 @@ LOAD SERIES PAGE
 
 async function loadSeriesPage() {
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const comicId =
-    params.get("id");
-
-
-const seriesId =
-    params.get("series");
-
-
-if (!comicId || !seriesId) {
-
-    showSeriesError(
-        "Comic or series ID not specified."
-    );
-
-    return;
-
-}
-
-
-try {
-
-    /*
-    =========================================
-    LOAD COMIC JSON
-    =========================================
-    */
-
-    const response =
-        await fetch(
-            `../data/comics/${encodeURIComponent(comicId)}.json`
+    const params =
+        new URLSearchParams(
+            window.location.search
         );
 
+    const comicId =
+        params.get("id");
 
-    if (!response.ok) {
+    const seriesId =
+        params.get("series");
 
-        throw new Error(
-            `Comic not found: ${comicId}`
+
+    if (!comicId || !seriesId) {
+
+        showSeriesError(
+            "Comic or series ID not specified."
         );
+
+        return;
 
     }
 
 
-    const comic =
-        await response.json();
+    try {
+
+        const response =
+            await fetch(
+                `../data/comics/${encodeURIComponent(comicId)}.json`
+            );
 
 
-    /*
-    =========================================
-    FIND SERIES
-    =========================================
-    */
+        if (!response.ok) {
 
-    const series =
-        Array.isArray(
-            comic.series
-        )
-            ? comic.series.find(
-                currentSeries =>
-                    String(
-                        currentSeries.id
-                    ) ===
-                    String(
-                        seriesId
-                    )
-            )
-            : null;
+            throw new Error(
+                `Comic not found: ${comicId}`
+            );
+
+        }
 
 
-    if (!series) {
+        const comic =
+            await response.json();
 
-        throw new Error(
-            `Series not found: ${seriesId}`
+
+        const series =
+            Array.isArray(comic.series)
+                ? comic.series.find(
+                    item =>
+                        String(item.id) ===
+                        String(seriesId)
+                )
+                : null;
+
+
+        if (!series) {
+
+            throw new Error(
+                `Series not found: ${seriesId}`
+            );
+
+        }
+
+
+        renderSeriesPage(
+            comic,
+            series
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading series:",
+            error
+        );
+
+        showSeriesError(
+            "The requested series could not be found."
         );
 
     }
 
-
-    /*
-    =========================================
-    RENDER SERIES
-    =========================================
-    */
-
-    renderSeriesPage(
-        comic,
-        series
-    );
-
-
-}
-catch (error) {
-
-    console.error(
-        "Error loading series:",
-        error
-    );
-
-
-    showSeriesError(
-        "The requested series could not be found."
-    );
-
 }
 
-}
 
 /* =========================================
 RENDER SERIES PAGE
 ========================================= */
 
 function renderSeriesPage(
-comic,
-series
+    comic,
+    series
 ) {
 
-/*
-=========================================
-SERIES TITLE
-=========================================
-*/
+    const title =
+        document.getElementById(
+            "series-title"
+        );
 
-const title =
-    document.getElementById(
-        "series-title"
-    );
+    if (title) {
 
-
-if (title) {
-
-    title.textContent =
-        series.title ||
-        "Untitled Series";
-
-}
-
-
-/*
-=========================================
-SERIES DESCRIPTION
-=========================================
-*/
-
-const description =
-    document.getElementById(
-        "series-description"
-    );
-
-
-if (description) {
-
-    description.textContent =
-        series.description ||
-        "";
-
-}
-
-
-/*
-=========================================
-SERIES COVER
-=========================================
-*/
-
-const cover =
-    document.getElementById(
-        "series-cover-image"
-    );
-
-
-if (cover) {
-
-    if (series.cover) {
-
-        cover.src =
-            normalizeAssetPath(
-                series.cover
-            );
-
-    }
-    else {
-
-        cover.src =
-            "../assets/placeholders/cover-placeholder.webp";
+        title.textContent =
+            getText(series.title);
 
     }
 
 
-    cover.alt =
-        series.title ||
-        "Series Cover";
+    const description =
+        document.getElementById(
+            "series-description"
+        );
+
+    if (description) {
+
+        description.textContent =
+            getText(series.description);
+
+    }
 
 
-    /*
-    =========================================
-    COVER FALLBACK
-    =========================================
-    */
+    const cover =
+        document.getElementById(
+            "series-cover-image"
+        );
 
-    cover.addEventListener(
-        "error",
-        function() {
+    if (cover) {
 
-            if (
-                !cover.src.includes(
-                    "cover-placeholder.webp"
-                )
-            ) {
+        cover.src =
+            series.cover
+                ? normalizeAssetPath(series.cover)
+                : "../assets/placeholders/cover-placeholder.webp";
+
+        cover.alt =
+            getText(series.title);
+
+        cover.onerror =
+            () => {
 
                 cover.src =
                     "../assets/placeholders/cover-placeholder.webp";
 
-            }
+            };
+
+    }
+
+
+    const comicBreadcrumb =
+        document.getElementById(
+            "comic-breadcrumb"
+        );
+
+    if (comicBreadcrumb) {
+
+        comicBreadcrumb.textContent =
+            getText(comic.title);
+
+        comicBreadcrumb.href =
+            `comic.html?id=${encodeURIComponent(comic.id)}`;
+
+    }
+
+
+    const seriesBreadcrumb =
+        document.getElementById(
+            "series-breadcrumb"
+        );
+
+    if (seriesBreadcrumb) {
+
+        seriesBreadcrumb.textContent =
+            getText(series.title);
+
+    }
+
+
+    const backButton =
+        document.getElementById(
+            "comic-back-button"
+        );
+
+    if (backButton) {
+
+        backButton.href =
+            `comic.html?id=${encodeURIComponent(comic.id)}`;
+
+    }
+
+
+    /* =========================================
+       SERIES INFORMATION
+    ========================================= */
+
+    const set = (id, value) => {
+
+        const el =
+            document.getElementById(id);
+
+        if (el) {
+
+            el.textContent = value;
 
         }
+
+    };
+
+
+    set(
+        "series-author",
+        getText(comic.author)
+    );
+
+    set(
+        "series-status",
+        getText(comic.status)
+    );
+
+    set(
+        "series-genres",
+        getList(comic.genres)
+    );
+
+    set(
+        "series-characters",
+        getList(comic.characters)
+    );
+
+    set(
+        "series-name",
+        getText(series.title)
+    );
+
+    set(
+        "series-updated",
+        getText(comic.updated)
+    );
+
+    set(
+        "series-rating",
+        getText(comic.rating)
+    );
+
+
+    renderChapters(
+        comic.id,
+        series
     );
 
 }
 
-
-/*
-=========================================
-COMIC BREADCRUMB
-=========================================
-*/
-
-const comicBreadcrumb =
-    document.getElementById(
-        "comic-breadcrumb"
-    );
-
-
-if (comicBreadcrumb) {
-
-    comicBreadcrumb.textContent =
-        comic.title ||
-        "Comic";
-
-
-    comicBreadcrumb.href =
-        `comic.html?id=${encodeURIComponent(
-            comic.id
-        )}`;
-
-}
-
-
-/*
-=========================================
-SERIES BREADCRUMB
-=========================================
-*/
-
-const seriesBreadcrumb =
-    document.getElementById(
-        "series-breadcrumb"
-    );
-
-
-if (seriesBreadcrumb) {
-
-    seriesBreadcrumb.textContent =
-        series.title ||
-        "Series";
-
-}
-
-
-/*
-=========================================
-BACK TO COMIC BUTTON
-=========================================
-*/
-
-const backButton =
-    document.getElementById(
-        "comic-back-button"
-    );
-
-
-if (backButton) {
-
-    backButton.href =
-        `comic.html?id=${encodeURIComponent(
-            comic.id
-        )}`;
-
-}
-
-
-/*
-=========================================
-RENDER CHAPTERS
-=========================================
-*/
-
-renderChapters(
-    comic.id,
-    series
-);
-
-}
 
 /* =========================================
 RENDER CHAPTERS
 ========================================= */
 
 function renderChapters(
-comicId,
-series
+    comicId,
+    series
 ) {
 
-const container =
-    document.getElementById(
-        "series-chapters-container"
-    );
+    const container =
+        document.getElementById(
+            "series-chapters-container"
+        );
 
+    if (!container) {
 
-if (!container) {
+        return;
 
-    console.error(
-        "series-chapters-container not found."
-    );
+    }
 
-    return;
+    container.innerHTML = "";
 
-}
-
-
-container.innerHTML =
-    "";
-
-
-const chapters =
-    Array.isArray(
-        series.chapters
-    )
-        ? series.chapters
-        : [];
-
-
+    const chapters =
+        Array.isArray(series.chapters)
+            ? series.chapters
+            : [];
+    
 /*
 =========================================
 NO CHAPTERS
 =========================================
 */
 
-if (
-    chapters.length ===
-    0
-) {
+if (!chapters.length) {
 
     container.innerHTML =
         "<p>No chapters available yet.</p>";
@@ -384,419 +336,237 @@ CREATE CHAPTER LINKS
 =========================================
 */
 
-chapters.forEach(
-    (
-        chapter,
-        index
-    ) => {
+chapters.forEach((chapter, index) => {
 
-        const item =
-            createChapterLink(
-                comicId,
-                series.id,
-                chapter,
-                index
-            );
+    container.appendChild(
+        createChapterLink(
+            comicId,
+            series.id,
+            chapter,
+            index
+        )
+    );
 
-
-        container.appendChild(
-            item
-        );
-
-    }
-);
+});
 
 }
+
 
 /* =========================================
 CREATE CHAPTER LINK
 ========================================= */
 
 function createChapterLink(
-comicId,
-seriesId,
-chapter,
-index
+    comicId,
+    seriesId,
+    chapter,
+    index
 ) {
 
-const item =
-    document.createElement(
-        "a"
-    );
+    const item =
+        document.createElement("a");
+
+    item.className =
+        "chapter-item";
 
 
-item.className =
-    "chapter-item";
+    let chapterTitle =
+        `Chapter ${index + 1}`;
 
+    if (chapter && typeof chapter === "object") {
 
-/*
-=========================================
-CHAPTER TITLE
-=========================================
-*/
+        if (chapter.title) {
 
-let chapterTitle =
-    `Chapter ${index + 1}`;
-
-
-if (
-    chapter &&
-    typeof chapter ===
-    "object"
-) {
-
-    if (
-        chapter.title
-    ) {
-
-        chapterTitle =
-            chapter.title;
-
-    }
-    else if (
-        chapter.number !==
-        undefined &&
-        chapter.number !==
-        null
-    ) {
-
-        chapterTitle =
-            `Chapter ${chapter.number}`;
-
-    }
-
-}
-
-
-/*
-=========================================
-TITLE ELEMENT
-=========================================
-*/
-
-const title =
-    document.createElement(
-        "span"
-    );
-
-
-title.className =
-    "chapter-number";
-
-
-title.textContent =
-    chapterTitle;
-
-
-/*
-=========================================
-SUBTITLE / DATE
-=========================================
-*/
-
-const subtitle =
-    document.createElement(
-        "span"
-    );
-
-
-subtitle.className =
-    "chapter-date";
-
-
-if (
-    chapter &&
-    typeof chapter ===
-    "object"
-) {
-
-    if (
-        chapter.subtitle
-    ) {
-
-        subtitle.textContent =
-            chapter.subtitle;
-
-    }
-    else if (
-        chapter.date
-    ) {
-
-        subtitle.textContent =
-            chapter.date;
-
-    }
-
-}
-
-
-/*
-=========================================
-BUILD CHAPTER ITEM
-=========================================
-*/
-
-item.appendChild(
-    title
-);
-
-
-if (
-    subtitle.textContent
-) {
-
-    item.appendChild(
-        subtitle
-    );
-
-}
-
-
-/*
-=========================================
-GET CHAPTER ID
-=========================================
-*/
-
-const chapterId =
-    getChapterIdentifier(
-        chapter
-    );
-
-
-/*
-=========================================
-CHAPTER LINK
-=========================================
-*/
-
-if (chapterId) {
-
-    item.href =
-        `chapter.html` +
-        `?id=${encodeURIComponent(
-            comicId
-        )}` +
-        `&series=${encodeURIComponent(
-            seriesId
-        )}` +
-        `&chapter=${encodeURIComponent(
-            chapterId
-        )}`;
-
-}
-else {
-
-    item.href =
-        "#";
-
-
-    item.addEventListener(
-        "click",
-        event => {
-
-            event.preventDefault();
+            chapterTitle =
+                chapter.title;
 
         }
-    );
+        else if (chapter.number != null) {
+
+            chapterTitle =
+                `Chapter ${chapter.number}`;
+
+        }
+
+    }
+
+
+    item.href = "#";
+
+    const chapterId =
+        getChapterIdentifier(chapter);
+
+    if (chapterId) {
+
+        item.href =
+            `chapter.html?id=${encodeURIComponent(comicId)}&series=${encodeURIComponent(seriesId)}&chapter=${encodeURIComponent(chapterId)}`;
+
+    }
+    else {
+
+        item.addEventListener(
+            "click",
+            event => event.preventDefault()
+        );
+
+    }
+
+
+    const title =
+        document.createElement("span");
+
+    title.className =
+        "chapter-number";
+
+    title.textContent =
+        chapterTitle;
+
+
+    item.appendChild(title);
+
+
+    const subtitle =
+        document.createElement("span");
+
+    subtitle.className =
+        "chapter-date";
+
+    if (chapter && typeof chapter === "object") {
+
+        subtitle.textContent =
+            chapter.subtitle ||
+            chapter.date ||
+            "";
+
+    }
+
+    if (subtitle.textContent) {
+
+        item.appendChild(subtitle);
+
+    }
+
+    return item;
 
 }
 
-
-return item;
-
-}
 
 /* =========================================
 GET CHAPTER IDENTIFIER
 ========================================= */
 
 function getChapterIdentifier(
-chapter
+    chapter
 ) {
 
-if (
-    typeof chapter ===
-    "string"
-) {
+    if (typeof chapter === "string") {
 
-    return chapter;
+        return chapter;
 
-}
+    }
 
+    if (!chapter || typeof chapter !== "object") {
 
-if (
-    chapter &&
-    typeof chapter ===
-    "object"
-) {
+        return "";
 
-    /*
-    =========================================
-    PRIORITY:
-    1. ID
-    2. SLUG
-    3. NUMBER
-    4. FILE
-    =========================================
-    */
+    }
 
     return (
-
         chapter.id ||
-
         chapter.slug ||
-
         chapter.number ||
-
         chapter.file ||
-
         ""
-
     );
 
 }
 
-
-return "";
-
-}
 
 /* =========================================
 NORMALIZE ASSET PATH
 ========================================= */
 
 function normalizeAssetPath(
-path
+    path
 ) {
 
-if (!path) {
+    if (!path) {
 
-    return "";
+        return "";
 
-}
+    }
 
+    if (
+        path.startsWith("http://") ||
+        path.startsWith("https://") ||
+        path.startsWith("//") ||
+        path.startsWith("data:")
+    ) {
 
-/*
-=========================================
-EXTERNAL URL
-=========================================
-*/
+        return path;
 
-if (
-    path.startsWith(
-        "http://"
-    ) ||
+    }
 
-    path.startsWith(
-        "https://"
-    ) ||
+    if (path.startsWith("../")) {
 
-    path.startsWith(
-        "//"
-    ) ||
+        return path;
 
-    path.startsWith(
-        "data:"
-    )
-) {
+    }
 
-    return path;
+    if (path.startsWith("assets/")) {
 
-}
+        return `../${path}`;
 
-
-/*
-=========================================
-ALREADY CORRECT FROM /pages/
-=========================================
-*/
-
-if (
-    path.startsWith(
-        "../"
-    )
-) {
-
-    return path;
-
-}
-
-
-/*
-=========================================
-ROOT ASSET PATH
-=========================================
-*/
-
-if (
-    path.startsWith(
-        "assets/"
-    )
-) {
+    }
 
     return `../${path}`;
 
 }
 
 
-/*
-=========================================
-GENERIC PATH
-=========================================
-*/
-
-return `../${path}`;
-
-}
-
 /* =========================================
 ERROR
 ========================================= */
 
 function showSeriesError(
-message
+    message
 ) {
 
-const title =
-    document.getElementById(
-        "series-title"
+    const set = (id, value) => {
+
+        const el =
+            document.getElementById(id);
+
+        if (el) {
+
+            el.textContent = value;
+
+        }
+
+    };
+
+
+    set(
+        "series-title",
+        "Series Not Found"
+    );
+
+    set(
+        "series-description",
+        message
     );
 
 
-if (title) {
+    const chapters =
+        document.getElementById(
+            "series-chapters-container"
+        );
 
-    title.textContent =
-        "Series Not Found";
+    if (chapters) {
 
-}
+        chapters.innerHTML =
+            `<p>${message}</p>`;
 
-
-const description =
-    document.getElementById(
-        "series-description"
-    );
-
-
-if (description) {
-
-    description.textContent =
-        message;
-
-}
-
-
-const chapters =
-    document.getElementById(
-        "series-chapters-container"
-    );
-
-
-if (chapters) {
-
-    chapters.innerHTML =
-        `<p>${message}</p>`;
-
-}
+    }
 
 }
