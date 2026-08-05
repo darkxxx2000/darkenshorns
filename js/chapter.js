@@ -20,20 +20,17 @@ throw new Error(`Comic not found: ${comicId}`);
 
 const comic=await comicResponse.json();
 
-const series = {
-    id: comic.id,
-    title: comic.series || comic.title,
-    chapters: comic.chapters || []
-};
+const series=Array.isArray(comic.series)
+?comic.series.find(item=>String(item.id)===String(seriesId))
+:null;
 
-
-const chapter = series.chapters.find(
-    item => String(item.id) === String(chapterId)
-);
-
-if(!chapter){
-    throw new Error(`Chapter not found: ${chapterId}`);
+if(!series){
+throw new Error(`Series not found: ${seriesId}`);
 }
+
+const chapter=Array.isArray(series.chapters)
+?series.chapters.find(item=>String(item.id)===String(chapterId))
+:null;
 
 if(!chapter){
 throw new Error(`Chapter not found: ${chapterId}`);
@@ -42,8 +39,8 @@ throw new Error(`Chapter not found: ${chapterId}`);
 const file=chapter.file||`${chapterId}.json`;
 const chapterFolder=chapter.folder||chapter.path||"AI-Story";
 
-const chapterPath =
-`../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(file)}`;
+const chapterPath=
+`../data/chapters/${encodeURIComponent(comicId)}/${encodeURIComponent(chapterFolder)}/${encodeURIComponent(file)}`;
 
 console.log("Loading chapter JSON:",chapterPath);
 
