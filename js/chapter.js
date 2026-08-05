@@ -60,51 +60,129 @@ showChapterError("The requested chapter could not be loaded.");
 }
 }
 
-function renderChapterPage(comic,series,chapter,chapterData){
-const comicName=document.getElementById("comic-name");
-const chapterName=document.getElementById("chapter-name");
-const chapterTitle=document.getElementById("chapter-title");
-const comicLink=document.getElementById("comic-link");
-const chapterPages=document.getElementById("chapter-pages");
-const chapterDate=document.getElementById("chapter-date");
+function renderChapterPage(
+    comic,
+    series,
+    chapter,
+    chapterData
+){
 
-const title=chapterData.title||chapter.title||"Untitled Chapter";
-const subtitle=chapterData.subtitle||chapter.subtitle||"";
-const pages=Array.isArray(chapterData.pages)?chapterData.pages:[];
+const comicName =
+document.getElementById("comic-name");
+
+const chapterName =
+document.getElementById("chapter-name");
+
+const chapterTitle =
+document.getElementById("chapter-title");
+
+const comicLink =
+document.getElementById("comic-link");
+
+const chapterPages =
+document.getElementById("chapter-pages");
+
+const chapterDate =
+document.getElementById("chapter-date");
+
+
+const title =
+chapterData.title ||
+chapter.title ||
+"Untitled Chapter";
+
+
+const subtitle =
+chapterData.subtitle ||
+chapter.subtitle ||
+"";
+
+
+const pages =
+Array.isArray(chapterData.pages)
+? chapterData.pages
+: [];
+
+
+
+/*
+=========================================
+CHAPTER HEADER ONLY
+=========================================
+*/
+
 
 if(comicName){
-comicName.textContent=comic.title||"Comic";
+
+comicName.textContent =
+comic.title || "Comic";
+
 }
+
 
 if(chapterName){
-chapterName.textContent=subtitle?`${title} - ${subtitle}`:title;
+
+chapterName.textContent =
+subtitle
+? `${title} - ${subtitle}`
+: title;
+
 }
+
 
 if(chapterTitle){
-chapterTitle.textContent=title;
+
+chapterTitle.textContent =
+title;
+
 }
+
 
 if(comicLink){
-comicLink.textContent=comic.title||"Comic";
-comicLink.href=`comic.html?id=${encodeURIComponent(comic.id)}`;
+
+comicLink.textContent =
+comic.title || "Comic";
+
+comicLink.href =
+`comic.html?id=${encodeURIComponent(comic.id)}`;
+
 }
+
 
 if(chapterPages){
-chapterPages.textContent=`Pages: ${pages.length}`;
+
+chapterPages.textContent =
+`Pages: ${pages.length}`;
+
 }
+
 
 if(chapterDate){
-chapterDate.textContent=`Date: ${chapterData.date||chapter.date||"-"}`;
+
+chapterDate.textContent =
+`Date: ${chapterData.date || chapter.date || "-"}`;
+
 }
+
+
 
 if(pages.length===0){
-showChapterError("This chapter has no pages.");
+
+showChapterError(
+"This chapter has no pages."
+);
+
 return;
+
 }
 
+
 renderChapterPages(pages);
+
 setupReaderControls();
+
 setupImageViewer(pages);
+
 }
 
 function renderChapterPages(pages){
