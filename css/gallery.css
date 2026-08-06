@@ -5,23 +5,23 @@
 
 
 /* =========================
-   GALLERY GRID HOME
+   HOME GALLERY GRID
 ========================= */
 
 .gallery-grid {
 
-    display:grid;
+    display: grid;
 
     grid-template-columns:
-    repeat(
-        auto-fill,
-        minmax(
-            160px,
-            1fr
-        )
-    );
+        repeat(
+            auto-fill,
+            minmax(
+                160px,
+                1fr
+            )
+        );
 
-    gap:20px;
+    gap: 20px;
 
 }
 
@@ -32,74 +32,30 @@
 ========================= */
 
 
-.gallery-card {
+.gallery-grid .comic-card {
 
     background:
         var(--bg-card);
 
-    border:
-        1px solid
-        var(--border-color);
-
-    border-radius:
-        var(--radius-medium);
-
-    overflow:hidden;
-
-    transition:
-        var(--transition-normal);
-
-}
-
-
-.gallery-card:hover {
-
-    transform:
-        translateY(-5px);
-
-    box-shadow:
-        var(--shadow-large);
-
 }
 
 
 
-/* =========================
-   COVER
-========================= */
-
-
-.gallery-cover {
+.gallery-grid .comic-cover {
 
     aspect-ratio:
         1 / 1;
 
-    overflow:hidden;
-
-    background:
-        #222;
-
 }
 
 
-.gallery-cover img {
 
-    width:100%;
+/* Imagen más compacta */
 
-    height:100%;
+.gallery-grid .comic-cover img {
 
-    object-fit:cover;
-
-    transition:
-        .3s ease;
-
-}
-
-
-.gallery-card:hover img {
-
-    transform:
-        scale(1.05);
+    object-fit:
+        cover;
 
 }
 
@@ -110,7 +66,7 @@
 ========================= */
 
 
-.gallery-info {
+.gallery-grid .card-info {
 
     padding:
         12px;
@@ -118,53 +74,113 @@
 }
 
 
-.gallery-title {
+
+.gallery-grid .card-title {
 
     font-size:
         1rem;
 
-    color:
-        var(--text-main);
-
-    font-weight:
-        bold;
-
 }
 
 
-.gallery-description {
+
+.gallery-grid .card-description {
 
     font-size:
         .85rem;
-
-    color:
-        var(--text-secondary);
 
 }
 
 
 
 /* =========================
-   MOBILE
+   GALLERY PAGE
 ========================= */
 
 
-@media(max-width:768px){
+.gallery-page {
 
-    .gallery-grid {
+    width:
+        100%;
 
-        grid-template-columns:
+    max-width:
+        1200px;
+
+    margin:
+        auto;
+
+    padding:
+        30px 20px;
+
+}
+
+
+
+.gallery-cover img {
+
+    max-width:
+        350px;
+
+    width:
+        100%;
+
+    border-radius:
+        12px;
+
+}
+
+
+
+/* =========================
+   COLLECTIONS
+========================= */
+
+
+.gallery-collections {
+
+    display:
+        grid;
+
+    grid-template-columns:
         repeat(
-            2,
+            auto-fill,
             minmax(
-                0,
+                180px,
                 1fr
             )
         );
 
-        gap:
+    gap:
+        20px;
+
+}
+
+
+
+.gallery-collection-card {
+
+    background:
+        var(--bg-card);
+
+    border-radius:
         12px;
 
-    }
+    overflow:
+        hidden;
+
+}
+
+
+
+.gallery-collection-card img {
+
+    width:
+        100%;
+
+    aspect-ratio:
+        1 / 1;
+
+    object-fit:
+        cover;
 
 }
