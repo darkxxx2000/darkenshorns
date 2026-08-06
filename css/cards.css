@@ -291,3 +291,17 @@
     }
 
 }
+
+/* =========================
+   GALLERY
+========================= */
+
+.card-images{
+
+    color: var(--text-dark);
+
+    font-size:.8rem;
+
+    font-weight:bold;
+
+}
