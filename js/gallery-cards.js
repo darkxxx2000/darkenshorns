@@ -60,10 +60,10 @@ function getFallbackCover() {
 export function createGalleryCard(gallery) {
 
     const card =
-        createElement(
-            "article",
-            "comic-card"
-        );
+    createElement(
+        "article",
+        "comic-card gallery-card"
+    );
 
     const cover =
         getAssetUrl(gallery.cover);
