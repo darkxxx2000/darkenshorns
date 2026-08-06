@@ -6,12 +6,17 @@
 
 import {
 loadComics,
-loadSeries
+loadSeries,
+loadGalleries
 } from "./data-loader.js";
 
 import {
 renderComicCards
 } from "./cards.js";
+
+import {
+renderGalleryCards
+} from "./gallery-cards.js";
 
 /**
 
