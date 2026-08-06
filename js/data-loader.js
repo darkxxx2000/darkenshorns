@@ -97,8 +97,66 @@ export const loadTags =
     () => loadJSON("tags.json");
 
 
-export const loadGalleries =
-    () => loadJSON("gallery.json");
+/* ===========================
+   GALLERIES
+=========================== */
+
+export async function loadGalleries() {
+
+    const files =
+        await loadJSON(
+            "gallery-index.json"
+        );
+
+    if (!Array.isArray(files)) {
+
+        console.error(
+            "gallery-index.json debe contener un array"
+        );
+
+        return [];
+
+    }
+
+    const loaded =
+        await Promise.all(
+
+            files.map(
+                file =>
+                    loadJSON(
+                        `gallery/${file}`
+                    )
+            )
+
+        );
+
+    const galleries = [];
+
+    loaded.forEach(item => {
+
+        if (!item) {
+
+            return;
+
+        }
+
+        if (Array.isArray(item)) {
+
+            galleries.push(...item);
+
+        }
+
+        else if (typeof item === "object") {
+
+            galleries.push(item);
+
+        }
+
+    });
+
+    return galleries;
+
+}
 
 
 export const loadShortComics =
