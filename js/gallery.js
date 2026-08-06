@@ -1,219 +1,307 @@
 /*************************************************
  * DARKENSHORNS
- * GALLERY PAGE
+ * GALLERY
  *************************************************/
+
+
+import {
+    loadGalleries
+} from "./data-loader.js";
+
+
+import {
+    renderGalleryCards
+} from "./gallery-cards.js";
+
+
 
 document.addEventListener(
     "DOMContentLoaded",
-    loadGalleryPage
+    initGallery
 );
 
-async function loadGalleryPage() {
+
+
+async function initGallery(){
+
 
     const params =
         new URLSearchParams(
             window.location.search
         );
 
-    const galleryId =
+
+    const id =
         params.get("id");
 
-    if (!galleryId) {
 
-        showGalleryError(
-            "Gallery not specified."
-        );
+
+    /*
+    =========================
+    LISTADO DE GALLERIES
+    =========================
+    */
+
+
+    if(!id){
+
+        loadGalleryList();
 
         return;
 
     }
 
+
+
+    /*
+    =========================
+    GALERIA INDIVIDUAL
+    =========================
+    */
+
+
+    loadGalleryDetail(id);
+
+
+
+}
+
+
+
+
+async function loadGalleryList(){
+
+
+    const container =
+        document.getElementById(
+            "gallery-container"
+        );
+
+
+    if(!container){
+
+        return;
+
+    }
+
+
+
+    const galleries =
+        await loadGalleries();
+
+
+
+    renderGalleryCards(
+        container,
+        galleries
+    );
+
+
+}
+
+
+
+
+
+async function loadGalleryDetail(id){
+
+
     try {
+
 
         const response =
             await fetch(
-                `../data/gallery/${encodeURIComponent(galleryId)}.json`
+                `../data/gallery/${encodeURIComponent(id)}.json`
             );
 
-        if (!response.ok) {
+
+
+        if(!response.ok){
 
             throw new Error(
-                "Gallery not found."
+                "Gallery not found"
             );
 
         }
 
+
+
         const gallery =
             await response.json();
 
-        renderGallery(gallery);
 
-    }
 
-    catch (error) {
-
-        console.error(error);
-
-        showGalleryError(
-            "Unable to load gallery."
+        renderGallery(
+            gallery
         );
 
+
+
     }
+    catch(error){
+
+
+        console.error(
+            error
+        );
+
+
+    }
+
 
 }
 
-function renderGallery(gallery) {
+
+
+
+function renderGallery(gallery){
+
 
     setText(
         "gallery-title",
         gallery.title
     );
 
-    setText(
-        "gallery-author",
-        gallery.author
-    );
-
-    setText(
-        "gallery-updated",
-        gallery.updated
-    );
 
     setText(
         "gallery-description",
         gallery.description
     );
 
-    setText(
-        "gallery-tags",
-        Array.isArray(gallery.tags)
-            ? gallery.tags.join(", ")
-            : ""
-    );
+
 
     const cover =
         document.getElementById(
             "gallery-cover-image"
         );
 
-    if (cover) {
+
+    if(cover){
+
 
         cover.src =
             normalizeAssetPath(
                 gallery.cover
             );
 
-        cover.alt =
-            gallery.title;
 
     }
+
+
 
     renderCollections(
         gallery.collections || []
     );
 
+
 }
 
-function renderCollections(collections) {
+
+
+
+
+function renderCollections(collections){
+
 
     const container =
         document.getElementById(
             "gallery-collections-container"
         );
 
-    if (!container) {
+
+    if(!container){
 
         return;
 
     }
 
-    container.innerHTML = "";
 
-    if (!collections.length) {
 
-        container.innerHTML =
-            "<p>No collections available.</p>";
+    container.innerHTML="";
 
-        return;
 
-    }
 
-    collections.forEach(collection => {
+    collections.forEach(collection=>{
+
 
         const item =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
+
 
         item.className =
             "chapter-item";
 
+
         item.href =
-            `gallery-view.html?id=${encodeURIComponent(collection.id)}`;
+            `gallery-view.html?id=${collection.id}`;
 
-        item.innerHTML = `
 
-<span class="chapter-number">
-${collection.title}
-</span>
+        item.textContent =
+            collection.title;
 
-`;
 
-        container.appendChild(item);
+
+        container.appendChild(
+            item
+        );
+
 
     });
 
+
 }
 
-function setText(id, value) {
+
+
+
+function setText(id,value){
+
 
     const el =
         document.getElementById(id);
 
-    if (el) {
+
+    if(el){
 
         el.textContent =
             value || "-";
 
     }
 
+
 }
 
-function normalizeAssetPath(path) {
 
-    if (!path) {
+
+
+function normalizeAssetPath(path){
+
+
+    if(
+        !path
+    ){
 
         return "../assets/placeholders/cover-placeholder.webp";
 
     }
 
-    if (
-        path.startsWith("http://") ||
-        path.startsWith("https://")
-    ) {
+
+
+    if(
+        path.startsWith("http")
+    ){
 
         return path;
 
     }
 
-    if (path.startsWith("../")) {
 
-        return path;
 
-    }
+    return path.startsWith("../")
+        ? path
+        : "../"+path;
 
-    return "../" + path;
-
-}
-
-function showGalleryError(message) {
-
-    setText(
-        "gallery-title",
-        "Gallery not found"
-    );
-
-    setText(
-        "gallery-description",
-        message
-    );
 
 }
