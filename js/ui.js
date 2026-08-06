@@ -1,280 +1,302 @@
 /*************************************************
-
-* DARKENSHORNS
-* UI
-  *************************************************/
+ * DARKENSHORNS
+ * UI
+ *************************************************/
 
 import {
-loadComics,
-loadSeries,
-loadGalleries
+    loadComics,
+    loadSeries,
+    loadGalleries
 } from "./data-loader.js";
 
 import {
-renderComicCards
+    renderComicCards
 } from "./cards.js";
 
 import {
-renderGalleryCards
+    renderGalleryCards
 } from "./gallery-cards.js";
 
+
 /**
+ * Inicializa Home
+ */
+export async function initHomePage(){
 
-* Inicializa la página de inicio.
-  */
-  export async function initHomePage() {
-
-  try {
-
-
-   const latestContainer =
-       document.querySelector(
-           "#latest-comics"
-       );
-
-   const popularContainer =
-       document.querySelector(
-           "#popular-comics"
-       );
-
-   const favoriteContainer =
-       document.querySelector(
-           "#favorite-comics"
-       );
-
-   const featuredSeriesContainer =
-       document.querySelector(
-           "#featured-series"
-       );
+try{
 
 
-   /* -------------------------
-      CARGAR CÓMICS
-   ------------------------- */
+/* =========================
+   CONTAINERS
+========================= */
 
-   const comics =
-       await loadComics();
+const latestContainer =
+document.querySelector("#latest-comics");
 
+const popularContainer =
+document.querySelector("#popular-comics");
 
-   if (
-       !Array.isArray(comics)
-   ) {
-       console.error(
-           "Home: loadComics() no devolvió un array."
-       );
+const favoriteContainer =
+document.querySelector("#favorite-comics");
 
-       return;
-   }
+const featuredSeriesContainer =
+document.querySelector("#featured-series");
 
 
-   /* -------------------------
-      RECENT UPDATES
-   ------------------------- */
+const latestGalleryContainer =
+document.querySelector("#latest-gallery");
 
-   const recentComics =
-       [...comics]
-           .sort(
-               (a, b) =>
-                   new Date(
-                       b.updated || 0
-                   ) -
-                   new Date(
-                       a.updated || 0
-                   )
-           )
-           .slice(
-               0,
-               8
-           );
+const popularGalleryContainer =
+document.querySelector("#popular-gallery");
 
 
-   if (
-       latestContainer
-   ) {
 
-       renderComicCards(
-           latestContainer,
-           recentComics
-       );
+/* =========================
+   COMICS
+========================= */
 
-   }
+const comics =
+await loadComics();
 
 
-   /* -------------------------
-      POPULAR
-   ------------------------- */
-
-   const popularComics =
-       [...comics]
-           .sort(
-               (a, b) =>
-                   Number(
-                       b.views || 0
-                   ) -
-                   Number(
-                       a.views || 0
-                   )
-           )
-           .slice(
-               0,
-               8
-           );
+if(Array.isArray(comics)){
 
 
-   if (
-       popularContainer
-   ) {
-
-       renderComicCards(
-           popularContainer,
-           popularComics
-       );
-
-   }
-
-
-   /* -------------------------
-      FAVORITES
-   ------------------------- */
-
-   if (
-       favoriteContainer
-   ) {
-
-       const favoriteComics =
-           comics
-               .filter(
-                   comic =>
-                       comic &&
-                       (
-                           comic.favorite === true ||
-                           comic.favorites === true ||
-                           comic.featured === true
-                       )
-               )
-               .slice(
-                   0,
-                   8
-               );
+const latestComics =
+[...comics]
+.sort(
+(a,b)=>
+new Date(b.updated || 0)
+-
+new Date(a.updated || 0)
+)
+.slice(0,8);
 
 
-       renderComicCards(
-           favoriteContainer,
-           favoriteComics
-       );
 
-   }
+if(latestContainer){
 
-
-   /* -------------------------
-      SERIES
-   ------------------------- */
-
-   const series =
-       await loadSeries();
-
-
-   if (
-       featuredSeriesContainer &&
-       Array.isArray(series)
-   ) {
-
-       renderComicCards(
-           featuredSeriesContainer,
-           series.slice(
-               0,
-               6
-           )
-       );
-
-   }
-
-
-  } catch (error) {
-
-
-   console.error(
-       "DarkensHorns Home error:",
-       error
-   );
-
-
-  }
+renderComicCards(
+latestContainer,
+latestComics
+);
 
 }
 
+
+
+const popularComics =
+[...comics]
+.sort(
+(a,b)=>
+Number(b.views || 0)
+-
+Number(a.views || 0)
+)
+.slice(0,8);
+
+
+
+if(popularContainer){
+
+renderComicCards(
+popularContainer,
+popularComics
+);
+
+}
+
+
+
+if(favoriteContainer){
+
+const favorites =
+comics
+.filter(
+comic =>
+comic.favorite === true ||
+comic.favorites === true ||
+comic.featured === true
+)
+.slice(0,8);
+
+
+renderComicCards(
+favoriteContainer,
+favorites
+);
+
+}
+
+
+}
+
+
+
+/* =========================
+   SERIES
+========================= */
+
+
+const series =
+await loadSeries();
+
+
+if(
+featuredSeriesContainer &&
+Array.isArray(series)
+){
+
+renderComicCards(
+featuredSeriesContainer,
+series.slice(0,6)
+);
+
+}
+
+
+
+/* =========================
+   GALLERY
+========================= */
+
+
+const galleries =
+await loadGalleries();
+
+
+if(Array.isArray(galleries)){
+
+
+
+const latestGallery =
+[...galleries]
+.sort(
+(a,b)=>
+new Date(b.updated || 0)
+-
+new Date(a.updated || 0)
+)
+.slice(0,8);
+
+
+
+if(latestGalleryContainer){
+
+renderGalleryCards(
+latestGalleryContainer,
+latestGallery
+);
+
+}
+
+
+
+
+const popularGallery =
+[...galleries]
+.sort(
+(a,b)=>
+Number(b.views || 0)
+-
+Number(a.views || 0)
+)
+.slice(0,8);
+
+
+
+if(popularGalleryContainer){
+
+renderGalleryCards(
+popularGalleryContainer,
+popularGallery
+);
+
+}
+
+
+
+}
+
+
+}
+catch(error){
+
+console.error(
+"DarkensHorns Home error:",
+error
+);
+
+}
+
+}
+
+
+
 /**
-
-* Detecta automáticamente
-* la página actual.
-  */
-  export function detectCurrentPage() {
-
-  const path =
-  window.location.pathname
-  .toLowerCase();
-
-  if (
-  path.endsWith("/") ||
-  path.endsWith("index.html")
-  ) {
+ * Detecta página actual
+ */
+export function detectCurrentPage(){
 
 
-   return "home";
+const path =
+window.location.pathname
+.toLowerCase();
 
 
-  }
 
-  if (
-  path.includes("series")
-  ) {
+if(
+path.endsWith("/") ||
+path.endsWith("index.html")
+){
 
+return "home";
 
-   return "series";
-
-
-  }
-
-  if (
-  path.includes("comic")
-  ) {
+}
 
 
-   return "comic";
+
+if(path.includes("series")){
+
+return "series";
+
+}
 
 
-  }
 
-  if (
-  path.includes("chapter")
-  ) {
+if(path.includes("comic")){
 
+return "comic";
 
-   return "chapter";
+}
 
 
-  }
 
-  if (
-  path.includes("gallery")
-  ) {
+if(path.includes("chapter")){
 
+return "chapter";
 
-   return "gallery";
+}
 
 
-  }
 
-  if (
-  path.includes("search")
-  ) {
+if(path.includes("gallery")){
 
+return "gallery";
 
-   return "search";
+}
 
 
-  }
 
-  return "unknown";
+if(path.includes("search")){
+
+return "search";
+
+}
+
+
+
+return "unknown";
+
 
 }
