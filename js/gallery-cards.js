@@ -3,17 +3,9 @@
  * GALLERY CARDS
  *************************************************/
 
-import {
-    createElement
-} from "./utils.js";
-
-
 function getGalleryPageUrl() {
 
-    const insidePages =
-        window.location.pathname.includes("/pages/");
-
-    return insidePages
+    return window.location.pathname.includes("/pages/")
         ? "gallery-view.html"
         : "pages/gallery-view.html";
 
@@ -22,9 +14,11 @@ function getGalleryPageUrl() {
 
 function getAssetUrl(path) {
 
-    if (!path) {
+    if (!path || typeof path !== "string") {
         return getFallbackCover();
     }
+
+    path = path.trim();
 
     if (
         path.startsWith("http://") ||
@@ -39,11 +33,9 @@ function getAssetUrl(path) {
         return path;
     }
 
-    if (window.location.pathname.includes("/pages/")) {
-        return `../${path}`;
-    }
-
-    return path;
+    return window.location.pathname.includes("/pages/")
+        ? `../${path}`
+        : path;
 
 }
 
@@ -60,60 +52,76 @@ function getFallbackCover() {
 export function createGalleryCard(gallery) {
 
     const card =
-    createElement(
-        "article",
-        "comic-card gallery-card"
-    );
+        document.createElement("article");
+
+    card.className =
+        "gallery-card";
+
 
     const cover =
         getAssetUrl(gallery.cover);
+
 
     const collections =
         Array.isArray(gallery.collections)
             ? gallery.collections.length
             : 0;
 
+
     card.innerHTML = `
 
 <a
-class="comic-card-link"
-href="${getGalleryPageUrl()}?id=${encodeURIComponent(gallery.id)}">
+    class="gallery-card-link"
+    href="${getGalleryPageUrl()}?id=${encodeURIComponent(gallery.id)}"
+>
 
-<div class="comic-cover">
+    <div class="gallery-card-cover">
 
-<img
-src="${cover}"
-alt="${gallery.title}"
-loading="lazy"
-onerror="this.src='${getFallbackCover()}'">
+        <img
+            src="${cover}"
+            alt="${gallery.title || "Gallery"}"
+            loading="lazy"
+            onerror="
+                this.onerror=null;
+                this.src='${getFallbackCover()}';
+            "
+        >
 
-</div>
+    </div>
 
-<div class="card-info">
 
-<h3 class="card-title">
-${gallery.title}
-</h3>
+    <div class="gallery-card-info">
 
-<p class="card-description">
-${gallery.description || ""}
-</p>
+        <h3 class="gallery-card-title">
+            ${gallery.title || "Untitled Gallery"}
+        </h3>
 
-<div class="card-footer">
 
-<span class="chapter-number">
+        ${
+            gallery.description
+                ? `
+                <p class="gallery-card-description">
+                    ${gallery.description}
+                </p>
+                `
+                : ""
+        }
 
-${collections} Collections
 
-</span>
+        <div class="gallery-card-footer">
 
-</div>
+            <span>
+                ${collections} Collections
+            </span>
 
-</div>
+        </div>
+
+    </div>
 
 </a>
 
 `;
+
 
     return card;
 
@@ -129,27 +137,41 @@ export function renderGalleryCards(
         return;
     }
 
+
     container.innerHTML = "";
 
-    if (!galleries.length) {
 
-        container.innerHTML =
+    if (
+        !Array.isArray(galleries) ||
+        galleries.length === 0
+    ) {
 
-            `<p class="empty-message">
+        container.innerHTML = `
+            <p class="empty-message">
                 No galleries available.
-            </p>`;
+            </p>
+        `;
 
         return;
+
     }
+
+
+    const fragment =
+        document.createDocumentFragment();
+
 
     galleries.forEach(gallery => {
 
-        container.appendChild(
-
+        fragment.appendChild(
             createGalleryCard(gallery)
-
         );
 
     });
+
+
+    container.appendChild(
+        fragment
+    );
 
 }
