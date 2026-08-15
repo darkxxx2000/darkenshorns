@@ -10,12 +10,180 @@ import {
 } from "./data-loader.js";
 
 import {
-    renderComicCards
+    createComicCard
 } from "./cards.js";
 
 import {
-    renderGalleryCards
+    createGalleryCard
 } from "./gallery-cards.js";
+
+
+/**
+ * Añade tipo y etiqueta a una tarjeta.
+ */
+function prepareCard(card, type) {
+
+    if (!card) {
+        return card;
+    }
+
+    card.classList.add(
+        "feed-card",
+        `feed-${type}`
+    );
+
+    const label =
+        document.createElement("span");
+
+    label.className =
+        "feed-type-label";
+
+    label.textContent =
+        type.toUpperCase();
+
+    card.appendChild(label);
+
+    return card;
+
+}
+
+
+/**
+ * Renderiza contenido mixto.
+ */
+function renderFeed(
+    container,
+    items = []
+) {
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+
+    if (!Array.isArray(items) || !items.length) {
+
+        container.innerHTML = `
+            <p class="empty-message">
+                No content available.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    items.forEach(item => {
+
+        if (!item || !item.type) {
+            return;
+        }
+
+
+        let card = null;
+
+
+        /* =========================
+           COMIC
+        ========================= */
+
+        if (item.type === "comic") {
+
+            card =
+                createComicCard(
+                    item.data
+                );
+
+        }
+
+
+        /* =========================
+           GALLERY
+        ========================= */
+
+        if (item.type === "gallery") {
+
+            card =
+                createGalleryCard(
+                    item.data
+                );
+
+        }
+
+
+        if (!card) {
+            return;
+        }
+
+
+        prepareCard(
+            card,
+            item.type
+        );
+
+
+        fragment.appendChild(
+            card
+        );
+
+    });
+
+
+    container.appendChild(
+        fragment
+    );
+
+}
+
+
+/**
+ * Convierte comics y galleries
+ * en un único listado.
+ */
+function combineContent(
+    comics = [],
+    galleries = []
+) {
+
+    const content = [];
+
+
+    comics.forEach(comic => {
+
+        if (!comic) {
+            return;
+        }
+
+        content.push({
+            type: "comic",
+            data: comic
+        });
+
+    });
+
+
+    galleries.forEach(gallery => {
+
+        if (!gallery) {
+            return;
+        }
+
+        content.push({
+            type: "gallery",
+            data: gallery
+        });
+
+    });
+
+
+    return content;
+
+}
 
 
 /**
@@ -25,244 +193,159 @@ export async function initHomePage() {
 
     try {
 
+
         /* =========================
            CONTAINERS
         ========================= */
 
         const latestContainer =
             document.querySelector(
-                "#latest-comics"
+                "#latest-feed"
             );
 
         const popularContainer =
             document.querySelector(
-                "#popular-comics"
+                "#popular-feed"
             );
 
         const favoriteContainer =
             document.querySelector(
-                "#favorite-comics"
-            );
-
-        const featuredSeriesContainer =
-            document.querySelector(
-                "#featured-series"
-            );
-
-        const latestGalleryContainer =
-            document.querySelector(
-                "#latest-gallery"
-            );
-
-        const popularGalleryContainer =
-            document.querySelector(
-                "#popular-gallery"
+                "#favorite-feed"
             );
 
 
         /* =========================
-           COMICS
+           CARGAR DATOS
         ========================= */
 
-        const comics =
-            await loadComics();
+        const [
+            comics,
+            galleries
+        ] = await Promise.all([
+
+            loadComics(),
+
+            loadGalleries()
+
+        ]);
 
 
-        if (Array.isArray(comics)) {
+        const validComics =
+            Array.isArray(comics)
+                ? comics
+                : [];
 
 
-            /* =========================
-               LATEST COMICS
-            ========================= */
+        const validGalleries =
+            Array.isArray(galleries)
+                ? galleries
+                : [];
 
-            const latestComics =
-                [...comics]
-                    .sort(
-                        (a, b) =>
-                            new Date(
-                                b.updated || 0
-                            ) -
-                            new Date(
-                                a.updated || 0
-                            )
+
+        /* =========================
+           LATEST
+        ========================= */
+
+        const latestContent =
+            combineContent(
+                validComics,
+                validGalleries
+            )
+            .sort(
+                (a, b) =>
+                    new Date(
+                        b.data.updated || 0
+                    ) -
+                    new Date(
+                        a.data.updated || 0
                     )
-                    .slice(
-                        0,
-                        8
-                    );
+            )
+            .slice(
+                0,
+                8
+            );
 
 
-            if (latestContainer) {
-
-                renderComicCards(
-                    latestContainer,
-                    latestComics
-                );
-
-            }
+        renderFeed(
+            latestContainer,
+            latestContent
+        );
 
 
-            /* =========================
-               POPULAR COMICS
-            ========================= */
+        /* =========================
+           POPULAR
+        ========================= */
 
-            const popularComics =
-                [...comics]
-                    .sort(
-                        (a, b) =>
-                            Number(
-                                b.views || 0
-                            ) -
-                            Number(
-                                a.views || 0
-                            )
+        const popularContent =
+            combineContent(
+                validComics,
+                validGalleries
+            )
+            .sort(
+                (a, b) =>
+                    Number(
+                        b.data.views || 0
+                    ) -
+                    Number(
+                        a.data.views || 0
                     )
-                    .slice(
-                        0,
-                        8
-                    );
+            )
+            .slice(
+                0,
+                8
+            );
 
 
-            if (popularContainer) {
-
-                renderComicCards(
-                    popularContainer,
-                    popularComics
-                );
-
-            }
+        renderFeed(
+            popularContainer,
+            popularContent
+        );
 
 
-            /* =========================
-               FAVORITES
-            ========================= */
+        /* =========================
+           FAVORITES
+        ========================= */
 
-            if (favoriteContainer) {
-
-                const favorites =
-                    comics
-                        .filter(
-                            comic =>
-                                comic &&
-                                (
-                                    comic.favorite === true ||
-                                    comic.favorites === true ||
-                                    comic.featured === true
-                                )
+        const favoriteContent =
+            combineContent(
+                validComics.filter(
+                    item =>
+                        item &&
+                        (
+                            item.favorite === true ||
+                            item.favorites === true ||
+                            item.featured === true
                         )
-                        .slice(
-                            0,
-                            8
-                        );
-
-
-                renderComicCards(
-                    favoriteContainer,
-                    favorites
-                );
-
-            }
-
-        }
-
-
-        /* =========================
-           SERIES
-        ========================= */
-
-        const series =
-            await loadSeries();
-
-
-        if (
-            featuredSeriesContainer &&
-            Array.isArray(series)
-        ) {
-
-            renderComicCards(
-                featuredSeriesContainer,
-                series.slice(
-                    0,
-                    6
+                ),
+                validGalleries.filter(
+                    item =>
+                        item &&
+                        (
+                            item.favorite === true ||
+                            item.favorites === true ||
+                            item.featured === true
+                        )
                 )
+            )
+            .sort(
+                (a, b) =>
+                    new Date(
+                        b.data.updated || 0
+                    ) -
+                    new Date(
+                        a.data.updated || 0
+                    )
+            )
+            .slice(
+                0,
+                8
             );
 
-        }
 
-
-        /* =========================
-           GALLERY
-        ========================= */
-
-        const galleries =
-            await loadGalleries();
-
-
-        if (Array.isArray(galleries)) {
-
-
-            /* =========================
-               LATEST GALLERY
-            ========================= */
-
-            const latestGallery =
-                [...galleries]
-                    .sort(
-                        (a, b) =>
-                            new Date(
-                                b.updated || 0
-                            ) -
-                            new Date(
-                                a.updated || 0
-                            )
-                    )
-                    .slice(
-                        0,
-                        8
-                    );
-
-
-            if (latestGalleryContainer) {
-
-                renderGalleryCards(
-                    latestGalleryContainer,
-                    latestGallery
-                );
-
-            }
-
-
-            /* =========================
-               POPULAR GALLERY
-            ========================= */
-
-            const popularGallery =
-                [...galleries]
-                    .sort(
-                        (a, b) =>
-                            Number(
-                                b.views || 0
-                            ) -
-                            Number(
-                                a.views || 0
-                            )
-                    )
-                    .slice(
-                        0,
-                        8
-                    );
-
-
-            if (popularGalleryContainer) {
-
-                renderGalleryCards(
-                    popularGalleryContainer,
-                    popularGallery
-                );
-
-            }
-
-        }
+        renderFeed(
+            favoriteContainer,
+            favoriteContent
+        );
 
 
     } catch (error) {
