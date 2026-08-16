@@ -218,3 +218,265 @@
     object-fit: cover;
 
 }
+
+/* =========================
+   GALLERY VIEW
+========================= */
+
+.gallery-header {
+
+    display: flex;
+
+    gap: 30px;
+
+    margin-bottom: 40px;
+
+    padding: 25px;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+}
+
+
+.gallery-cover {
+
+    width: 220px;
+
+    flex-shrink: 0;
+
+}
+
+
+.gallery-cover img {
+
+    width: 100%;
+
+    aspect-ratio: 2 / 3;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+
+    display: block;
+
+}
+
+
+.gallery-info {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+.gallery-info h1 {
+
+    margin: 0 0 15px;
+
+}
+
+
+.gallery-info p {
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+
+}
+
+
+.gallery-content {
+
+    margin-bottom: 50px;
+
+}
+
+
+.gallery-content h2 {
+
+    margin-bottom: 20px;
+
+}
+
+
+.preview-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(
+                180px,
+                1fr
+            )
+        );
+
+    gap: 18px;
+
+}
+
+
+.preview-grid img {
+
+    width: 100%;
+
+    aspect-ratio: 2 / 3;
+
+    object-fit: cover;
+
+    display: block;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    border: 1px solid var(--border);
+
+    transition:
+        transform .25s,
+        border-color .25s;
+
+}
+
+
+.preview-grid img:hover {
+
+    transform: scale(1.03);
+
+    border-color: var(--primary);
+
+}
+
+
+/* =========================
+   IMAGE VIEWER
+========================= */
+
+.image-viewer {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(0,0,0,.92);
+
+    padding: 30px;
+
+}
+
+
+.image-viewer.active {
+
+    display: flex;
+
+}
+
+
+.viewer-content {
+
+    max-width: 95vw;
+
+    max-height: 95vh;
+
+}
+
+
+.viewer-content img {
+
+    max-width: 95vw;
+
+    max-height: 90vh;
+
+    object-fit: contain;
+
+    display: block;
+
+}
+
+
+.viewer-close {
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 25px;
+
+    z-index: 2;
+
+    width: 45px;
+
+    height: 45px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.12);
+
+    color: #fff;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+}
+
+
+.viewer-close:hover {
+
+    background: rgba(255,255,255,.22);
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .gallery-header {
+
+        flex-direction: column;
+
+    }
+
+
+    .gallery-cover {
+
+        width: 180px;
+
+    }
+
+
+    .preview-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        gap: 12px;
+
+    }
+
+}
