@@ -480,3 +480,76 @@
     }
 
 }
+
+/* =========================
+   GALLERY COLLECTIONS
+========================= */
+
+.gallery-collection-card {
+
+    display: block;
+
+    background: var(--bg-card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    text-decoration: none;
+
+    transition:
+        transform .25s,
+        border-color .25s;
+
+}
+
+
+.gallery-collection-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color: var(--primary);
+
+}
+
+
+.gallery-collection-cover {
+
+    width: 100%;
+
+    aspect-ratio: 2 / 3;
+
+    overflow: hidden;
+
+}
+
+
+.gallery-collection-cover img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+}
+
+
+.gallery-collection-info {
+
+    padding: 12px;
+
+}
+
+
+.gallery-collection-info h3 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+}
