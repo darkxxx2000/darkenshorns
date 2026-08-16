@@ -9,6 +9,10 @@ document.addEventListener(
 );
 
 
+/* =========================
+   LOAD
+========================= */
+
 async function loadGallery() {
 
     const params =
@@ -94,6 +98,16 @@ function renderGallery(
     );
 
 
+    setText(
+        "gallery-breadcrumb",
+        gallery.title
+    );
+
+
+    /* =========================
+       COVER
+    ========================= */
+
     const cover =
         document.getElementById(
             "gallery-cover-image"
@@ -113,8 +127,150 @@ function renderGallery(
     }
 
 
-    renderImages(
-        gallery.images || []
+    /* =========================
+       COLLECTIONS
+    ========================= */
+
+    if (
+        Array.isArray(
+            gallery.collections
+        )
+    ) {
+
+        renderCollections(
+            gallery.collections
+        );
+
+        return;
+
+    }
+
+
+    /* =========================
+       IMAGES
+    ========================= */
+
+    if (
+        Array.isArray(
+            gallery.images
+        )
+    ) {
+
+        renderImages(
+            gallery.images
+        );
+
+        return;
+
+    }
+
+
+    showEmptyContent();
+
+}
+
+
+/* =========================
+   COLLECTIONS
+========================= */
+
+function renderCollections(
+    collections
+) {
+
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        "";
+
+
+    if (!collections.length) {
+
+        showEmptyContent();
+
+        return;
+
+    }
+
+
+    collections.forEach(
+        collection => {
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.className =
+                "gallery-collection-card";
+
+
+            link.href =
+                `gallery-view.html?id=${encodeURIComponent(
+                    collection.id
+                )}`;
+
+
+            link.innerHTML = `
+
+                <div class="gallery-collection-cover">
+
+                    <img
+                        src="${normalizeAssetPath(
+                            collection.cover
+                        )}"
+                        alt="${collection.title || ""}"
+                        loading="lazy"
+                    >
+
+                </div>
+
+                <div class="gallery-collection-info">
+
+                    <h3>
+                        ${collection.title || ""}
+                    </h3>
+
+                </div>
+
+            `;
+
+
+            const image =
+                link.querySelector(
+                    "img"
+                );
+
+
+            image.onerror =
+                () => {
+
+                    image.onerror =
+                        null;
+
+                    image.src =
+                        "../assets/placeholders/cover.webp";
+
+                };
+
+
+            container.appendChild(
+                link
+            );
+
+        }
     );
 
 }
@@ -136,10 +292,6 @@ function renderImages(
 
     if (!container) {
 
-        console.error(
-            "preview-container not found."
-        );
-
         return;
 
     }
@@ -154,11 +306,7 @@ function renderImages(
         !images.length
     ) {
 
-        container.innerHTML = `
-            <p class="empty-message">
-                No images available.
-            </p>
-        `;
+        showEmptyContent();
 
         return;
 
@@ -256,8 +404,7 @@ function setupViewer() {
 
     if (viewer) {
 
-        viewer.addEventListener(
-            "click",
+        viewer.onclick =
             event => {
 
                 if (
@@ -268,8 +415,7 @@ function setupViewer() {
 
                 }
 
-            }
-        );
+            };
 
     }
 
@@ -387,18 +533,10 @@ function normalizeAssetPath(
 
 
     if (
-        path.startsWith(
-            "http://"
-        ) ||
-        path.startsWith(
-            "https://"
-        ) ||
-        path.startsWith(
-            "//"
-        ) ||
-        path.startsWith(
-            "data:"
-        )
+        path.startsWith("http://") ||
+        path.startsWith("https://") ||
+        path.startsWith("//") ||
+        path.startsWith("data:")
     ) {
 
         return path;
@@ -407,9 +545,7 @@ function normalizeAssetPath(
 
 
     if (
-        path.startsWith(
-            "../"
-        )
+        path.startsWith("../")
     ) {
 
         return path;
@@ -418,9 +554,7 @@ function normalizeAssetPath(
 
 
     if (
-        path.startsWith(
-            "/"
-        )
+        path.startsWith("/")
     ) {
 
         return path;
@@ -457,6 +591,36 @@ function setText(
 
     element.textContent =
         value || "";
+
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+function showEmptyContent() {
+
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <p class="empty-message">
+            No content available.
+        </p>
+
+    `;
 
 }
 
