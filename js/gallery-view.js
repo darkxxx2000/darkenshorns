@@ -1,130 +1,483 @@
+/*************************************************
+ * DARKENSHORNS
+ * GALLERY VIEW
+ *************************************************/
+
 document.addEventListener(
     "DOMContentLoaded",
     loadGallery
 );
 
-async function loadGallery(){
 
-const params =
-new URLSearchParams(
-window.location.search
-);
+async function loadGallery() {
 
-const id =
-params.get("id");
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
 
-if(!id)return;
+    const id =
+        params.get("id");
 
-const response =
-await fetch(
-`../data/gallery/${id}.json`
-);
 
-const gallery =
-await response.json();
+    if (!id) {
 
-document.getElementById(
-"gallery-title"
-).textContent =
-gallery.title;
+        showError(
+            "Gallery not specified."
+        );
 
-document.getElementById(
-"gallery-description"
-).textContent =
-gallery.description || "";
+        return;
 
-renderImages(
-gallery.images || []
-);
+    }
 
-setupViewer();
 
-}
+    try {
 
-function renderImages(images){
+        const response =
+            await fetch(
+                `../data/gallery/${encodeURIComponent(id)}.json`
+            );
 
-const container =
-document.getElementById(
-"preview-container"
-);
 
-container.innerHTML="";
+        if (!response.ok) {
 
-images.forEach((src,index)=>{
+            throw new Error(
+                "Gallery not found."
+            );
 
-const img =
-document.createElement("img");
+        }
 
-img.src =
-normalize(src);
 
-img.loading="lazy";
+        const gallery =
+            await response.json();
 
-img.addEventListener("click",()=>{
 
-openViewer(
-images,
-index
-);
+        renderGallery(
+            gallery
+        );
 
-});
 
-container.appendChild(img);
+    } catch (error) {
 
-});
+        console.error(
+            "Gallery loading error:",
+            error
+        );
+
+
+        showError(
+            "Unable to load gallery."
+        );
+
+    }
 
 }
 
-let galleryImages=[];
-let current=0;
 
-function setupViewer(){
+/* =========================
+   GALLERY
+========================= */
 
-document
-.getElementById("viewer-close")
-.onclick=closeViewer;
+function renderGallery(
+    gallery
+) {
+
+    setText(
+        "gallery-title",
+        gallery.title
+    );
+
+
+    setText(
+        "gallery-description",
+        gallery.description
+    );
+
+
+    const cover =
+        document.getElementById(
+            "gallery-cover-image"
+        );
+
+
+    if (cover) {
+
+        cover.src =
+            normalizeAssetPath(
+                gallery.cover
+            );
+
+        cover.alt =
+            gallery.title || "Gallery";
+
+    }
+
+
+    renderImages(
+        gallery.images || []
+    );
 
 }
 
-function openViewer(images,index){
 
-galleryImages=images;
-current=index;
+/* =========================
+   IMAGES
+========================= */
 
-const viewer=
-document.getElementById("image-viewer");
+function renderImages(
+    images
+) {
 
-viewer.classList.add("active");
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
 
-updateViewer();
+
+    if (!container) {
+
+        console.error(
+            "preview-container not found."
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        "";
+
+
+    if (
+        !Array.isArray(images) ||
+        !images.length
+    ) {
+
+        container.innerHTML = `
+            <p class="empty-message">
+                No images available.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    images.forEach(
+        (image, index) => {
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+
+            img.src =
+                normalizeAssetPath(
+                    image
+                );
+
+
+            img.alt =
+                `Gallery image ${index + 1}`;
+
+
+            img.loading =
+                "lazy";
+
+
+            img.addEventListener(
+                "click",
+                () => {
+
+                    openViewer(
+                        images,
+                        index
+                    );
+
+                }
+            );
+
+
+            img.onerror =
+                () => {
+
+                    img.style.display =
+                        "none";
+
+                };
+
+
+            container.appendChild(
+                img
+            );
+
+        }
+    );
+
+
+    setupViewer();
 
 }
 
-function updateViewer(){
 
-document.getElementById(
-"viewer-image"
-).src=
-normalize(
-galleryImages[current]
-);
+/* =========================
+   VIEWER
+========================= */
+
+let galleryImages = [];
+
+let currentImage = 0;
+
+
+function setupViewer() {
+
+    const closeButton =
+        document.getElementById(
+            "viewer-close"
+        );
+
+
+    if (closeButton) {
+
+        closeButton.onclick =
+            closeViewer;
+
+    }
+
+
+    const viewer =
+        document.getElementById(
+            "image-viewer"
+        );
+
+
+    if (viewer) {
+
+        viewer.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === viewer
+                ) {
+
+                    closeViewer();
+
+                }
+
+            }
+        );
+
+    }
 
 }
 
-function closeViewer(){
 
-document
-.getElementById("image-viewer")
-.classList.remove("active");
+function openViewer(
+    images,
+    index
+) {
+
+    galleryImages =
+        images;
+
+    currentImage =
+        index;
+
+
+    const viewer =
+        document.getElementById(
+            "image-viewer"
+        );
+
+
+    if (!viewer) {
+
+        return;
+
+    }
+
+
+    viewer.classList.add(
+        "active"
+    );
+
+
+    updateViewer();
 
 }
 
-function normalize(path){
 
-if(
-path.startsWith("http")
-)return path;
+function updateViewer() {
 
-return "../"+path;
+    if (
+        !galleryImages.length
+    ) {
+
+        return;
+
+    }
+
+
+    const image =
+        document.getElementById(
+            "viewer-image"
+        );
+
+
+    if (!image) {
+
+        return;
+
+    }
+
+
+    image.src =
+        normalizeAssetPath(
+            galleryImages[
+                currentImage
+            ]
+        );
+
+}
+
+
+function closeViewer() {
+
+    const viewer =
+        document.getElementById(
+            "image-viewer"
+        );
+
+
+    if (viewer) {
+
+        viewer.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   PATH
+========================= */
+
+function normalizeAssetPath(
+    path
+) {
+
+    if (
+        !path ||
+        typeof path !== "string"
+    ) {
+
+        return "../assets/placeholders/cover.webp";
+
+    }
+
+
+    path =
+        path.trim();
+
+
+    if (
+        path.startsWith(
+            "http://"
+        ) ||
+        path.startsWith(
+            "https://"
+        ) ||
+        path.startsWith(
+            "//"
+        ) ||
+        path.startsWith(
+            "data:"
+        )
+    ) {
+
+        return path;
+
+    }
+
+
+    if (
+        path.startsWith(
+            "../"
+        )
+    ) {
+
+        return path;
+
+    }
+
+
+    if (
+        path.startsWith(
+            "/"
+        )
+    ) {
+
+        return path;
+
+    }
+
+
+    return "../" + path;
+
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
+        value || "";
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showError(
+    message
+) {
+
+    setText(
+        "gallery-title",
+        "Gallery not found"
+    );
+
+
+    setText(
+        "gallery-description",
+        message
+    );
 
 }
