@@ -13,13 +13,13 @@
     "collections": [
         {
             "id": "rapunzel-vs-horse",
-            "title": "Rapunzel vs Horse",
+            "title": "My horse gets me into trouble",
             "cover": "https://ah-img.luscious.net/darkenshorns/599470/9_01KESVR138QXMV4YP7Y0Z28PR8.640x0.jpg",
             "file": "rapunzel-vs-horse.json"
         },
         {
-            "id": "rapunzel-vs-tentacles",
-            "title": "Rapunzel vs Tentacles",
+            "id": "rapunzel-vs-horse-2",
+            "title": "My horse gets me into trouble 2",
             "cover": "assets/images/galleries/rapunzel/tentacles/001.webp",
             "file": "rapunzel-vs-tentacles.json"
         }
