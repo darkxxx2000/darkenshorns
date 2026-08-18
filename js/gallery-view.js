@@ -10,6 +10,19 @@ document.addEventListener(
 
 
 /* =========================
+   STATE
+========================= */
+
+let galleryImages = [];
+
+let currentImage = 0;
+
+let currentMode = "normal";
+
+let zoomLevel = 1;
+
+
+/* =========================
    LOAD
 ========================= */
 
@@ -93,38 +106,9 @@ function renderGallery(
 
 
     setText(
-        "gallery-description",
-        gallery.description
-    );
-
-
-    setText(
         "gallery-breadcrumb",
         gallery.title
     );
-
-
-    /* =========================
-       COVER
-    ========================= */
-
-    const cover =
-        document.getElementById(
-            "gallery-cover-image"
-        );
-
-
-    if (cover) {
-
-        cover.src =
-            normalizeAssetPath(
-                gallery.cover
-            );
-
-        cover.alt =
-            gallery.title || "Gallery";
-
-    }
 
 
     /* =========================
@@ -141,6 +125,8 @@ function renderGallery(
             gallery.collections
         );
 
+        setupReaderModes();
+
         return;
 
     }
@@ -156,9 +142,16 @@ function renderGallery(
         )
     ) {
 
+        galleryImages =
+            gallery.images;
+
         renderImages(
             gallery.images
         );
+
+        setupReaderModes();
+
+        setupViewer();
 
         return;
 
@@ -204,6 +197,11 @@ function renderCollections(
     }
 
 
+    container.classList.add(
+        "collections-mode"
+    );
+
+
     collections.forEach(
         collection => {
 
@@ -231,7 +229,9 @@ function renderCollections(
                         src="${normalizeAssetPath(
                             collection.cover
                         )}"
-                        alt="${collection.title || ""}"
+                        alt="${escapeHtml(
+                            collection.title || ""
+                        )}"
                         loading="lazy"
                     >
 
@@ -240,7 +240,9 @@ function renderCollections(
                 <div class="gallery-collection-info">
 
                     <h3>
-                        ${collection.title || ""}
+                        ${escapeHtml(
+                            collection.title || ""
+                        )}
                     </h3>
 
                 </div>
@@ -254,16 +256,20 @@ function renderCollections(
                 );
 
 
-            image.onerror =
-                () => {
+            if (image) {
 
-                    image.onerror =
-                        null;
+                image.onerror =
+                    () => {
 
-                    image.src =
-                        "../assets/placeholders/cover.webp";
+                        image.onerror =
+                            null;
 
-                };
+                        image.src =
+                            "../assets/placeholders/cover.webp";
+
+                    };
+
+            }
 
 
             container.appendChild(
@@ -301,6 +307,16 @@ function renderImages(
         "";
 
 
+    container.classList.remove(
+        "collections-mode"
+    );
+
+
+    container.classList.add(
+        "normal-mode"
+    );
+
+
     if (
         !Array.isArray(images) ||
         !images.length
@@ -315,6 +331,16 @@ function renderImages(
 
     images.forEach(
         (image, index) => {
+
+            const wrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            wrapper.className =
+                "gallery-image-item";
+
 
             const img =
                 document.createElement(
@@ -333,7 +359,17 @@ function renderImages(
 
 
             img.loading =
-                "lazy";
+                index < 4
+                    ? "eager"
+                    : "lazy";
+
+
+            img.decoding =
+                "async";
+
+
+            img.dataset.index =
+                index;
 
 
             img.addEventListener(
@@ -352,21 +388,144 @@ function renderImages(
             img.onerror =
                 () => {
 
-                    img.style.display =
-                        "none";
+                    wrapper.classList.add(
+                        "image-error"
+                    );
+
+                    img.remove();
 
                 };
 
 
-            container.appendChild(
+            wrapper.appendChild(
                 img
+            );
+
+
+            container.appendChild(
+                wrapper
             );
 
         }
     );
 
+}
 
-    setupViewer();
+
+/* =========================
+   READER MODES
+========================= */
+
+function setupReaderModes() {
+
+    const normalButton =
+        document.getElementById(
+            "normal-mode-button"
+        );
+
+
+    const webtoonButton =
+        document.getElementById(
+            "webtoon-mode-button"
+        );
+
+
+    if (
+        normalButton
+    ) {
+
+        normalButton.onclick =
+            () => {
+
+                setReaderMode(
+                    "normal"
+                );
+
+            };
+
+    }
+
+
+    if (
+        webtoonButton
+    ) {
+
+        webtoonButton.onclick =
+            () => {
+
+                setReaderMode(
+                    "webtoon"
+                );
+
+            };
+
+    }
+
+}
+
+
+function setReaderMode(
+    mode
+) {
+
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    currentMode =
+        mode;
+
+
+    container.classList.remove(
+        "normal-mode",
+        "webtoon-mode"
+    );
+
+
+    container.classList.add(
+        `${mode}-mode`
+    );
+
+
+    const normalButton =
+        document.getElementById(
+            "normal-mode-button"
+        );
+
+
+    const webtoonButton =
+        document.getElementById(
+            "webtoon-mode-button"
+        );
+
+
+    if (normalButton) {
+
+        normalButton.classList.toggle(
+            "active",
+            mode === "normal"
+        );
+
+    }
+
+
+    if (webtoonButton) {
+
+        webtoonButton.classList.toggle(
+            "active",
+            mode === "webtoon"
+        );
+
+    }
 
 }
 
@@ -374,11 +533,6 @@ function renderImages(
 /* =========================
    VIEWER
 ========================= */
-
-let galleryImages = [];
-
-let currentImage = 0;
-
 
 function setupViewer() {
 
@@ -404,7 +558,8 @@ function setupViewer() {
 
     if (viewer) {
 
-        viewer.onclick =
+        viewer.addEventListener(
+            "click",
             event => {
 
                 if (
@@ -415,12 +570,110 @@ function setupViewer() {
 
                 }
 
+            }
+        );
+
+    }
+
+
+    const previousButton =
+        document.getElementById(
+            "viewer-prev"
+        );
+
+
+    if (previousButton) {
+
+        previousButton.onclick =
+            event => {
+
+                event.stopPropagation();
+
+                previousImage();
+
             };
 
     }
 
+
+    const nextButton =
+        document.getElementById(
+            "viewer-next"
+        );
+
+
+    if (nextButton) {
+
+        nextButton.onclick =
+            event => {
+
+                event.stopPropagation();
+
+                nextImage();
+
+            };
+
+    }
+
+
+    const viewerImage =
+        document.getElementById(
+            "viewer-image"
+        );
+
+
+    if (viewerImage) {
+
+        viewerImage.addEventListener(
+            "click",
+            event => {
+
+                event.stopPropagation();
+
+                nextImage();
+
+            }
+        );
+
+
+        viewerImage.addEventListener(
+            "wheel",
+            event => {
+
+                event.preventDefault();
+
+                if (
+                    event.deltaY < 0
+                ) {
+
+                    zoomIn();
+
+                } else {
+
+                    zoomOut();
+
+                }
+
+            },
+            {
+                passive: false
+            }
+        );
+
+    }
+
+
+    document.addEventListener(
+        "keydown",
+        handleViewerKeyboard
+    );
+
 }
 
+
+/* =========================
+   OPEN VIEWER
+========================= */
 
 function openViewer(
     images,
@@ -432,6 +685,9 @@ function openViewer(
 
     currentImage =
         index;
+
+    zoomLevel =
+        1;
 
 
     const viewer =
@@ -452,10 +708,19 @@ function openViewer(
     );
 
 
+    document.body.classList.add(
+        "viewer-open"
+    );
+
+
     updateViewer();
 
 }
 
+
+/* =========================
+   UPDATE VIEWER
+========================= */
 
 function updateViewer() {
 
@@ -488,8 +753,206 @@ function updateViewer() {
             ]
         );
 
+
+    image.alt =
+        `Gallery image ${currentImage + 1}`;
+
+
+    image.style.transform =
+        `scale(${zoomLevel})`;
+
+
+    const counter =
+        document.getElementById(
+            "viewer-counter"
+        );
+
+
+    if (counter) {
+
+        counter.textContent =
+            `${currentImage + 1} / ${galleryImages.length}`;
+
+    }
+
 }
 
+
+/* =========================
+   NEXT
+========================= */
+
+function nextImage() {
+
+    if (
+        !galleryImages.length
+    ) {
+
+        return;
+
+    }
+
+
+    currentImage =
+        (
+            currentImage + 1
+        ) %
+        galleryImages.length;
+
+
+    zoomLevel =
+        1;
+
+
+    updateViewer();
+
+}
+
+
+/* =========================
+   PREVIOUS
+========================= */
+
+function previousImage() {
+
+    if (
+        !galleryImages.length
+    ) {
+
+        return;
+
+    }
+
+
+    currentImage =
+        (
+            currentImage - 1 +
+            galleryImages.length
+        ) %
+        galleryImages.length;
+
+
+    zoomLevel =
+        1;
+
+
+    updateViewer();
+
+}
+
+
+/* =========================
+   ZOOM IN
+========================= */
+
+function zoomIn() {
+
+    zoomLevel =
+        Math.min(
+            zoomLevel + 0.15,
+            4
+        );
+
+
+    updateViewer();
+
+}
+
+
+/* =========================
+   ZOOM OUT
+========================= */
+
+function zoomOut() {
+
+    zoomLevel =
+        Math.max(
+            zoomLevel - 0.15,
+            0.5
+        );
+
+
+    updateViewer();
+
+}
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+function handleViewerKeyboard(
+    event
+) {
+
+    const viewer =
+        document.getElementById(
+            "image-viewer"
+        );
+
+
+    if (
+        !viewer ||
+        !viewer.classList.contains(
+            "active"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        event.key === "Escape"
+    ) {
+
+        closeViewer();
+
+    }
+
+
+    if (
+        event.key === "ArrowRight"
+    ) {
+
+        nextImage();
+
+    }
+
+
+    if (
+        event.key === "ArrowLeft"
+    ) {
+
+        previousImage();
+
+    }
+
+
+    if (
+        event.key === "+"
+    ) {
+
+        zoomIn();
+
+    }
+
+
+    if (
+        event.key === "-"
+    ) {
+
+        zoomOut();
+
+    }
+
+}
+
+
+/* =========================
+   CLOSE VIEWER
+========================= */
 
 function closeViewer() {
 
@@ -506,6 +969,29 @@ function closeViewer() {
         );
 
     }
+
+
+    document.body.classList.remove(
+        "viewer-open"
+    );
+
+
+    const image =
+        document.getElementById(
+            "viewer-image"
+        );
+
+
+    if (image) {
+
+        image.style.transform =
+            "scale(1)";
+
+    }
+
+
+    zoomLevel =
+        1;
 
 }
 
@@ -596,6 +1082,41 @@ function setText(
 
 
 /* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================
    EMPTY
 ========================= */
 
@@ -640,8 +1161,27 @@ function showError(
 
 
     setText(
-        "gallery-description",
-        message
+        "gallery-breadcrumb",
+        "Error"
     );
+
+
+    const container =
+        document.getElementById(
+            "preview-container"
+        );
+
+
+    if (container) {
+
+        container.innerHTML = `
+
+            <p class="empty-message">
+                ${escapeHtml(message)}
+            </p>
+
+        `;
+
+    }
 
 }
