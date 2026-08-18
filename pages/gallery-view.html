@@ -32,9 +32,6 @@ href="../css/navigation.css">
 href="../css/footer.css">
 
 <link rel="stylesheet"
-href="../css/chapter.css">
-
-<link rel="stylesheet"
 href="../css/gallery.css">
 
 </head>
@@ -111,34 +108,36 @@ Loading...
 
 
 
-<section class="gallery-header">
-
-
-<div class="gallery-cover">
-
-<img
-id="gallery-cover-image"
-src=""
-alt=""
-loading="eager">
-
-</div>
-
-
-<div class="gallery-info">
-
+<section class="gallery-title-section">
 
 <h1 id="gallery-title">
 Loading...
 </h1>
 
-
-<p id="gallery-description">
-</p>
+</section>
 
 
-</div>
 
+<section class="gallery-reader-controls">
+
+<button
+type="button"
+id="normal-mode-button"
+class="reader-mode-button active">
+
+Normal Mode
+
+</button>
+
+
+<button
+type="button"
+id="webtoon-mode-button"
+class="reader-mode-button">
+
+Webtoon Mode
+
+</button>
 
 </section>
 
@@ -147,14 +146,9 @@ Loading...
 <section class="gallery-content">
 
 
-<h2>
-Gallery Images
-</h2>
-
-
 <div
 id="preview-container"
-class="preview-grid">
+class="preview-grid normal-mode">
 
 </div>
 
@@ -189,6 +183,32 @@ src=""
 alt="">
 
 </div>
+
+
+<div class="viewer-counter"
+id="viewer-counter">
+
+</div>
+
+
+<button
+id="viewer-prev"
+class="viewer-navigation viewer-prev"
+aria-label="Previous image">
+
+‹
+
+</button>
+
+
+<button
+id="viewer-next"
+class="viewer-navigation viewer-next"
+aria-label="Next image">
+
+›
+
+</button>
 
 
 </div>
