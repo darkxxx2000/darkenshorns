@@ -1,0 +1,45 @@
+{
+    "id": "shibari",
+    "title": "Shibari",
+    "cover": "URL_DE_LA_PORTADA_PRINCIPAL",
+    "description": "A collection of dark fantasy galleries featuring Shibari.",
+    "author": "DarkensHorns",
+    "updated": "2026-08-19",
+    "tags": [
+        "Shibari",
+        "Dark",
+        "Fantasy"
+    ],
+    "collections": [
+        {
+            "id": "shibari-in-bedroom",
+            "title": "Shibari in Bedroom",
+            "cover": "URL_PORTADA_BEDROOM",
+            "file": "shibari-in-bedroom.json"
+        },
+        {
+            "id": "shibari-in-forest",
+            "title": "Shibari in Forest",
+            "cover": "URL_PORTADA_FOREST",
+            "file": "shibari-in-forest.json"
+        },
+        {
+            "id": "shibari-in-abandoned-building",
+            "title": "Shibari in Abandoned Building",
+            "cover": "URL_PORTADA_ABANDONED_BUILDING",
+            "file": "shibari-in-abandoned-building.json"
+        },
+        {
+            "id": "shibari-in-town",
+            "title": "Shibari in Town",
+            "cover": "URL_PORTADA_TOWN",
+            "file": "shibari-in-town.json"
+        },
+        {
+            "id": "shibari-in-wood-house",
+            "title": "Shibari in Wood House",
+            "cover": "URL_PORTADA_WOOD_HOUSE",
+            "file": "shibari-in-wood-house.json"
+        }
+    ]
+}
